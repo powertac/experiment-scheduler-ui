@@ -1,0 +1,9 @@
+#app, html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.autocomplete span.marked {
+    font-weight: bold;
+    color: darkviolet;
+}
