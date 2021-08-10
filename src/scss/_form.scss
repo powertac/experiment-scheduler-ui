@@ -1,0 +1,104 @@
+div.form {
+  background: #fafafa;
+
+  .form-title {
+    margin: 3rem auto 1.5rem 20rem;
+    color: #555;
+  }
+
+  &.embedded {
+    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    .field-group {
+      padding: 1rem 1.25rem;
+
+      &.alternative-actions {
+        padding: 1rem 1.25rem;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .field-group {
+    display: flex;
+    background: #fff;
+    padding: 2rem 5rem 4rem 5rem;
+    border-top: 1px solid #e9e9e9;
+    border-radius: .2rem;
+
+    &:first-child {
+      border-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 3rem;
+      border-bottom: 1px solid #e9e9e9;
+    }
+
+    &.alternative-actions {
+      background: #fafafa;
+      border-bottom: 0;
+
+      .field-group-body {
+        margin-left: 15rem;
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+
+        & > .control-button {
+          flex-grow: 1;
+        }
+
+        .alternative-actions-separator {
+          display: flex;
+          align-items: center;
+          margin: 0 1.5em;
+        }
+      }
+
+      .field-group-title + .field-group-body {
+        margin-left: 0;
+      }
+    }
+
+    .field-group-title {
+      width: 15rem;
+      font-size: 1.25em;
+      line-height: 1.2;
+      margin: .44rem 0 .5rem 0;
+    }
+
+    .field-group-body {
+      width: 60rem;
+    }
+
+    .field-group-description {
+      margin-top: .75rem;
+      margin-bottom: 0;
+    }
+
+    input + .field-group-description {
+      margin-top: .75rem;
+      margin-bottom: 0;
+    }
+
+    .field-group-description {
+      color: #555;
+    }
+  }
+
+  input[type=text].form-control {
+    border-radius: 0;
+    padding: .5rem 1rem;
+    height: 2.75rem;
+    color: #333;
+    transition: none;
+    line-height: 1.5;
+    font-size: 1rem;
+    &:focus {
+      box-shadow: none;
+      background: #f1f6ff;
+      color: #000aa3;
+      border-color: #A5B3E8;
+    }
+  }
+}

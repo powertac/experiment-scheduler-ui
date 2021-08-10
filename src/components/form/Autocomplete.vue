@@ -34,6 +34,9 @@
         @Prop({required: true})
         public items: string[];
 
+        @Prop({required: false, default: ''})
+        public initialValue: string;
+
         private search: string;
         private isOpen: boolean;
         private selectedItemIndex: number;
@@ -45,6 +48,7 @@
             this.isOpen = false;
             this.selectedItemIndex = -1;
             this.inputElementId = uuid();
+            this.search = this.initialValue
         }
 
         private mounted() {

@@ -1,29 +1,6 @@
 <template>
     <div id="game-form">
-      <div class="content-actions">
-        <button type="button" class="content-action" @click="$router.back()">
-          <fa-icon icon="arrow-left" class="content-action-icon" />
-          Back
-        </button>
-      </div>
       <div class="form-container">
-        <h2 class="form-container-title">New Game</h2>
-        <div class="field-group">
-          <label for="game-name" class="field-group-title le">Name</label>
-          <div class="field-group-body">
-            <input type="text" v-model="name" class="form-control" id="game-name">
-            <p class="field-group-description">
-              Choosing descriptive names actually improves the usability of the system if you need to manage a lot of games ;)
-            </p>
-          </div>
-        </div>
-        <div class="field-group">
-          <h5 class="field-group-title">Brokers</h5>
-          <div class="field-group-body">
-            <broker-selector :types="availableTypes"
-                             :callback="setBrokers"/>
-          </div>
-        </div>
         <div class="field-group">
           <h5 class="field-group-title">Server Parameters</h5>
           <div class="field-group-body">
@@ -32,12 +9,13 @@
                        :enableRemove="isParameterRemovable(param)"
                        @param-updated="updateParam(param, $event)"
                        @param-removed="removeParam(param)" />
-            <p class="field-group-description">
-              These parameters will apply to the game during simulation. They do not affect the bootstrap run. For a full
-              reference of configurable parameters, please refer to the
-              <a href="https://github.com/powertac/server-distribution/blob/master/config/server.properties" target="_blank">
-                <code>server.properties</code> file on GitHub <fa-icon icon="external-link-square-alt" /></a>.
-            </p>
+          </div>
+        </div>
+        <div class="field-group">
+          <h5 class="field-group-title">Brokers</h5>
+          <div class="field-group-body">
+            <broker-selector :types="availableTypes"
+                             :callback="setBrokers"/>
           </div>
         </div>
         <div class="field-group alternative-actions">
@@ -82,7 +60,7 @@
     import {JobRequest} from "@/domain/types/Job";
 
     @Component({components: {'broker-selector': BrokerSelector, 'parameter': ParameterInput}})
-    export default class GameForm extends Vue {
+    export default class ExperimentGameForm extends Vue {
 
         @Prop({required: false, default: 'New Game'})
         private formTitle: string;
@@ -194,21 +172,17 @@
               });
             }
             else {
-              RestClient.createGameInstance({
+              StompClient.send<JobRequest>('/requests/jobs/create', {
                 name: this.name,
                 brokers: brokerSpecs,
-                serverParameters: parameters
-              }).then(() => this.$router.push('/games'));
+                serverParameters: parameters,
+              });
+              this.$router.push('/games');
             }
         }
 
         private closeForm() {
-          if (this.isEmbedded){
             this.$emit('form:close');
-          }
-          else {
-            this.$router.back()
-          }
         }
 
     }
@@ -218,65 +192,26 @@
 
   #game-form {
     background: #fafafa;
+    border: 1px solid #e9e9e9;
+    border-radius: .2rem;
   }
-
-  // TODO : elevate to App
-  div.content-actions {
-    height: 2.75rem;
-    justify-self: stretch;
-    display: flex;
-    align-items: stretch;
-    position: sticky;
-    top: 0;
-    background: #fff;
-    background: #fafafa;
-    border-bottom: 1px solid #ddd;
-
-    .content-action {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding: 0 1rem;
-      margin: 0;
-      border: 0;
-      background: transparent;
-      color: #3071F2;
-
-      &:hover {
-        color: #fff;
-        background: #3071F2;
-      }
-
-      .content-action-icon {
-        margin-right: .5em;
-      }
-    }
-  }
-
 
   div.form-container {
 
     .field-group {
-      display: flex;
-      background: #fff;
-      padding: 2rem 5rem 4rem 5rem;
-      border-top: 1px solid #e9e9e9;
-      border-radius: .2rem;
+      padding: .5rem 2rem;
 
-      &:last-child {
-        margin-bottom: 3rem;
-        border-bottom: 1px solid #e9e9e9;
+      &:first-child {
+        padding-top: 1.5rem;
       }
 
       &.alternative-actions {
-        padding: 1.5rem 5rem 1.5rem 20rem;
-        background: #fafafa;
-        border-bottom: 0;
-
+        padding: 2rem;
         .field-group-body {
           display: flex;
           flex-direction: row;
           align-items: stretch;
+
 
           & > .control-button {
             flex-grow: 1;
@@ -291,19 +226,13 @@
       }
 
       .field-group-title {
-        width: 15rem;
         font-size: 1.25em;
-        line-height: 1.2;
-        margin: .44rem 0 .5rem 0;
+        line-height: 1.5;
+        margin: 0 0 .5rem 0;
       }
 
-      .field-group-body {
-        width: 60rem;
-      }
-
-      .field-group-description {
-        margin-top: .75rem;
-        margin-bottom: 0;
+      label.field-group-title {
+        width: 100%;
       }
 
       input + .field-group-description {
@@ -317,24 +246,16 @@
     }
 
     .form-container-title {
-      margin: 3rem auto 1.5rem 20rem;
+      margin: 3rem auto 2rem 10%;
       color: #555;
     }
 
     input[type=text].form-control {
-      border-radius: 0;
-      padding: .5rem 1rem;
-      height: 2.75rem;
+      border-radius: .2rem;
+      padding: .66rem 1rem .66rem 1rem;
+      height: auto;
       color: #333;
       transition: none;
-      line-height: 1.5;
-      font-size: 1rem;
-      &:focus {
-        box-shadow: none;
-        background: #f1f6ff;
-        color: #000aa3;
-        border-color: #A5B3E8;
-      }
     }
   }
 </style>

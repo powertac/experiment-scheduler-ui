@@ -1,0 +1,65 @@
+table.datatable {
+  border: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 0;
+
+  &.table-hover tbody tr:hover {
+    background: #fafbfc;
+  }
+
+  td, th {
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+
+    &:last-child {
+      border-right-width: 0;
+    }
+
+    &.col-center {
+      text-align: center;
+    }
+  }
+
+  & > thead {
+    position: sticky;
+    top: 2.75rem;
+
+    & > tr > th {
+      font-weight: normal;
+      border-bottom-width: 1px;
+      color: #727f8e;
+      background-color: #eee;
+      border-color: #dbdfe2;
+      text-transform: uppercase;
+      font-size: .75em;
+      padding-top: .6rem;
+      padding-bottom: .5rem;
+    }
+  }
+
+  tr > td {
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+  }
+
+  & > tbody > tr {
+    cursor: pointer;
+
+    & > td {
+
+      &.monospaced {
+        font-family: "Inconsolata", monospace;
+      }
+
+      span.state-icon {
+        font-size: .66em;
+      }
+
+      .progress {
+        height: 1.5rem;
+      }
+    }
+  }
+}

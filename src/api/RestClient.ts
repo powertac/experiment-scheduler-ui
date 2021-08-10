@@ -5,13 +5,15 @@ import {ServerStatus} from '@/domain/types/Server';
 import config from '@/config';
 import {ExperimentSpec} from '@/domain/Experiment/ExperimentSpec';
 import {Experiment} from '@/domain/Experiment/Experiment';
-import {GameSpec} from "@/domain/Game/GameSpec";
+import {GameSpec} from '@/domain/Game/GameSpec';
+import {Baseline} from '@/domain/Baseline/Baseline';
 
 interface RestResponse {
     success: boolean;
     message: string;
     payload: any;
     experiments: Experiment[];
+    baselines: Baseline[];
 }
 
 interface JobResponse {
@@ -76,7 +78,7 @@ export class RestClient {
         return new Promise<string>((resolve: (success: string) => void,
                                      reject: (error: AxiosError) => void) => {
             axios.post(config.services.orchestrator.uri + '/experiments/', experiment)
-                .then((response: AxiosResponse<RestResponse>) => resolve(response.data.experiments))
+                .then((response: AxiosResponse<RestResponse>) => resolve(response.data.payload))
                 .catch((response: AxiosError) => reject(response));
         });
     }
@@ -87,6 +89,15 @@ export class RestClient {
             axios.get(config.services.orchestrator.uri + '/experiments/')
                 .then((response: AxiosResponse<RestResponse>) => resolve(response.data.experiments))
                 .catch((response: AxiosError) => reject(response));
+        });
+    }
+
+    public static baselines(): Promise<Baseline[]> {
+        return new Promise<Baseline[]>((resolve: (baselines: Baseline[]) => void,
+                                        reject: (error: AxiosError) => void) => {
+            axios.get(config.services.orchestrator.uri + '/baselines')
+              .then((response: AxiosResponse<RestResponse>) => resolve(response.data.baselines))
+              .catch((response: AxiosError) => reject(response));
         });
     }
 

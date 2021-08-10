@@ -9,7 +9,7 @@ library.add(faCheckSquare);
 library.add(faRunning);
 library.add(faAngleDoubleDown);
 
-// TODO : order icons
+// TODO : order icons and remove the ones that are no longer required
 
 // SOLID
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
@@ -170,6 +170,9 @@ library.add(faExternalLinkSquareAlt);
 
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 library.add(faArrowLeft);
+
+import { faSeedling } from '@fortawesome/free-solid-svg-icons';
+library.add(faSeedling);
 
 // REGULAR
 import { faCaretSquareDown } from '@fortawesome/free-regular-svg-icons';

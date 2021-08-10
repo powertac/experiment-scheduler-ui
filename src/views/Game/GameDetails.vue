@@ -105,16 +105,20 @@ import {JobState} from "@/domain/types/Job";
               <td>Bootstrap properties</td>
               <td><code>{{ files.get("bootstrap-properties") }}</code></td>
             </tr>
+            <tr v-if="files.has('seed-file')">
+              <td>Seed file</td>
+              <td><code>{{ files.get("seed-file") }}</code></td>
+            </tr>
             <tr v-if="files.has('simulation-properties')">
               <td>Simulation properties</td>
               <td><code>{{ files.get("simulation-properties") }}</code></td>
             </tr>
             <tr v-if="files.has('state-log')">
-              <td>Trace log</td>
+              <td>State log</td>
               <td><code>{{ files.get("state-log") }}</code></td>
             </tr>
             <tr v-if="files.has('trace-log')">
-              <td>State log</td>
+              <td>Trace log</td>
               <td><code>{{ files.get("trace-log") }}</code></td>
             </tr>
             </tbody>

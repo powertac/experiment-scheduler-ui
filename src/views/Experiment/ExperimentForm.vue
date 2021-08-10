@@ -103,14 +103,14 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import {GameSpec} from '@/domain/Game/GameSpec';
-    import InlineGameForm from '@/views/Game/InlineGameForm.vue';
+    import ExperimentGameForm from '@/views/Game/ExperimentGameForm.vue';
     import TreatmentsForm from '@/views/Treatment/TreatmentsForm.vue';
     import {Treatment} from '@/domain/Treatment/Treatment';
     import {RestClient} from '@/api/RestClient';
     import {Experiment} from '@/domain/Experiment/Experiment';
     import {ExperimentSpec} from '@/domain/Experiment/ExperimentSpec';
 
-    @Component({components: {'instance-form': InlineGameForm, 'treatments-form': TreatmentsForm}})
+    @Component({components: {'instance-form': ExperimentGameForm, 'treatments-form': TreatmentsForm}})
     export default class ExperimentForm extends Vue {
 
         private name: string;

@@ -6,4 +6,6 @@ export interface GameSpec {
     name?: string;
     serverParameters: Parameter[];
     brokers: BrokerSpec[];
+    bootstrapFile?: string;
+    seedFile?: string;
 }

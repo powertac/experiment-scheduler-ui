@@ -1,89 +1,134 @@
 <template>
-    <div id="job-form" class="container">
-        <h1 class="mb-5">Create new job</h1>
-        <div class="form-group mb-5">
-            <label for="job-name">Name</label>
-            <input type="text" v-model="name" class="form-control" id="job-name" placeholder="Any name will do ...">
+    <div id="game-form">
+      <div class="content-actions">
+        <button type="button" class="content-action" @click="$router.back()">
+          <fa-icon icon="arrow-left" class="content-action-icon" />
+          Back
+        </button>
+      </div>
+      <div class="form-container">
+        <h2 class="form-container-title">New Game</h2>
+        <div class="field-group">
+          <label for="game-name" class="field-group-title le">Base game<br><small class="size font-weight-bold">(optional)</small></label>
+          <div class="field-group-body">
+            <game-selector @game-selected="setBaseGame($event)"
+                           :initial-value="baseGame"
+                           :filter="jobSelectorFilter()"/>
+            <p class="field-group-description">
+              Choosing a base game will set the new game's bootstrap and seed file to the ones provided by the base game.
+            </p>
+            <p v-if="!validBaseGame" class="text-danger font-italic font-weight-bold">This game has either no bootstrap file or no state log.</p>
+          </div>
         </div>
-        <h4 class="mb-3">Simulation parameters</h4>
-        <p class="mb-3">
-            These parameters will apply to the game during simulation. They do not affect the bootstrap run. For a full
-            reference of configurable parameters, please refer to this
-            <a href="https://github.com/powertac/server-distribution/blob/master/config/server.properties" target="_blank">
-                <code>server.properties</code> file on github</a>.
-        </p>
-        <p class="mb-3">
-            <em>Please be advised: The parameters you pass will not be validated before running the simulation.</em>
-        </p>
-        <div class="parameters mb-5">
-            <parameter v-for="param in simulationParameters" :key="param.id"
+        <div class="field-group">
+          <label for="game-name" class="field-group-title le">Name</label>
+          <div class="field-group-body">
+            <input type="text" v-model="name" class="form-control" id="game-name">
+            <p class="field-group-description">
+              Choosing descriptive names actually improves the usability of the system if you need to manage a lot of games ;)
+            </p>
+          </div>
+        </div>
+        <div class="field-group">
+          <h5 class="field-group-title">Brokers</h5>
+          <div class="field-group-body">
+            <broker-selector :types="availableTypes"
+                             :brokers="brokers"
+                             :callback="setBrokers"/>
+          </div>
+        </div>
+        <div class="field-group">
+          <h5 class="field-group-title">Server Parameters</h5>
+          <div class="field-group-body">
+            <parameter v-for="param in serverParameters" :key="param.id"
+                       :initial-key="param.key"
+                       :initial-value="param.value"
                        :allowedParameters="allowedParameters"
                        :enableRemove="isParameterRemovable(param)"
                        @param-updated="updateParam(param, $event)"
-                       @param-removed="removeParam(param)"
-            ></parameter>
+                       @param-removed="removeParam(param)" />
+            <p class="field-group-description">
+              These parameters will apply to the game during simulation. They do not affect the bootstrap run. For a full
+              reference of configurable parameters, please refer to the
+              <a href="https://github.com/powertac/server-distribution/blob/master/config/server.properties" target="_blank">
+                <code>server.properties</code> file on GitHub <fa-icon icon="external-link-square-alt" /></a>.
+            </p>
+          </div>
         </div>
-        <div class="form-group">
-            <h4 class="mb-3">Brokers</h4>
-            <broker-selector :types="availableTypes" :callback="setBrokers"></broker-selector>
-        </div>
-        <div class="text-right mt-5 form-actions">
-            <button type="button" class="btn btn-outline-secondary btn-lg mr-3" @click="$router.back()">
-                <fa-icon icon="times-circle" />
+        <div class="field-group alternative-actions">
+          <div class="field-group-body">
+            <div class="control-button" @click="closeForm">
+              <div class="control-button-icon">
+                <fa-icon icon="times" />
+              </div>
+              <div class="control-button-text">
                 Cancel
-            </button>
-            <button class="queue-job btn btn-primary btn-lg" :class="{disabled: !isValid}" :disabled="!isValid" @click="queueJob">
-                <fa-icon icon="check" class="fa-icon"></fa-icon>
-                Queue job
-            </button>
+              </div>
+            </div>
+            <div class="alternative-actions-separator">
+              OR
+            </div>
+            <div class="control-button confirm"
+                 :class="{disabled: !isValid}"
+                 @click="submit">
+              <div class="control-button-icon">
+                <fa-icon icon="check" />
+              </div>
+              <div class="control-button-text">
+                {{formSubmitLabel}}
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import {StompClient} from '@/api/StompClient';
-    import {Broker, BrokerType} from '@/domain/types/Broker';
-    import {JobRequest, Parameter} from "@/domain/types/Job";
-    import BrokerSelector from '@/components/BrokerSelector.vue';
-    import {RestClient} from '@/api/RestClient';
-    import {TransientParameter} from '@/domain/types/Parameter';
-    import ParameterInput from '@/components/form/ParameterInput.vue';
-    import uuid from 'uuid/v4';
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
+import {Parameter, TransientParameter} from '@/domain/types/Parameter';
+import uuid from 'uuid/v4';
+import {RestClient} from '@/api/RestClient';
+import ParameterInput from '@/components/form/ParameterInput.vue';
+import {Broker, BrokerType} from '@/domain/types/Broker';
+import BrokerSelector from '@/components/BrokerSelector.vue';
+import {BrokerSpec} from '@/domain/Broker/BrokerSpec';
+import {Job, JobState} from '@/domain/types/Job';
+import GameSelector from '@/components/game/GameSelector.vue';
+import {GameSpec} from '@/domain/Game/GameSpec';
 
-    @Component({components: {'broker-selector': BrokerSelector, 'parameter': ParameterInput}})
-    export default class JobForm extends Vue {
+@Component({components: {'broker-selector': BrokerSelector, 'parameter': ParameterInput, 'game-selector': GameSelector}})
+    export default class GameForm extends Vue {
+
+        @Prop({required: false, default: 'New Game'})
+        private formTitle: string;
+
+        @Prop({required: false, default: 'Queue game'})
+        private formSubmitLabel: string;
+
+        @Prop({required: false, default: true})
+        private withName: boolean;
+
+        @Prop({required: false, default: false})
+        private isEmbedded: boolean;
 
         private name: string;
+        private serverParameters: TransientParameter[];
         private brokers: Broker[];
-        private simulationParameters: TransientParameter[];
         private allowedParameters: string[];
+        private baseGame: Job | null;
 
         constructor() {
             super();
-            this.name = '';
+            this.name = "";
+            this.$set(this, 'serverParameters', []);
             this.brokers = [];
-            this.simulationParameters = [];
-            this.$set(this, 'simulationParameters', []);
             this.allowedParameters = [];
-        }
-
-        get availableTypes(): BrokerType[] {
-            return this.$store.getters['brokers/types'];
-        }
-
-        get isValid(): boolean {
-            if (this.name === '') {
-                return false;
-            }
-            if (this.brokers.length < 1) {
-                return false;
-            }
-            return true;
+            this.baseGame = null;
         }
 
         private created(): void {
-            this.simulationParameters.push({
+            this.serverParameters.push({
                 id: uuid(),
                 key: '',
                 value: '',
@@ -92,12 +137,47 @@
             RestClient.supportedParams()
                 .then((params) => this.allowedParameters = params.sort())
                 .catch((e) => console.log(e));
+            const jobId = this.$route.params.id
+            if (jobId != undefined) {
+              this.setBaseGame( this.$store.getters['jobs/job'](jobId))
+            }
         }
 
-        @Watch('simulationParameters')
-        private onSimulationParametersChanged(params: TransientParameter[]): void {
+        private setBaseGame(job: Job | null): void {
+          if (null == job) return
+          this.name = job.name
+          this.brokers = job.brokers
+          this.baseGame = job
+          this.$set(this, 'serverParameters', []);
+          for (const index in job.config['simulation-parameters']) {
+            const param = job.config['simulation-parameters'][index]
+            this.serverParameters.push({
+              id: uuid(),
+              key: param.parameter,
+              value: param.value})
+          }
+        }
+
+        private updateParam(oldParam: TransientParameter, newParam: TransientParameter): void {
+            newParam.id = oldParam.id;
+            this.$set(this.serverParameters, this.serverParameters.indexOf(oldParam), newParam);
+        }
+
+        private removeParam(param: TransientParameter): void {
+            this.$delete(this.serverParameters, this.serverParameters.indexOf(param));
+        }
+
+        private isParameterRemovable(param: TransientParameter): boolean {
+            return this.serverParameters.length > 1 && !(
+                this.serverParameters.indexOf(param) === (this.serverParameters.length - 1)
+                && param.key === ''
+                && param.value === '');
+        }
+
+        @Watch('serverParameters')
+        private onServerParametersChanged(params: TransientParameter[]): void {
             if (params.filter((param) => param.key === '' && param.value === '').length < 1) {
-                this.simulationParameters.push({
+                this.serverParameters.push({
                     id: uuid(),
                     key: '',
                     value: '',
@@ -105,20 +185,25 @@
             }
         }
 
-        private updateParam(oldParam: TransientParameter, newParam: TransientParameter): void {
-            newParam.id = oldParam.id;
-            this.$set(this.simulationParameters, this.simulationParameters.indexOf(oldParam), newParam);
+        get availableTypes(): BrokerType[] {
+            return this.$store.getters['brokers/types'];
         }
 
-        private removeParam(param: TransientParameter): void {
-            this.$delete(this.simulationParameters, this.simulationParameters.indexOf(param));
+        get isValid(): boolean {
+            if (this.withName && this.name === '') {
+                return false;
+            }
+            if (this.brokers.length < 1) {
+                return false;
+            }
+            return this.validBaseGame;
         }
 
-        private isParameterRemovable(param: TransientParameter): boolean {
-            return this.simulationParameters.length > 1 && !(
-                this.simulationParameters.indexOf(param) === (this.simulationParameters.length - 1)
-                && param.key === ''
-                && param.value === '');
+        get validBaseGame(): boolean {
+          if (null == this.baseGame) {
+            return true
+          }
+          return this.isValidBaseGame(this.baseGame)
         }
 
         private setBrokers(brokers: Broker[]): void {
@@ -129,60 +214,194 @@
             this.$delete(this.brokers, this.brokers.indexOf(broker));
         }
 
-        private queueJob() {
-            const selectedBrokers: string[] = this.brokers
-                .map((broker) => broker.name)
-                .filter((brokerName) => brokerName !== undefined)
-                // TODO : remove samplebroker from orchestrator repository
-                .filter((brokerName) => brokerName !== 'samplebroker') as string[];
-            const parameters: Parameter[] = [];
-            this.simulationParameters.filter((param) => param.key !== '')
-                .filter((param) => param.value !== '')
-                .forEach((param) => parameters.push({parameter: param.key, value: param.value}));
-            StompClient.send<JobRequest>('/requests/jobs/create', {
-                name: this.name,
-                brokers: selectedBrokers,
-                params: parameters,
-            });
-            this.$router.push('/jobs');
+        private submit(): void {
+          if (!this.isValid) {
+              return;
+          }
+          if (this.isEmbedded) {
+            this.$emit('form:submit', this.createGameSpec());
+          }
+          else {
+            RestClient.createGameInstance(this.createGameSpec())
+                .then(() => this.$router.push('/games'));
+          }
+        }
+
+        private createGameSpec(): GameSpec {
+          let brokerSpecs: BrokerSpec[] = this.brokers.map((broker) => {
+            return {
+              name: broker.name,
+              version: 'latest'
+            }
+          });
+          const parameters: Parameter[] = [];
+          this.serverParameters
+              .filter((param) => param.key !== '')
+              .filter((param) => param.value !== '')
+              .forEach((param) => parameters.push({key: param.key, value: param.value}));
+          const game: GameSpec = {
+            name: this.name,
+            brokers: brokerSpecs,
+            serverParameters: parameters
+          }
+          if (null != this.baseGame) {
+            game.bootstrapFile = this.baseGame.files['bootstrap-file']
+            game.seedFile = this.baseGame.files['state-log']
+          }
+          return game
+        }
+
+        private closeForm() {
+          if (this.isEmbedded){
+            this.$emit('form:close');
+          }
+          else {
+            this.$router.back()
+          }
+        }
+
+        private isValidBaseGame(job: Job): boolean {
+          let hasStateLog = false
+          let hasBootstrapFile = false
+          for (let key in job.files) {
+            hasStateLog = hasStateLog || (key == 'state-log')
+            hasBootstrapFile = hasBootstrapFile || (key == 'bootstrap-file')
+          }
+          return hasStateLog && hasBootstrapFile
+        }
+
+        private jobSelectorFilter(): (job: Job) => boolean {
+          return (job) => {
+            return job.status.state == JobState.completed
+                && this.isValidBaseGame(job)
+          }
         }
 
     }
 </script>
 
-<style scoped lang="scss">
-    #job-form {
-        padding: 3rem;
-    }
-    .brokers {
+<style lang="scss" scoped>
 
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
+  #game-form {
+    background: #fafafa;
+  }
 
-        .broker {
-            margin-bottom: 1rem;
-            width: 15rem;
-            margin-right: 1.28rem;
-            &:after(4) {
-                margin-right: 0;
-            }
-        }
+  // TODO : elevate to App
+  div.content-actions {
+    height: 2.75rem;
+    justify-self: stretch;
+    display: flex;
+    align-items: stretch;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    background: #fafafa;
+    border-bottom: 1px solid #ddd;
+    flex-shrink: 0;
 
-        &:after {
-            content: "";
-            flex: auto;
+    .content-action {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+      margin: 0;
+      border: 0;
+      background: transparent;
+      color: #3071F2;
+
+      &:hover {
+        color: #fff;
+        background: #3071F2;
+      }
+
+      .content-action-icon {
+        margin-right: .5em;
+      }
+    }
+  }
+
+
+  div.form-container {
+
+    .field-group {
+      display: flex;
+      background: #fff;
+      padding: 2rem 5rem 4rem 5rem;
+      border-top: 1px solid #e9e9e9;
+      border-radius: .2rem;
+
+      &:last-child {
+        margin-bottom: 3rem;
+        border-bottom: 1px solid #e9e9e9;
+      }
+
+      &.alternative-actions {
+        padding: 1.5rem 5rem 1.5rem 20rem;
+        background: #fafafa;
+        border-bottom: 0;
+
+        .field-group-body {
+          display: flex;
+          flex-direction: row;
+          align-items: stretch;
+
+          & > .control-button {
+            flex-grow: 1;
+          }
+
+          .alternative-actions-separator {
+            display: flex;
+            align-items: center;
+            margin: 0 1.5em;
+          }
         }
+      }
+
+      .field-group-title {
+        width: 15rem;
+        font-size: 1.25em;
+        line-height: 1.2;
+        margin: .44rem 0 .5rem 0;
+      }
+
+      .field-group-body {
+        width: 60rem;
+      }
+
+      .field-group-description {
+        margin-top: .75rem;
+        margin-bottom: 0;
+      }
+
+      input + .field-group-description {
+        margin-top: .75rem;
+        margin-bottom: 0;
+      }
+
+      .field-group-description {
+        color: #555;
+      }
     }
-    .btn.queue-job {
-        .fa-icon {
-            margin-right: .5rem;
-        }
+
+    .form-container-title {
+      margin: 3rem auto 1.5rem 20rem;
+      color: #555;
     }
-    .form-actions {
-        margin: .2rem;
+
+    input[type=text].form-control {
+      border-radius: 0;
+      padding: .5rem 1rem;
+      height: 2.75rem;
+      color: #333;
+      transition: none;
+      line-height: 1.5;
+      font-size: 1rem;
+      &:focus {
+        box-shadow: none;
+        background: #f1f6ff;
+        color: #000aa3;
+        border-color: #A5B3E8;
+      }
     }
-    label {
-        font-size: 1.5rem;
-    }
+  }
 </style>

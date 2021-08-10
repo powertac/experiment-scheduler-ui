@@ -11,6 +11,12 @@
     <h3 class="title">
       {{game.name}}
     </h3>
+    <div class="actions" v-if="isValidBaseGame">
+      <router-link :to="'/games/create/' + gameId" class="btn btn-primary btn-block">
+        <fa-icon class="btn-icon" icon="clone" />
+        Create copy
+      </router-link>
+    </div>
     <div class="game-meta">
       <div class="game-meta-atom">
         <span class="label">Experiment</span>
@@ -56,14 +62,14 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop} from "vue-property-decorator";
-  import {VueAdapter} from "@/VueAdapter";
-  import {Job, JobState} from "@/domain/types/Job";
-  import * as Date from '@/util/Date';
-  import Duration from "@/components/time/Duration.vue";
-  import JobStateTag from "@/components/JobStateTag.vue";
+import {Component} from 'vue-property-decorator';
+import {VueAdapter} from '@/VueAdapter';
+import {Job, JobState} from '@/domain/types/Job';
+import * as Date from '@/util/Date';
+import Duration from '@/components/time/Duration.vue';
+import JobStateTag from '@/components/JobStateTag.vue';
 
-  @Component({components: {duration: Duration, 'state-tag': JobStateTag}})
+@Component({components: {duration: Duration, 'state-tag': JobStateTag}})
   export default class GameSidebar extends VueAdapter {
 
     get gameId(): string {
@@ -72,6 +78,17 @@ import {Component, Prop} from "vue-property-decorator";
 
     get game(): Job {
       return this.$store.getters['jobs/job'](this.gameId);
+    }
+
+    get isValidBaseGame(): boolean {
+      if (this.game.status.state != JobState.completed) return false
+      let hasStateLog = false
+      let hasBootstrapFile = false
+      for (let key in this.game.files) {
+        hasStateLog = hasStateLog || (key == 'state-log')
+        hasBootstrapFile = hasBootstrapFile || (key == 'bootstrap-file')
+      }
+      return hasStateLog && hasBootstrapFile
     }
 
     private formatDate(date: number|null): string {
@@ -86,6 +103,14 @@ import {Component, Prop} from "vue-property-decorator";
   #game-sidebar {
     padding: 0 0 4rem 0;
     background: #fafafa;
+
+    .actions {
+      padding: 1rem 2rem 0 2rem;
+
+      .btn-icon {
+        margin-right: .5rem;
+      }
+    }
 
     .sidebar-actions {
       display: flex;

@@ -1,6 +1,7 @@
 import jobs from '@/domain/JobStore';
 import brokers from '@/domain/BrokerStore';
 import experiments from '@/domain/Experiment/ExperimentStore';
+import baselines from '@/domain/Baseline/BaselineStore';
 import {RootStoreState} from '@/domain/types/RootStore';
 import {ActionContext} from 'vuex';
 import {ServerStatus} from '@/domain/types/Server';
@@ -12,7 +13,6 @@ import {ServerStatusListener} from '@/util/ServerStatusListener';
 let orchestratorServerStatusListener: ServerStatusListener|null = null;
 
 export default {
-
     state: {
         notifications: [],
         orchestratorStatus: {
@@ -20,25 +20,22 @@ export default {
             healthy: false,
         },
     },
-
     modules: {
         jobs,
         brokers,
         experiments,
+        baselines,
     },
-
     getters: {
         orchestratorStatus: (state: RootStoreState) => {
             return state.orchestratorStatus;
         },
     },
-
     mutations: {
         setOrchestratorStatus: (state: RootStoreState, orchestratorStatus: ServerStatus) => {
             Vue.set(state, 'orchestratorStatus', orchestratorStatus);
         },
     },
-
     actions: {
         activateOrchestratorStatusListener: (context: ActionContext<RootStoreState, RootStoreState>) => {
             if (null === orchestratorServerStatusListener) {
@@ -58,5 +55,4 @@ export default {
             console.log(notification);
         },
     },
-
 };

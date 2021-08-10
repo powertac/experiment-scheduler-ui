@@ -10,6 +10,10 @@
       Experiments
     </router-link>
     <!--
+    <router-link class="nav-option" to="/baselines">
+      <fa-icon icon="seedling" transform="shrink-2" class="nav-option-icon" />
+      Baselines
+    </router-link>
     <router-link class="nav-option" to="/analysis">
       <fa-icon icon="chart-line" transform="shrink-2" class="nav-option-icon" />
       Analysis

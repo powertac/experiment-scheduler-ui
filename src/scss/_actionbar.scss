@@ -1,0 +1,30 @@
+div.action-bar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: stretch;
+  background: var(--nav-option-bg);
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  height: 2.75rem;
+  flex-shrink: 0;
+
+  label.filter-toggle, a, button {
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    color: #3071F2;
+    margin: 0;
+    background: #fff;
+    .icon-left {
+      margin-right: .5em;
+    }
+    &:hover {
+      background: #040DBF;
+      background: #3071F2;
+      color: #fff;
+    }
+  }
+}

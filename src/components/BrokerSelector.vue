@@ -52,7 +52,9 @@
         @Prop({required: true})
         private callback: (brokers: Broker[]) => void;
 
+        @Prop({required: false, default: []})
         private brokers: Broker[];
+
         private brokerFormOpen: boolean;
 
         constructor() {

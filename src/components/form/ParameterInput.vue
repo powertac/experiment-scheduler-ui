@@ -4,7 +4,8 @@
         <autocomplete class="autocomplete col br-0 "
                       @item-selected="key = $event"
                       @item-changed="key = $event"
-                      :items="allowedParameters"></autocomplete>
+                      :items="allowedParameters"
+                      :initial-value="initialKey"></autocomplete>
         <div class="separator">=</div>
         <div class="col">
             <input type="text" class="form-control parameter-value" v-model="value">
@@ -30,13 +31,19 @@
         @Prop({required: false, default: () => true})
         private enableRemove: boolean;
 
+        @Prop({required: false, default: ''})
+        private initialKey: string;
+
+        @Prop({required: false, default: ''})
+        private initialValue: string;
+
         private key: string;
         private value: string;
 
         constructor() {
             super();
-            this.key = '';
-            this.value = '';
+            this.key = this.initialKey;
+            this.value = this.initialValue;
         }
 
         @Watch('key')

@@ -1,0 +1,20 @@
+* {
+  --nav-bg: #fff;
+  --nav-option-bg: #eee;
+  --view-bg: #fff;
+
+  --c-main: #3071F2;
+
+  --c1: #fff;
+  --c2: #eee;
+  --c3: #ccc;
+  --c4: #262626;
+  --c5: #0D0D0D;
+
+  &.dark {
+    --nav-bg: #222;
+    --view-bg: #333;
+  }
+
+  --shade1: #fafafa;
+}
