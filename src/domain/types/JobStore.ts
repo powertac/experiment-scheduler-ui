@@ -1,4 +1,4 @@
-import {GetterTree, Module} from 'vuex';
+import {GetterTree} from 'vuex';
 import {RootStoreState} from '@/domain/types/RootStore';
 import {Job, JobState} from '@/domain/types/Job.ts';
 
@@ -18,11 +18,6 @@ export interface JobStoreModuleGetters extends GetterTree<JobStoreState, RootSto
 
 export interface JobStoreState {
     jobs: {[key: string]: Job};
-}
-
-export interface JobStoreModule extends Module<JobStoreState, RootStoreState> {
-    state: JobStoreState;
-    getters: JobStoreModuleGetters;
 }
 
 export interface JobGetters {

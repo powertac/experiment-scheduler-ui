@@ -1,4 +1,4 @@
-import {Game} from '@/domain/Game/Game';
+import {GameTypes} from '@/domain/Game/Game';
 
 export interface BaselineSpec {
   name: string;

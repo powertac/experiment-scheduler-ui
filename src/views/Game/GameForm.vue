@@ -9,11 +9,11 @@
       <div class="form-container">
         <h2 class="form-container-title">New Game</h2>
         <div class="field-group">
-          <label for="game-name" class="field-group-title le">Base game<br><small class="size font-weight-bold">(optional)</small></label>
+          <label for="game-name" class="field-group-title le">Template<br><small class="size font-weight-bold">(optional)</small></label>
           <div class="field-group-body">
             <game-selector @game-selected="setBaseGame($event)"
                            :initial-value="baseGame"
-                           :filter="jobSelectorFilter()"/>
+                           :filter="(game) => game.isValidTemplate" />
             <p class="field-group-description">
               Choosing a base game will set the new game's bootstrap and seed file to the ones provided by the base game.
             </p>
@@ -96,188 +96,172 @@ import {BrokerSpec} from '@/domain/Broker/BrokerSpec';
 import {Job, JobState} from '@/domain/types/Job';
 import GameSelector from '@/components/game/GameSelector.vue';
 import {GameSpec} from '@/domain/Game/GameSpec';
+import {Game} from '@/domain/Game/GameTypes';
+import GameImpl from '@/domain/Game/GameImpl';
 
 @Component({components: {'broker-selector': BrokerSelector, 'parameter': ParameterInput, 'game-selector': GameSelector}})
-    export default class GameForm extends Vue {
+export default class GameForm extends Vue {
 
-        @Prop({required: false, default: 'New Game'})
-        private formTitle: string;
+    @Prop({required: false, default: 'New Game'})
+    private formTitle: string;
 
-        @Prop({required: false, default: 'Queue game'})
-        private formSubmitLabel: string;
+    @Prop({required: false, default: 'Queue game'})
+    private formSubmitLabel: string;
 
-        @Prop({required: false, default: true})
-        private withName: boolean;
+    @Prop({required: false, default: true})
+    private withName: boolean;
 
-        @Prop({required: false, default: false})
-        private isEmbedded: boolean;
+    @Prop({required: false, default: false})
+    private isEmbedded: boolean;
 
-        private name: string;
-        private serverParameters: TransientParameter[];
-        private brokers: Broker[];
-        private allowedParameters: string[];
-        private baseGame: Job | null;
+    private name: string;
+    private serverParameters: TransientParameter[];
+    private brokers: Broker[];
+    private allowedParameters: string[];
+    private baseGame: Game | null;
 
-        constructor() {
-            super();
-            this.name = "";
-            this.$set(this, 'serverParameters', []);
-            this.brokers = [];
-            this.allowedParameters = [];
-            this.baseGame = null;
+    constructor() {
+        super();
+        this.name = "";
+        this.$set(this, 'serverParameters', []);
+        this.brokers = [];
+        this.allowedParameters = [];
+        this.baseGame = null;
+    }
+
+    private created(): void {
+        this.serverParameters.push({
+            id: uuid(),
+            key: '',
+            value: '',
+        });
+        this.$store.dispatch('brokers/refresh');
+        RestClient.supportedParams()
+            .then((params) => this.allowedParameters = params.sort())
+            .catch((e) => console.log(e));
+        const gameId = this.$route.params.id
+        if (gameId != undefined) {
+          this.setBaseGame( this.$store.getters['games/find'](gameId))
         }
+    }
 
-        private created(): void {
+    private setBaseGame(game: Game | null): void {
+      if (null == game) return
+      this.name = game.name
+      this.brokers = game.brokers.map((b) => { return {id: '', name: b.name, type: {name: b.name, image: 'IMAGE'}} })
+      this.baseGame = game
+      this.$set(this, 'serverParameters', []);
+      for (const param of Object.keys(game.serverParameters)) {
+        this.serverParameters.push({
+          id: uuid(),
+          key: param,
+          value: game.serverParameters[param]})
+      }
+    }
+
+    private updateParam(oldParam: TransientParameter, newParam: TransientParameter): void {
+        newParam.id = oldParam.id;
+        this.$set(this.serverParameters, this.serverParameters.indexOf(oldParam), newParam);
+    }
+
+    private removeParam(param: TransientParameter): void {
+        this.$delete(this.serverParameters, this.serverParameters.indexOf(param));
+    }
+
+    private isParameterRemovable(param: TransientParameter): boolean {
+        return this.serverParameters.length > 1 && !(
+            this.serverParameters.indexOf(param) === (this.serverParameters.length - 1)
+            && param.key === ''
+            && param.value === '');
+    }
+
+    @Watch('serverParameters')
+    private onServerParametersChanged(params: TransientParameter[]): void {
+        if (params.filter((param) => param.key === '' && param.value === '').length < 1) {
             this.serverParameters.push({
                 id: uuid(),
                 key: '',
                 value: '',
             });
-            this.$store.dispatch('brokers/refresh');
-            RestClient.supportedParams()
-                .then((params) => this.allowedParameters = params.sort())
-                .catch((e) => console.log(e));
-            const jobId = this.$route.params.id
-            if (jobId != undefined) {
-              this.setBaseGame( this.$store.getters['jobs/job'](jobId))
-            }
         }
-
-        private setBaseGame(job: Job | null): void {
-          if (null == job) return
-          this.name = job.name
-          this.brokers = job.brokers
-          this.baseGame = job
-          this.$set(this, 'serverParameters', []);
-          for (const index in job.config['simulation-parameters']) {
-            const param = job.config['simulation-parameters'][index]
-            this.serverParameters.push({
-              id: uuid(),
-              key: param.parameter,
-              value: param.value})
-          }
-        }
-
-        private updateParam(oldParam: TransientParameter, newParam: TransientParameter): void {
-            newParam.id = oldParam.id;
-            this.$set(this.serverParameters, this.serverParameters.indexOf(oldParam), newParam);
-        }
-
-        private removeParam(param: TransientParameter): void {
-            this.$delete(this.serverParameters, this.serverParameters.indexOf(param));
-        }
-
-        private isParameterRemovable(param: TransientParameter): boolean {
-            return this.serverParameters.length > 1 && !(
-                this.serverParameters.indexOf(param) === (this.serverParameters.length - 1)
-                && param.key === ''
-                && param.value === '');
-        }
-
-        @Watch('serverParameters')
-        private onServerParametersChanged(params: TransientParameter[]): void {
-            if (params.filter((param) => param.key === '' && param.value === '').length < 1) {
-                this.serverParameters.push({
-                    id: uuid(),
-                    key: '',
-                    value: '',
-                });
-            }
-        }
-
-        get availableTypes(): BrokerType[] {
-            return this.$store.getters['brokers/types'];
-        }
-
-        get isValid(): boolean {
-            if (this.withName && this.name === '') {
-                return false;
-            }
-            if (this.brokers.length < 1) {
-                return false;
-            }
-            return this.validBaseGame;
-        }
-
-        get validBaseGame(): boolean {
-          if (null == this.baseGame) {
-            return true
-          }
-          return this.isValidBaseGame(this.baseGame)
-        }
-
-        private setBrokers(brokers: Broker[]): void {
-            this.brokers = brokers;
-        }
-
-        private removeBroker(broker: Broker): void {
-            this.$delete(this.brokers, this.brokers.indexOf(broker));
-        }
-
-        private submit(): void {
-          if (!this.isValid) {
-              return;
-          }
-          if (this.isEmbedded) {
-            this.$emit('form:submit', this.createGameSpec());
-          }
-          else {
-            RestClient.createGameInstance(this.createGameSpec())
-                .then(() => this.$router.push('/games'));
-          }
-        }
-
-        private createGameSpec(): GameSpec {
-          let brokerSpecs: BrokerSpec[] = this.brokers.map((broker) => {
-            return {
-              name: broker.name,
-              version: 'latest'
-            }
-          });
-          const parameters: Parameter[] = [];
-          this.serverParameters
-              .filter((param) => param.key !== '')
-              .filter((param) => param.value !== '')
-              .forEach((param) => parameters.push({key: param.key, value: param.value}));
-          const game: GameSpec = {
-            name: this.name,
-            brokers: brokerSpecs,
-            serverParameters: parameters
-          }
-          if (null != this.baseGame) {
-            game.bootstrapFile = this.baseGame.files['bootstrap-file']
-            game.seedFile = this.baseGame.files['state-log']
-          }
-          return game
-        }
-
-        private closeForm() {
-          if (this.isEmbedded){
-            this.$emit('form:close');
-          }
-          else {
-            this.$router.back()
-          }
-        }
-
-        private isValidBaseGame(job: Job): boolean {
-          let hasStateLog = false
-          let hasBootstrapFile = false
-          for (let key in job.files) {
-            hasStateLog = hasStateLog || (key == 'state-log')
-            hasBootstrapFile = hasBootstrapFile || (key == 'bootstrap-file')
-          }
-          return hasStateLog && hasBootstrapFile
-        }
-
-        private jobSelectorFilter(): (job: Job) => boolean {
-          return (job) => {
-            return job.status.state == JobState.completed
-                && this.isValidBaseGame(job)
-          }
-        }
-
     }
+
+    get availableTypes(): BrokerType[] {
+        return this.$store.getters['brokers/types'];
+    }
+
+    get isValid(): boolean {
+        if (this.withName && this.name === '') {
+            return false;
+        }
+        if (this.brokers.length < 1) {
+            return false;
+        }
+        return this.validBaseGame;
+    }
+
+    get validBaseGame(): boolean {
+      if (null == this.baseGame) {
+        return true
+      }
+      return this.baseGame.isValidTemplate;
+    }
+
+    private setBrokers(brokers: Broker[]): void {
+        this.brokers = brokers;
+    }
+
+    private removeBroker(broker: Broker): void {
+        this.$delete(this.brokers, this.brokers.indexOf(broker));
+    }
+
+    private submit(): void {
+      if (!this.isValid) {
+          return;
+      }
+      if (this.isEmbedded) {
+        this.$emit('form:submit', this.createGameSpec());
+      }
+      else {
+        RestClient.createGameInstance(this.createGameSpec())
+            .then(() => this.$router.push('/games'));
+      }
+    }
+
+    private createGameSpec(): GameSpec {
+      let brokerSpecs: BrokerSpec[] = this.brokers.map((broker) => {
+        return {
+          name: broker.name,
+          version: 'latest'
+        }
+      });
+      const parameters: Parameter[] = [];
+      this.serverParameters
+          .filter((param) => param.key !== '')
+          .filter((param) => param.value !== '')
+          .forEach((param) => parameters.push({key: param.key, value: param.value}));
+      const game: GameSpec = {
+        name: this.name,
+        brokers: brokerSpecs,
+        serverParameters: parameters
+      }
+      if (null != this.baseGame) {
+        game.bootstrapFile = this.baseGame.files['bootstrap-file']
+        game.seedFile = this.baseGame.files['state-log']
+      }
+      return game
+    }
+
+    private closeForm() {
+      if (this.isEmbedded){
+        this.$emit('form:close');
+      }
+      else {
+        this.$router.back()
+      }
+    }
+
+}
 </script>
 
 <style lang="scss" scoped>

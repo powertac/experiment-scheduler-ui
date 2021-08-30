@@ -5,17 +5,15 @@
 <script lang="ts">
     import {Component, Prop, Vue} from "vue-property-decorator";
     import moment from "moment";
+    import {Game} from '@/domain/Game/GameTypes';
 
     const updateInterval: number = 1000;
 
     @Component
-    export default class Duration extends Vue {
+    export default class GameDuration extends Vue {
 
         @Prop({required: true})
-        private start: number;
-
-        @Prop({required: false, default: () => null})
-        private end: number|null;
+        private game: Game;
 
         private durationRepresentation: string;
         private stopUpdate: boolean;
@@ -27,8 +25,7 @@
         }
 
         get shouldUpdate(): boolean {
-          // FIXME : restart updateDurationRepresentation once props change!
-          return (this.end === null) && !this.stopUpdate;
+            return (this.game.end >= 0) && !this.stopUpdate;
         }
 
         private created(): void {
@@ -40,11 +37,11 @@
         }
 
         private getReferenceEnd(): moment.Moment {
-            return this.end !== null ? moment(this.end) : moment(moment.now());
+            return this.game.end >= 0 ? moment(this.game.end) : moment(moment.now());
         }
 
         private getDuration(): moment.Duration {
-            return moment.duration(this.getReferenceEnd().diff(moment(this.start)));
+            return moment.duration(this.getReferenceEnd().diff(moment(this.game.start)));
         }
 
         private updateDurationRepresentation(): void {
@@ -52,7 +49,7 @@
             if (!this.shouldUpdate) {
                 return;
             }
-            setTimeout(() =>  this.updateDurationRepresentation(), updateInterval);
+            setTimeout(() => this.updateDurationRepresentation(), updateInterval);
         }
 
         private createDurationRepresentation(): string {

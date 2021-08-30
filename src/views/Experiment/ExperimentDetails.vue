@@ -129,7 +129,7 @@ import {JobState} from "@/domain/types/Job";
   import {Component, Vue} from "vue-property-decorator";
   import {Experiment} from "@/domain/Experiment/Experiment";
   import {JobState} from "@/domain/types/Job";
-  import {Game} from "@/domain/Game/Game";
+  import {GameTypes} from "@/domain/Game/Game";
 
   @Component()
   export default class ExperimentDetails extends Vue {

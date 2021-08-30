@@ -47,16 +47,6 @@ import ApplicationBar from "@/components/application/ApplicationBar.vue";
           }
         }
 
-        input[type=text] {
-          flex-grow: 1;
-          border: 0;
-          border-radius: 0;
-          padding: .5rem 1rem;
-          background: #fff;
-          font-family: "Inconsolata", monospace;
-          height: 2.75rem;
-        }
-
         label.filter-toggle, a {
           cursor: pointer;
           display: flex;

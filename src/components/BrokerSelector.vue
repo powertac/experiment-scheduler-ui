@@ -52,6 +52,7 @@
         @Prop({required: true})
         private callback: (brokers: Broker[]) => void;
 
+        // TODO : rewrite using omit to avoid overwriting component property (see warning)
         @Prop({required: false, default: []})
         private brokers: Broker[];
 

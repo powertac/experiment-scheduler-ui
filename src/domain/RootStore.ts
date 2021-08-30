@@ -9,6 +9,7 @@ import Vue from 'vue';
 import {RestClient} from '@/api/RestClient';
 import {Notification} from '@/domain/types/Notification';
 import {ServerStatusListener} from '@/util/ServerStatusListener';
+import { gameStore } from '@/domain/Game/GameStore';
 
 let orchestratorServerStatusListener: ServerStatusListener|null = null;
 
@@ -25,6 +26,7 @@ export default {
         brokers,
         experiments,
         baselines,
+        games: gameStore,
     },
     getters: {
         orchestratorStatus: (state: RootStoreState) => {

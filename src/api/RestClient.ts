@@ -7,6 +7,7 @@ import {ExperimentSpec} from '@/domain/Experiment/ExperimentSpec';
 import {Experiment} from '@/domain/Experiment/Experiment';
 import {GameSpec} from '@/domain/Game/GameSpec';
 import {Baseline} from '@/domain/Baseline/Baseline';
+import {Game} from '@/domain/Game/GameTypes';
 
 interface RestResponse {
     success: boolean;
@@ -14,6 +15,7 @@ interface RestResponse {
     payload: any;
     experiments: Experiment[];
     baselines: Baseline[];
+    games: Game[];
 }
 
 interface JobResponse {
@@ -98,6 +100,30 @@ export class RestClient {
             axios.get(config.services.orchestrator.uri + '/baselines')
               .then((response: AxiosResponse<RestResponse>) => resolve(response.data.baselines))
               .catch((response: AxiosError) => reject(response));
+        });
+    }
+
+    public static games(): Promise<Game[]> {
+        return new Promise<Game[]>((resolve: (games: Game[]) => void, reject: (error: AxiosError) => void) => {
+            axios.get(config.services.orchestrator.uri + '/games/')
+              .then((response: AxiosResponse<Game[]>) => resolve(response.data))
+              .catch((error: AxiosError) => reject(error));
+        });
+    }
+
+    public static game(id: string): Promise<Game> {
+        return new Promise<Game>((resolve: (games: Game) => void, reject: (error: AxiosError) => void) => {
+            axios.get(config.services.orchestrator.uri + '/games/' + id)
+              .then((response: AxiosResponse<Game>) => resolve(response.data))
+              .catch((error: AxiosError) => reject(error));
+        });
+    }
+
+    public static gameFiles(gameId: string): Promise<{[key: string]: string}> {
+        return new Promise<{ [key: string]: string }>((resolve: (files: { [key: string]: string }) => void, reject: (error: AxiosError) => void) => {
+            axios.get(config.services.orchestrator.uri + '/games/' + gameId + '/files')
+              .then((response: AxiosResponse<{ [key: string]: string }>) => resolve(response.data))
+              .catch((error: AxiosError) => reject(error));
         });
     }
 

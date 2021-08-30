@@ -78,7 +78,7 @@
       jobs.sort((a: Job, b: Job) => b.status.start - a.status.start);
       return jobs;
     }
-    
+
     private mounted() {
       this.$store.dispatch('jobs/listen').then(() => {
         // TODO : add loading indication

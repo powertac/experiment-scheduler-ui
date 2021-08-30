@@ -16,17 +16,22 @@ import ApplicationNavigation from '@/components/application/ApplicationNavigatio
 import ApplicationView from "@/components/application/ApplicationView.vue";
 
 @Component({components: {'server-status': ServerStatusIndicator, 'loader': Loader, 'app-nav': ApplicationNavigation, 'app-view': ApplicationView}})
-    export default class App extends VueAdapter {
+export default class App extends VueAdapter {
 
-        get orchestratorStatus(): ServerStatus {
-            return this.$store.getters.orchestratorStatus;
-        }
+  get orchestratorStatus(): ServerStatus {
+    return this.$store.getters.orchestratorStatus;
+  }
 
-        private created(): void {
-            this.$store.dispatch('activateOrchestratorStatusListener');
-        }
+  private created(): void {
+    this.$store.dispatch('activateOrchestratorStatusListener');
+    this.$store.dispatch('games/loadAll')
+      .then(() => this.isLoading = false)
+      .catch(() => console.log("unable to load games"));
+    this.$store.dispatch('games/subscribe')
+      .catch(() => console.log('failed to subscribe to games channel'));
+  }
 
-    }
+}
 </script>
 
 <style lang="scss">

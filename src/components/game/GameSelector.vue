@@ -11,23 +11,24 @@
 import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
 import Autocomplete from '@/components/form/Autocomplete.vue';
 import {Job} from '@/domain/types/Job';
+import {Game} from '@/domain/Game/GameTypes';
 
 @Component({components: {Autocomplete}})
 export default class GameSelector extends Vue {
 
   @Prop({required: false, default: () => {}})
-  private filter: (job: Job) => boolean
+  private filter: (game: Game) => boolean
 
   @Prop({required: false, default: null})
-  private initialValue: Job | null
+  private initialValue: Game | null
 
   private mounted() {
-    this.$store.dispatch('jobs/listen').then(() => {
+    this.$store.dispatch('games/loadAll').then(() => {
       // TODO : add loading indication
     }).catch(() => {
       // TODO : show fatal error message
     });
-    this.$store.dispatch('jobs/refresh').then(() => {
+    this.$store.dispatch('games/subscribe').then(() => {
       // TODO : add loading indication
     }).catch(() => {
       // TODO : show fatal error message
@@ -36,32 +37,32 @@ export default class GameSelector extends Vue {
 
   get initialName(): string {
     if (null != this.initialValue) {
-      return this.jobLabel(this.initialValue)
+      return this.gameLabel(this.initialValue)
     }
     return ''
   }
 
   get gameList(): string[] {
-    let jobs = this.$store.getters['jobs/jobs'];
+    let jobs = this.$store.getters['games/findAll'];
     return jobs
-        .sort((a: Job, b: Job) => b.status.start - a.status.start)
+        .sort((a: Game, b: Game) => b.start - a.start)
         .filter(this.filter)
-        .map(this.jobLabel);
+        .map(this.gameLabel);
   }
 
   @Emit('game-selected')
-  private selectGame(label: string): Job | null {
-    const jobs = this.$store.getters['jobs/jobs']
-    for (const index in jobs) {
-      if (this.jobLabel(jobs[index]) == label) {
-        return jobs[index]
+  private selectGame(label: string): Game | null {
+    const games = this.$store.getters['games/findAll']
+    for (const index in games) {
+      if (this.gameLabel(games[index]) == label) {
+        return games[index]
       }
     }
     return null
   }
 
-  private jobLabel(job: Job): string {
-    return `@${job.id} - ${job.name}`;
+  private gameLabel(game: Game): string {
+    return `${game.id} - ${game.name}`;
   }
 
 }

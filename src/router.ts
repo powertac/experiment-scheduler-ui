@@ -1,15 +1,15 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import GameTable from '@/views/Game/GameTable.vue';
-import GameSidebar from '@/views/Game/GameSidebar.vue';
 import GameFormAlternative from '@/views/Game/GameForm.vue';
 import ExperimentFormAlternative from '@/views/Experiment/ExperimentFormAlternative.vue';
 import ExperimentsTable from '@/views/Experiment/ExperimentsTable.vue';
 import ExperimentSidebar from '@/views/Experiment/ExperimentSidebar.vue';
-import GameDetails from '@/views/Game/GameDetails.vue';
 import ExperimentDetails from '@/views/Experiment/ExperimentDetails.vue';
 import BaselineTable from '@/views/Baseline/BaselineTable.vue';
 import BaselineForm from '@/views/Baseline/BaselineForm.vue';
+import NewGameTable from '@/views/Game/NewGameTable.vue';
+import NewGameSidebar from '@/views/Game/NewGameSidebar.vue';
+import NewGameDetails from '@/views/Game/NewGameDetails.vue';
 
 Vue.use(Router);
 
@@ -21,7 +21,7 @@ export default new Router({
     },
     {
       path: '/games',
-      component: GameTable,
+      component: NewGameTable,
     },
     {
       path: '/games/create',
@@ -30,21 +30,21 @@ export default new Router({
     },
     {
       path: '/games/create/:id',
-      name: 'create-game',
+      name: 'create-game-template',
       component: GameFormAlternative,
     },
     {
       path: '/games/:id',
       name: 'game',
       components: {
-        default: GameTable,
-        sidebar: GameSidebar,
+        default: NewGameTable,
+        sidebar: NewGameSidebar,
       },
     },
     {
       path: '/games/:id/details',
       name: 'game-details',
-      component: GameDetails,
+      component: NewGameDetails,
     },
     {
       path: '/experiments',

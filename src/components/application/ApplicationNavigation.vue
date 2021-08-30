@@ -5,11 +5,11 @@
       <fa-icon icon="dice-d6" transform="shrink-2" class="nav-option-icon" />
       Games
     </router-link>
+    <!--
     <router-link class="nav-option" to="/experiments">
       <fa-icon icon="flask" transform="shrink-2" class="nav-option-icon" />
       Experiments
     </router-link>
-    <!--
     <router-link class="nav-option" to="/baselines">
       <fa-icon icon="seedling" transform="shrink-2" class="nav-option-icon" />
       Baselines

@@ -18,13 +18,30 @@ div.action-bar {
     color: #3071F2;
     margin: 0;
     background: #fff;
+    text-decoration: none;
     .icon-left {
-      margin-right: .5em;
+      margin-right: .66em;
     }
     &:hover {
-      background: #040DBF;
-      background: #3071F2;
+      // background: #040DBF;
+      // background: #3071F2;
       color: #fff;
     }
   }
+
+  input[type=text] {
+    flex-grow: 1;
+    border: 0;
+    border-radius: 0;
+    padding: .5rem 1rem;
+    background: #fff;
+    font-family: "Inconsolata", monospace;
+    height: 2.75rem;
+    outline: none;
+    border-bottom: 1px solid #dbdfe2;
+    &::placeholder {
+      color: #999;
+    }
+  }
+
 }
