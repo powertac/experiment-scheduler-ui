@@ -14,6 +14,14 @@ export class DataTable {
       : true;
   }
 
+  public static defaultSortGames(a: Game, b: Game): number {
+    if (a.status !== b.status) {              // sort by status first
+      return a.statusIndex - b.statusIndex;
+    } else {                                  // ... then by creation date
+      return a.createdAt === b.createdAt ? 0 : b.createdAt - a.createdAt;
+    }
+  }
+
   private static matchSingleGame(term: string, game: Game): boolean {
     return game.name.toLowerCase().includes(term)
     || game.id.toLowerCase().includes(term)

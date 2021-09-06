@@ -1,6 +1,15 @@
 import {BrokerSpec} from '@/domain/Broker/BrokerSpec';
 import {ActionContext, GetterTree} from 'vuex';
 import {RootStoreState} from '@/domain/types/RootStore';
+import {Parameter} from '@/domain/types/Parameter';
+
+// TODO : rename to GameSpec after removing old one
+export interface NewGameSpec {
+    name: string;
+    baseGameId?: string;
+    serverParameters: {[key: string]: string};
+    brokers: BrokerSpec[];
+}
 
 export interface Game {
     id: string;
@@ -13,6 +22,7 @@ export interface Game {
     files: {[key: string]: string};
     createdAt: number;
     status: string;
+    statusIndex: number;
     start: number;
     end: number;
     isValidTemplate: boolean;

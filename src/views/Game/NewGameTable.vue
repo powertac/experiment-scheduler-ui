@@ -5,7 +5,7 @@
         <router-link to="/games/create">
           <fa-icon icon="plus" class="icon-left" /> New game
         </router-link>
-        <input type="text" placeholder="enter filter ..." v-model="search" />
+        <input type="text" placeholder="search ..." v-model="search" />
       </div>
       <div class="loader" v-if="isLoading">
         LOADING
@@ -14,7 +14,7 @@
         <thead>
         <tr>
           <th class="col-center">Status</th>
-          <th>ID</th>
+          <th class="col-center">ID</th>
           <th>Name</th>
           <th>Brokers</th>
           <th>Created at</th>
@@ -26,8 +26,10 @@
             :key="game.id"
             :class="{'selected': game.id === selectedGameId}"
             @click="showDetails(game.id)">
-          <td class="col-center monospaced text-uppercase">{{game.status}}</td>
-          <td class="monospaced">{{game.id}}</td>
+          <td class="col-center status-icon">
+            <span class="status-icon"><fa-icon :icon="statusIcon(game.status)" /></span>
+          </td>
+          <td class="col-center monospaced">{{game.id.substr(0, 8)}}</td>
           <td>{{game.name}}</td>
           <td>{{game.brokers.map((b) => b.name).join(", ")}}</td>
           <td class="monospaced">{{formatDate(game.createdAt)}}</td>
@@ -45,6 +47,7 @@ import {VueAdapter} from '@/VueAdapter';
 import {Game} from '@/domain/Game/GameTypes';
 import {formatDate} from '@/util/Date';
 import {DataTable} from '@/util/DataTable';
+import {JobState} from '@/domain/types/Job';
 
 @Component
 export default class NewGameTable extends VueAdapter {
@@ -66,7 +69,7 @@ export default class NewGameTable extends VueAdapter {
     const games = this.$store.getters['games/findAll'];
     return games.slice()
         .filter((g: Game) => DataTable.matchGames(this.search, g))
-        .sort((a: Game, b: Game) => a.createdAt == b.createdAt ? 0 : b.createdAt - a.createdAt);
+        .sort(DataTable.defaultSortGames);
   }
 
   private mounted() {
@@ -83,15 +86,36 @@ export default class NewGameTable extends VueAdapter {
     return formatDate(date);
   }
 
+  private statusIcon(status: string): any {
+    switch (status) {
+      case 'queued':
+        return ['far', 'clock'];
+      case 'running':
+        return ['fas', 'play'];
+      case 'completed':
+        return ['fas', 'check'];
+      case 'failed':
+        return ['fas', 'bolt'];
+    }
+    return [];
+  }
+
 }
 </script>
 
 <style lang="scss">
 #game-table {
   // TODO : move to global SCSS
+  // TODO : show again when scrolling bar is active
   border-right: 0 !important;
 }
 tr.selected {
   background: #EBF6FC !important;
+}
+td.status-icon {
+  width: 4rem;
+}
+span.status-icon {
+  font-size: .66em;
 }
 </style>

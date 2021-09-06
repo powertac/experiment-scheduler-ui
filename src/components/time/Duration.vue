@@ -1,69 +1,44 @@
 <template>
-    <span class="duration" v-html="durationRepresentation"></span>
+    <span class="duration" v-html="durationString"></span>
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from "vue-property-decorator";
-    import moment from "moment";
+import {Component, Prop, Vue} from 'vue-property-decorator';
+import moment from 'moment';
 
-    const updateInterval: number = 1000;
+@Component
+export default class Duration extends Vue {
 
-    @Component
-    export default class Duration extends Vue {
+  @Prop({required: true})
+  private start: number;
 
-        @Prop({required: true})
-        private start: number;
+  @Prop({required: true})
+  private end: number;
 
-        @Prop({required: false, default: () => null})
-        private end: number|null;
+  @Prop({required: false, default: () => false })
+  private shouldTick: boolean;
 
-        private durationRepresentation: string;
-        private stopUpdate: boolean;
+  get now(): number {
+    return this.$store.getters.time;
+  }
 
-        constructor() {
-            super();
-            this.durationRepresentation = '00:00:00';
-            this.stopUpdate = false;
-        }
+  get realEnd(): number {
+    return this.end >= 0 || !this.shouldTick ? this.end : this.now;
+  }
 
-        get shouldUpdate(): boolean {
-          // FIXME : restart updateDurationRepresentation once props change!
-          return (this.end === null) && !this.stopUpdate;
-        }
+  get duration(): moment.Duration {
+    return moment.duration(moment(this.realEnd).diff(moment(this.start)));
+  }
 
-        private created(): void {
-            this.updateDurationRepresentation();
-        }
-
-        private beforeDestroy(): void {
-            this.stopUpdate = true;
-        }
-
-        private getReferenceEnd(): moment.Moment {
-            return this.end !== null ? moment(this.end) : moment(moment.now());
-        }
-
-        private getDuration(): moment.Duration {
-            return moment.duration(this.getReferenceEnd().diff(moment(this.start)));
-        }
-
-        private updateDurationRepresentation(): void {
-            this.durationRepresentation = this.createDurationRepresentation();
-            if (!this.shouldUpdate) {
-                return;
-            }
-            setTimeout(() =>  this.updateDurationRepresentation(), updateInterval);
-        }
-
-        private createDurationRepresentation(): string {
-            const duration: moment.Duration = this.getDuration();
-            if (!duration.isValid()) {
-                return '&mdash;';
-            }
-            return duration.hours().toString().padStart(2, "0") + ":"
-                + duration.minutes().toString().padStart(2, "0") + ":"
-                + duration.seconds().toString().padStart(2, "0");
-        }
-
+  get durationString(): string {
+    if (this.realEnd < 0 || !this.duration.isValid()) {
+      return '&mdash;';
+    } else {
+      return this.duration.hours().toString().padStart(2, "0") + ":"
+          + this.duration.minutes().toString().padStart(2, "0") + ":"
+          + this.duration.seconds().toString().padStart(2, "0");
     }
+  }
+
+}
 </script>

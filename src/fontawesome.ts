@@ -174,6 +174,21 @@ library.add(faArrowLeft);
 import { faSeedling } from '@fortawesome/free-solid-svg-icons';
 library.add(faSeedling);
 
+import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
+library.add(faCodeBranch);
+
+import { faChess } from '@fortawesome/free-solid-svg-icons';
+library.add(faChess);
+
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+library.add(faChevronRight);
+
+import { faSearchPlus } from '@fortawesome/free-solid-svg-icons';
+library.add(faSearchPlus);
+
+import { faInfo } from '@fortawesome/free-solid-svg-icons';
+library.add(faInfo);
+
 // REGULAR
 import { faCaretSquareDown } from '@fortawesome/free-regular-svg-icons';
 library.add(faCaretSquareDown);

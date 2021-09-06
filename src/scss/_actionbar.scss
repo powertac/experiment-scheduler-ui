@@ -38,6 +38,7 @@ div.action-bar {
     font-family: "Inconsolata", monospace;
     height: 2.75rem;
     outline: none;
+    border-left: 1px solid #eee;
     border-bottom: 1px solid #dbdfe2;
     &::placeholder {
       color: #999;

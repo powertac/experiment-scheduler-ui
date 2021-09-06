@@ -10,6 +10,7 @@ import {RestClient} from '@/api/RestClient';
 import {Notification} from '@/domain/types/Notification';
 import {ServerStatusListener} from '@/util/ServerStatusListener';
 import { gameStore } from '@/domain/Game/GameStore';
+import moment from 'moment';
 
 let orchestratorServerStatusListener: ServerStatusListener|null = null;
 
@@ -20,6 +21,7 @@ export default {
             running: false,
             healthy: false,
         },
+        time: moment.now(),
     },
     modules: {
         jobs,
@@ -32,10 +34,16 @@ export default {
         orchestratorStatus: (state: RootStoreState) => {
             return state.orchestratorStatus;
         },
+        time: (state: RootStoreState) => {
+            return state.time;
+        },
     },
     mutations: {
         setOrchestratorStatus: (state: RootStoreState, orchestratorStatus: ServerStatus) => {
             Vue.set(state, 'orchestratorStatus', orchestratorStatus);
+        },
+        setTime: (state: RootStoreState, time: number) => {
+            Vue.set(state, 'time', time);
         },
     },
     actions: {
@@ -55,6 +63,9 @@ export default {
         },
         notify: (context: ActionContext<RootStoreState, RootStoreState>, notification: Notification) => {
             console.log(notification);
+        },
+        startClock: (context: ActionContext<RootStoreState, RootStoreState>) => {
+            setInterval(() => context.commit('setTime', moment.now()), 1000);
         },
     },
 };

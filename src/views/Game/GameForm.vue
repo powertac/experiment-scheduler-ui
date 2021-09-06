@@ -96,7 +96,7 @@ import {BrokerSpec} from '@/domain/Broker/BrokerSpec';
 import {Job, JobState} from '@/domain/types/Job';
 import GameSelector from '@/components/game/GameSelector.vue';
 import {GameSpec} from '@/domain/Game/GameSpec';
-import {Game} from '@/domain/Game/GameTypes';
+import {Game, NewGameSpec} from '@/domain/Game/GameTypes';
 import GameImpl from '@/domain/Game/GameImpl';
 
 @Component({components: {'broker-selector': BrokerSelector, 'parameter': ParameterInput, 'game-selector': GameSelector}})
@@ -223,33 +223,24 @@ export default class GameForm extends Vue {
         this.$emit('form:submit', this.createGameSpec());
       }
       else {
-        RestClient.createGameInstance(this.createGameSpec())
+        RestClient.createGame(this.createGameSpec())
             .then(() => this.$router.push('/games'));
       }
     }
 
-    private createGameSpec(): GameSpec {
-      let brokerSpecs: BrokerSpec[] = this.brokers.map((broker) => {
-        return {
-          name: broker.name,
-          version: 'latest'
-        }
-      });
-      const parameters: Parameter[] = [];
+    private createGameSpec(): NewGameSpec {
+      let brokerSpecs: BrokerSpec[] = this.brokers.map((broker) => {return {name: broker.name, version: 'latest'}});
+      const parameters: {[key: string]: string} = {};
       this.serverParameters
           .filter((param) => param.key !== '')
           .filter((param) => param.value !== '')
-          .forEach((param) => parameters.push({key: param.key, value: param.value}));
-      const game: GameSpec = {
+          .forEach((param) => parameters[param.key] = param.value);
+      return {
         name: this.name,
+        baseGameId: this.baseGame != null ? this.baseGame.id : undefined,
         brokers: brokerSpecs,
         serverParameters: parameters
-      }
-      if (null != this.baseGame) {
-        game.bootstrapFile = this.baseGame.files['bootstrap-file']
-        game.seedFile = this.baseGame.files['state-log']
-      }
-      return game
+      };
     }
 
     private closeForm() {

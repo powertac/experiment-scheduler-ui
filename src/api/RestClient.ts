@@ -7,7 +7,7 @@ import {ExperimentSpec} from '@/domain/Experiment/ExperimentSpec';
 import {Experiment} from '@/domain/Experiment/Experiment';
 import {GameSpec} from '@/domain/Game/GameSpec';
 import {Baseline} from '@/domain/Baseline/Baseline';
-import {Game} from '@/domain/Game/GameTypes';
+import {Game, NewGameSpec} from '@/domain/Game/GameTypes';
 
 interface RestResponse {
     success: boolean;
@@ -123,6 +123,14 @@ export class RestClient {
         return new Promise<{ [key: string]: string }>((resolve: (files: { [key: string]: string }) => void, reject: (error: AxiosError) => void) => {
             axios.get(config.services.orchestrator.uri + '/games/' + gameId + '/files')
               .then((response: AxiosResponse<{ [key: string]: string }>) => resolve(response.data))
+              .catch((error: AxiosError) => reject(error));
+        });
+    }
+
+    public static createGame(spec: NewGameSpec): Promise<void> {
+        return new Promise<void>((resolve: (response: void) => void, reject: (error: AxiosError) => void) => {
+            axios.post(config.services.orchestrator.uri + '/games/', spec)
+              .then((response: AxiosResponse<void>) => resolve())
               .catch((error: AxiosError) => reject(error));
         });
     }

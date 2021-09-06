@@ -23,7 +23,7 @@
         <div class="col-sm-2 game-state-container">
           <div class="game-state">
             <div class="label">Status</div>
-            <div class="value">{{game.status}}</div>
+            <div class="value" :class="gameStatusClass">{{game.status}}</div>
           </div>
         </div>
         <div class="col-sm-2">
@@ -37,7 +37,7 @@
           </div>
           <div class="game-status">
             <div class="label">Duration</div>
-            <div class="value"><duration :start="game.start" :end="game.end" /></div>
+            <div class="value"><duration :start="game.start" :end="game.end" :should-tick="game.status === 'running'" /></div>
           </div>
         </div>
       </div>
@@ -128,42 +128,41 @@
 </template>
 
 <script lang="ts">
-  import {Component, Vue} from "vue-property-decorator";
-  import {Job, JobState} from "@/domain/types/Job";
-  import Duration from "@/components/time/Duration.vue";
-  import {JobStateHelper} from '@/domain/Job';
-  import * as Date from '@/util/Date';
-  import {Game} from '@/domain/Game/GameTypes';
-  import {RestClient} from '@/api/RestClient';
+import {Component, Vue} from 'vue-property-decorator';
+import Duration from '@/components/time/Duration.vue';
+import * as Date from '@/util/Date';
+import {Game} from '@/domain/Game/GameTypes';
 
-  @Component({components: {duration: Duration}})
-  export default class NewGameDetails extends Vue {
+@Component({components: {duration: Duration}})
+export default class NewGameDetails extends Vue {
 
-    private mounted(): void {
-      this.$store.dispatch('games/load', this.gameId);
-    }
-
-    get gameId(): string {
-      return this.$route.params.id;
-    }
-
-    get game(): Game {
-      return this.$store.getters['games/find'](this.gameId);
-    }
-
-    get start(): string {
-      return this.formatDate(this.game.start);
-    }
-
-    get end(): string {
-      return this.formatDate(this.game.end);
-    }
-
-    private formatDate(date: number|null): string {
-      return Date.formatDate(date);
-    }
-
+  private mounted(): void {
+    this.$store.dispatch('games/load', this.gameId);
   }
+
+  get gameId(): string {
+    return this.$route.params.id;
+  }
+
+  get game(): Game {
+    return this.$store.getters['games/find'](this.gameId);
+  }
+
+  get start(): string {
+    return Date.formatDate(this.game.start);
+  }
+
+  get end(): string {
+    return Date.formatDate(this.game.end);
+  }
+
+  get gameStatusClass(): {[key: string]: boolean} {
+    let styleClass: any = {};
+    styleClass[this.game.status] = true;
+    return styleClass;
+  }
+
+}
 </script>
 
 <style lang="scss" scoped>

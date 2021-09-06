@@ -9,6 +9,7 @@ import {GameStore} from '@/domain/Game/GameTypes';
 export interface RootStoreState {
     notifications: Notification[];
     orchestratorStatus: ServerStatus;
+    time: number;
 }
 
 export interface RootStore extends Store<RootStoreState> {

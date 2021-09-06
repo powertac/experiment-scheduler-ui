@@ -43,6 +43,16 @@ export default class GameImpl implements Game {
     return 'failed';
   }
 
+  get statusIndex(): number {
+    switch (this.status) {
+      case 'running': { return 0; }
+      case 'queued': { return 1; }
+      case 'completed': { return 2; }
+      case 'failed': { return 3; }
+      default: { return -1; }
+    }
+  }
+
   get activeRun(): GameRun|undefined {
     return this.runs
       .filter((r) => r.phase !== 'DONE' && r.phase !== 'NONE')
@@ -66,13 +76,13 @@ export default class GameImpl implements Game {
   }
 
   get end(): number {
+    let end: number|null = null;
     if (this.completedRun !== undefined) {
-      return this.completedRun.end;
+      end = this.completedRun.end;
     } else if (this.activeRun !== undefined) {
-      return this.activeRun.end;
-    } else {
-      return -1;
+      end = this.activeRun.end;
     }
+    return end !== null ? end : -1;
   }
 
   get isValidTemplate(): boolean {
