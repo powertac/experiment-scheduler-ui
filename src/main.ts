@@ -18,6 +18,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // font-awesome
 import {FontAwesomeIcon, FontAwesomeLayers} from '@fortawesome/vue-fontawesome';
 import './fontawesome';
+import {StompClient} from '@/api/StompClient';
+
+StompClient.initialize();
 
 // add font awesome component
 Vue.component('fa-icon', FontAwesomeIcon);

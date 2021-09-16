@@ -23,7 +23,10 @@
         <div class="col-sm-2 game-state-container">
           <div class="game-state">
             <div class="label">Status</div>
-            <div class="value" :class="gameStatusClass">{{game.status}}</div>
+            <div class="value" :class="gameStatusClass">
+              <fa-icon class="state-icon" :icon="statusIcon" />
+              <span>{{game.status}}</span>
+            </div>
           </div>
         </div>
         <div class="col-sm-2">
@@ -162,6 +165,22 @@ export default class NewGameDetails extends Vue {
     return styleClass;
   }
 
+  get statusIcon(): any {
+    switch (this.game.status) {
+      case 'queued':
+        return ['far', 'clock'];
+      case 'running':
+        return ['fas', 'play'];
+      case 'completed':
+        return ['fas', 'check'];
+      case 'failed':
+        return ['fas', 'bolt'];
+      case 'cancelled':
+        return ['fas', 'times'];
+    }
+    return [];
+  }
+
 }
 </script>
 
@@ -228,10 +247,15 @@ export default class NewGameDetails extends Vue {
       }
 
       .game-state div.value {
+        display: flex;
+        align-items: center;
         padding: 1rem 3rem;
         border: 1px solid #e9e9e9;
         border-radius: .2em;
         width: 100%;
+        .state-icon {
+          margin-right: .5rem;
+        }
         &.queued {
           background: #fff;
           color: #333;
@@ -250,7 +274,7 @@ export default class NewGameDetails extends Vue {
           color: #00804A;
           border-color: #97cbaa;
         }
-        &.failed {
+        &.failed, &.cancelled {
           background: #FFD9E1;
           color: #B81F40;
           border-color: #DB768C;

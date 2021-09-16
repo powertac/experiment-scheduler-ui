@@ -32,7 +32,8 @@ const gameStore: GameStore = {
         data.seed,
         data.serverParameters,
         data.createdAt,
-        data.files);
+        data.files,
+        data.cancelled);
       Vue.set(state.games, game.id, game);
     },
   },
@@ -48,10 +49,7 @@ const gameStore: GameStore = {
         .catch((error: AxiosError) => console.error(error));
     },
     subscribe: (context: ActionContext<GameStoreState, RootStoreState>) => {
-      StompClient.subscribe('/games', (game: Game) => {
-        console.log('received game with id=' + game.id);
-        context.commit('add', game);
-      });
+      StompClient.subscribe('/games', (game: Game) => context.commit('add', game));
     },
   },
 };

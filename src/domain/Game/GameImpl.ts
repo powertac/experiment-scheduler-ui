@@ -10,10 +10,11 @@ export default class GameImpl implements Game {
   public serverParameters: {[key: string]: string};
   public createdAt: number;
   public files: { [role: string]: string };
+  public cancelled: boolean;
   private _brokers: BrokerSpec[];
 
   constructor(id: string, bootstrap: File, brokers: BrokerSpec[], name: string, runs: GameRun[], seed: File,
-              serverParameters: {[key: string]: string}, createdAt: number, files: { [role: string]: string }) {
+              serverParameters: {[key: string]: string}, createdAt: number, files: { [role: string]: string }, cancelled: boolean) {
     this.id = id;
     this.bootstrap = bootstrap;
     this.brokers = brokers;
@@ -23,6 +24,7 @@ export default class GameImpl implements Game {
     this.serverParameters = serverParameters;
     this.createdAt = createdAt;
     this.files = files;
+    this.cancelled = cancelled;
   }
 
   set brokers(brokers) {
@@ -34,10 +36,11 @@ export default class GameImpl implements Game {
   }
 
   get status(): string {
-    if (this.completedRun !== undefined) {
+    if (this.cancelled) {
+      return 'cancelled';
+    } else if (this.completedRun !== undefined) {
       return 'completed';
-    }
-    if (this.runs.length < 5) {
+    } else if (this.runs.length < 5) {
       return this.activeRun !== undefined ? 'running' : 'queued';
     }
     return 'failed';
@@ -49,6 +52,7 @@ export default class GameImpl implements Game {
       case 'queued': { return 1; }
       case 'completed': { return 2; }
       case 'failed': { return 3; }
+      case 'cancelled': { return 4; }
       default: { return -1; }
     }
   }

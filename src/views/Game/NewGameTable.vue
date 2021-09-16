@@ -96,6 +96,8 @@ export default class NewGameTable extends VueAdapter {
         return ['fas', 'check'];
       case 'failed':
         return ['fas', 'bolt'];
+      case 'cancelled':
+        return ['fas', 'times'];
     }
     return [];
   }

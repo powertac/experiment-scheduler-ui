@@ -11,22 +11,26 @@ client.heartbeatOutgoing = 10000;
 client.debug = () => { return; };
 
 let isConnected: boolean = false;
+const subscriptions: Map<string, Subscriber<any>> = new Map<string, Subscriber<any>>();
 
-export enum RequestAction {
-    create = 'CREATE',
-    update = 'UPDATE',
-    remove = 'REMOVE',
-}
-
-export interface RequestMessage {
-    action: RequestAction;
-    payload: any;
+export interface Subscriber<T> {
+    channel: string;
+    callback: (entity: T) => void;
 }
 
 export class StompClient {
 
-    public static get isConnected(): boolean {
-        return isConnected;
+    public static initialize(): void {
+        this.connect()
+          .then(() => {
+              for (const subscription of subscriptions.values()) {
+                client.subscribe(
+                  subscription.channel,
+                  (message) => subscription.callback((JSON.parse(message.body))));
+              }
+          })
+          .catch(() => console.error('unable to establish websocket connection'))
+        ;
     }
 
     public static connect(): Promise<void> {
@@ -34,8 +38,8 @@ export class StompClient {
             try {
                 if (!isConnected) {
                     client.connect({}, () => {
-                        isConnected = true;
                         resolve();
+                        isConnected = true;
                     });
                     return;
                 }
@@ -47,20 +51,10 @@ export class StompClient {
     }
 
     public static subscribe<T>(destination: string, callback: (payload: T) => void): void {
-        this.connect().then(() =>
-            client.subscribe(destination, (message: IMessage) => {
-                callback(JSON.parse(message.body));
-            }));
-    }
-
-    public static send<T>(destination: string, payload: T, headers: {[key: string]: any} = {}): void {
-        this.connect().then(() => {
-            client.send(
-                destination,
-                headers,
-                JSON.stringify(payload));
-            })
-            .catch((error) => console.log(error));
+        subscriptions.set(destination, {channel: destination, callback});
+        if (isConnected) {
+            client.subscribe(destination, (message: IMessage) => callback(JSON.parse(message.body)));
+        }
     }
 
 }

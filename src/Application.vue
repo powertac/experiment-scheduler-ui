@@ -26,10 +26,11 @@ export default class App extends VueAdapter {
     this.$store.dispatch('activateOrchestratorStatusListener');
     this.$store.dispatch('startClock');
     this.$store.dispatch('games/loadAll')
-      .then(() => this.isLoading = false)
-      .catch(() => console.log("unable to load games"));
+      .catch(() => console.error("unable to load games"));
     this.$store.dispatch('games/subscribe')
-      .catch(() => console.log('failed to subscribe to games channel'));
+        .catch(() => console.error('failed to subscribe to games channel'));
+    this.$store.dispatch('brokers/subscribe')
+        .catch(() => console.error('failed to subscribe to brokers channel'));
   }
 
 }

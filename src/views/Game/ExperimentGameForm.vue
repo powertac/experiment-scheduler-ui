@@ -172,12 +172,14 @@
               });
             }
             else {
+              /*
               StompClient.send<JobRequest>('/requests/jobs/create', {
                 name: this.name,
                 brokers: brokerSpecs,
                 serverParameters: parameters,
               });
               this.$router.push('/games');
+               */
             }
         }
 

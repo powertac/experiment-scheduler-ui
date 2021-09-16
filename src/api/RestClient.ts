@@ -8,6 +8,7 @@ import {Experiment} from '@/domain/Experiment/Experiment';
 import {GameSpec} from '@/domain/Game/GameSpec';
 import {Baseline} from '@/domain/Baseline/Baseline';
 import {Game, NewGameSpec} from '@/domain/Game/GameTypes';
+import {Broker} from '@/domain/Broker/Broker';
 
 interface RestResponse {
     success: boolean;
@@ -29,7 +30,7 @@ export class RestClient {
         return new Promise<void>((resolve: (response: void) => void, reject: (error: AxiosError) => void) => {
             axios.post(config.services.orchestrator.uri + '/games/', game)
                 .then((response: AxiosResponse<void>) => resolve())
-                .catch((error: AxiosError) => reject(error))
+                .catch((error: AxiosError) => reject(error));
         });
     }
 
@@ -119,18 +120,34 @@ export class RestClient {
         });
     }
 
-    public static gameFiles(gameId: string): Promise<{[key: string]: string}> {
-        return new Promise<{ [key: string]: string }>((resolve: (files: { [key: string]: string }) => void, reject: (error: AxiosError) => void) => {
-            axios.get(config.services.orchestrator.uri + '/games/' + gameId + '/files')
-              .then((response: AxiosResponse<{ [key: string]: string }>) => resolve(response.data))
-              .catch((error: AxiosError) => reject(error));
-        });
-    }
-
     public static createGame(spec: NewGameSpec): Promise<void> {
         return new Promise<void>((resolve: (response: void) => void, reject: (error: AxiosError) => void) => {
             axios.post(config.services.orchestrator.uri + '/games/', spec)
               .then((response: AxiosResponse<void>) => resolve())
+              .catch((error: AxiosError) => reject(error));
+        });
+    }
+
+    public static brokers(): Promise<Broker[]> {
+        return new Promise<Broker[]>((resolve: (response: Broker[]) => void, reject: (error: AxiosError) => void) => {
+            axios.get(config.services.orchestrator.uri + '/brokers/')
+              .then((response: AxiosResponse<Broker[]>) => resolve(response.data))
+              .catch((error: AxiosError) => reject(error));
+        });
+    }
+
+    public static createBroker(broker: Broker): Promise<void> {
+        return new Promise<void>((resolve: (response: void) => void, reject: (error: AxiosError) => void) => {
+            axios.post(config.services.orchestrator.uri + '/brokers/', broker)
+              .then((response: AxiosResponse<void>) => resolve())
+              .catch((error: AxiosError) => reject(error));
+        });
+    }
+
+    public static images(): Promise<Image[]> {
+        return new Promise<Image[]>((resolve: (response: Image[]) => void, reject: (error: AxiosError) => void) => {
+            axios.get(config.services.orchestrator.uri + '/docker/images/')
+              .then((response: AxiosResponse<Image[]>) => resolve(response.data))
               .catch((error: AxiosError) => reject(error));
         });
     }

@@ -9,7 +9,7 @@
       <div class="form-container">
         <h2 class="form-container-title">New Game</h2>
         <div class="field-group">
-          <label for="game-name" class="field-group-title le">Template<br><small class="size font-weight-bold">(optional)</small></label>
+          <label for="game-name" class="field-group-title le">Base game<br><small class="size font-weight-bold">(optional)</small></label>
           <div class="field-group-body">
             <game-selector @game-selected="setBaseGame($event)"
                            :initial-value="baseGame"
@@ -18,6 +18,16 @@
               Choosing a base game will set the new game's bootstrap and seed file to the ones provided by the base game.
             </p>
             <p v-if="!validBaseGame" class="text-danger font-italic font-weight-bold">This game has either no bootstrap file or no state log.</p>
+            <table v-if="baseGame !== null && validBaseGame" class="mt-2">
+              <tr>
+                <th class="pr-2 text-uppercase font-weight-normal" style="color: #555; font-size: .875em">Bootstrap</th>
+                <td><code>{{baseGame.files['BOOTSTRAP']}}</code></td>
+              </tr>
+              <tr>
+                <th class="text-uppercase font-weight-normal" style="color: #555; font-size: .875em">Seed</th>
+                <td><code>{{baseGame.files['STATE_LOG']}}</code></td>
+              </tr>
+            </table>
           </div>
         </div>
         <div class="field-group">
@@ -38,7 +48,7 @@
           </div>
         </div>
         <div class="field-group">
-          <h5 class="field-group-title">Server Parameters</h5>
+          <h5 class="field-group-title">Server parameters</h5>
           <div class="field-group-body">
             <parameter v-for="param in serverParameters" :key="param.id"
                        :initial-key="param.key"

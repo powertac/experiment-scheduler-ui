@@ -20,6 +20,7 @@ export interface Game {
     seed: File;
     runs: GameRun[];
     files: {[key: string]: string};
+    cancelled: boolean;
     createdAt: number;
     status: string;
     statusIndex: number;

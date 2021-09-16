@@ -6,16 +6,23 @@
         <fa-icon icon="dice-d6" transform="shrink-2" class="nav-option-icon" />
       </div>
       Games
-    </router-link><!--
+    </router-link>
+    <router-link class="nav-option" to="/brokers">
+      <div class="nav-icon">
+        <fa-icon icon="chess" transform="shrink-2" class="nav-option-icon" />
+      </div>
+      Brokers
+    </router-link>
+    <!--
+    <router-link class="nav-option" to="/baselines">
+      <div class="nav-icon"><fa-icon icon="seedling" transform="shrink-2" class="nav-option-icon" /></div>
+      Baselines
+    </router-link>
     <router-link class="nav-option" to="/experiments">
       <div class="nav-icon">
         <fa-icon icon="flask" transform="shrink-2" class="nav-option-icon" />
       </div>
       Experiments
-    </router-link>
-    <router-link class="nav-option" to="/baselines">
-      <div class="nav-icon"><fa-icon icon="seedling" transform="shrink-2" class="nav-option-icon" /></div>
-      Baselines
     </router-link>
     <router-link class="nav-option" to="/treatments">
       <div class="nav-icon">
