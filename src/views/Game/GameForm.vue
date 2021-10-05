@@ -96,18 +96,15 @@
 
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-import {Parameter, TransientParameter} from '@/domain/types/Parameter';
+import {TransientParameter} from '@/domain/types/Parameter';
 import uuid from 'uuid/v4';
 import {RestClient} from '@/api/RestClient';
 import ParameterInput from '@/components/form/ParameterInput.vue';
 import {Broker, BrokerType} from '@/domain/types/Broker';
 import BrokerSelector from '@/components/BrokerSelector.vue';
 import {BrokerSpec} from '@/domain/Broker/BrokerSpec';
-import {Job, JobState} from '@/domain/types/Job';
 import GameSelector from '@/components/game/GameSelector.vue';
-import {GameSpec} from '@/domain/Game/GameSpec';
-import {Game, NewGameSpec} from '@/domain/Game/GameTypes';
-import GameImpl from '@/domain/Game/GameImpl';
+import {Game, GameSpec} from '@/domain/Game/GameTypes';
 
 @Component({components: {'broker-selector': BrokerSelector, 'parameter': ParameterInput, 'game-selector': GameSelector}})
 export default class GameForm extends Vue {
@@ -238,7 +235,7 @@ export default class GameForm extends Vue {
       }
     }
 
-    private createGameSpec(): NewGameSpec {
+    private createGameSpec(): GameSpec {
       let brokerSpecs: BrokerSpec[] = this.brokers.map((broker) => {return {name: broker.name, version: 'latest'}});
       const parameters: {[key: string]: string} = {};
       this.serverParameters

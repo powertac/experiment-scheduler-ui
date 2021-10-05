@@ -13,42 +13,6 @@
       </div>
       Brokers
     </router-link>
-    <!--
-    <router-link class="nav-option" to="/baselines">
-      <div class="nav-icon"><fa-icon icon="seedling" transform="shrink-2" class="nav-option-icon" /></div>
-      Baselines
-    </router-link>
-    <router-link class="nav-option" to="/experiments">
-      <div class="nav-icon">
-        <fa-icon icon="flask" transform="shrink-2" class="nav-option-icon" />
-      </div>
-      Experiments
-    </router-link>
-    <router-link class="nav-option" to="/treatments">
-      <div class="nav-icon">
-        <fa-icon icon="code-branch" transform="shrink-2" class="nav-option-icon" />
-      </div>
-      Treatments
-    </router-link>
-    <router-link class="nav-option" to="/brokers">
-      <div class="nav-icon">
-        <fa-icon icon="chess" transform="shrink-2" class="nav-option-icon" />
-      </div>
-      Brokers
-    </router-link>
-    <router-link class="nav-option" to="/analysis">
-      <fa-icon icon="chart-line" transform="shrink-2" class="nav-option-icon" />
-      Analysis
-    </router-link>
-    <router-link class="nav-option mt-5" to="/system">
-      <fa-icon icon="server" transform="shrink-2" class="nav-option-icon" />
-      System
-    </router-link>
-    <router-link class="nav-option" to="/help">
-      <fa-icon icon="info-circle" transform="shrink-2" class="nav-option-icon" />
-      Help
-    </router-link>
-    -->
     <div class="footer">
       <div class="connection-status" :class="{'dead': !serverStatus.running}">
         <fa-icon class="fa-icon" icon="circle"></fa-icon>
@@ -61,7 +25,7 @@
 
 <script lang="ts">
   import {Component, Prop, Vue} from 'vue-property-decorator';
-  import {ServerStatus} from "@/domain/types/Server";
+  import {ServerStatus} from "@/domain/Service/ServerStatus";
 
   @Component
   export default class ApplicationNavigation extends Vue {

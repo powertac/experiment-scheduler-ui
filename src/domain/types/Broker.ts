@@ -1,6 +1,8 @@
+// TODO : change all references to new broker model
+
 export interface BrokerType {
-    name: string
-    image: string
+    name: string;
+    image: string;
 }
 
 export interface BrokerConfig {

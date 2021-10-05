@@ -1,215 +1,122 @@
 <template>
-  <div id="game-table" class="view">
-    <div class="experiments-actions">
-      <router-link to="/games/create">
-        <fa-icon icon="plus" />
-      </router-link>
-      <!--
-      <label for="table-filter" class="filter-toggle" @click="isLoading = !isLoading">
-        <fa-icon icon="spinner" pulse v-if="isLoading" />
-        <fa-icon icon="filter" v-else />
-      </label>
-      <input type="text" id="table-filter" placeholder="enter filter ..." />
-      <label for="table-filter" class="filter-toggle">
-        <fa-icon icon="sort-amount-up" />
-      </label>
-      -->
-    </div>
-    <table class="table data-table table-hover table-bordered">
-      <thead>
+  <div class="view">
+    <div id="game-table" class="view">
+      <div class="action-bar">
+        <router-link to="/games/create">
+          <fa-icon icon="plus" class="icon-left" /> New game
+        </router-link>
+        <input type="text" placeholder="search ..." v-model="search" />
+      </div>
+      <div class="loader" v-if="isLoading">
+        LOADING
+      </div>
+      <table class="table datatable table-hover table-bordered" v-else>
+        <thead>
         <tr>
           <th class="col-center">Status</th>
-          <th>ID</th>
+          <th class="col-center">ID</th>
           <th>Name</th>
-          <th>Experiment</th>
-          <th>Agents</th>
-          <th>Start</th>
-          <th>End</th>
-          <th>Duration</th>
+          <th>Brokers</th>
+          <th>Created at</th>
+          <th>Completed at</th>
         </tr>
-      </thead>
-      <tbody>
-      <tr v-for="job in jobs" :key="job.id" @click="showDetails(job.id)">
-        <td class="col-center">
-          <state-tag class="state-icon" :state="job.status.state" />
-        </td>
-        <td class="monospaced">{{job.id}}</td>
-        <td>{{job.name}}</td>
-        <td>
-          <span v-if="job.experiment !== null">{{job.experiment.name}}</span>
-          <span v-else>&mdash;</span>
-        </td>
-        <td>
-          {{job.brokers.sort((a, b) => (a.name >= b.name)).map((b) => b.name).join(", ")}}
-        </td>
-        <td class="monospaced" v-html="formatDate(job.status.start)"></td>
-        <td class="monospaced" v-html="formatDate(job.status.end)"></td>
-        <td class="monospaced"><duration :start="job.status.start" :end="job.status.end" /></td>
-      </tr>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+        <tr v-for="game in games"
+            :key="game.id"
+            :class="{'selected': game.id === selectedGameId}"
+            @click="showDetails(game.id)">
+          <td class="col-center status-icon">
+            <span class="status-icon"><fa-icon :icon="statusIcon(game.status)" /></span>
+          </td>
+          <td class="col-center monospaced">{{game.id.substr(0, 8)}}</td>
+          <td>{{game.name}}</td>
+          <td>{{game.brokers.map((b) => b.name).join(", ")}}</td>
+          <td class="monospaced">{{formatDate(game.createdAt)}}</td>
+          <td class="monospaced" v-html="formatDate(game.end)"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-  import {Component} from "vue-property-decorator";
-  import {VueAdapter} from "@/VueAdapter";
-  import {Job, JobState} from "@/domain/types/Job";
-  import * as Date from '@/util/Date';
-  import Duration from "@/components/time/Duration.vue";
-  import JobStateTag from "@/components/JobStateTag.vue";
+import {Component} from 'vue-property-decorator';
+import {VueAdapter} from '@/VueAdapter';
+import {Game} from '@/domain/Game/GameTypes';
+import {formatDate} from '@/util/Date';
+import {DataTable} from '@/util/DataTable';
 
-  @Component({components: {duration: Duration, 'state-tag': JobStateTag}})
-  export default class GameDashboard extends VueAdapter {
+@Component
+export default class GameTable extends VueAdapter {
 
-    private isLoading: boolean;
+  private isLoading: boolean;
+  private search: string;
 
-    constructor() {
-      super();
-      this.isLoading = false;
-    }
-
-    get activeJobId(): string {
-      return this.$route.params.id;
-    }
-
-    get jobs(): Job[] {
-      let jobs = this.$store.getters['jobs/jobs'];
-      jobs.sort((a: Job, b: Job) => b.status.start - a.status.start);
-      return jobs;
-    }
-
-    private mounted() {
-      this.$store.dispatch('jobs/listen').then(() => {
-        // TODO : add loading indication
-      }).catch(() => {
-        // TODO : show fatal error message
-      });
-      this.$store.dispatch('jobs/refresh').then(() => {
-        // TODO : add loading indication
-      }).catch(() => {
-        // TODO : show fatal error message
-      });
-    }
-
-    private showDetails(id: string): void {
-      this.$router.push({name: 'game', params: {id}});
-    }
-
-    private formatDate(date: number|null): string {
-      return Date.formatDate(date);
-    }
-
+  constructor() {
+    super();
+    this.isLoading = true;
+    this.search = '';
   }
+
+  get selectedGameId(): string {
+    return this.$route.params.id;
+  }
+
+  get games(): Game[] {
+    const games = this.$store.getters['games/findAll'];
+    return games.slice()
+        .filter((g: Game) => DataTable.matchGames(this.search, g))
+        .sort(DataTable.defaultSortGames);
+  }
+
+  private mounted() {
+    this.$store.dispatch('games/loadAll')
+        .then(() => this.isLoading = false)
+        .catch(() => console.log("unable to load games"));
+  }
+
+  private showDetails(id: string): void {
+    this.$router.push({name: 'game', params: {id}});
+  }
+
+  private formatDate(date: number): string {
+    return formatDate(date);
+  }
+
+  private statusIcon(status: string): any {
+    switch (status) {
+      case 'queued':
+        return ['far', 'clock'];
+      case 'running':
+        return ['fas', 'play'];
+      case 'completed':
+        return ['fas', 'check'];
+      case 'failed':
+        return ['fas', 'bolt'];
+      case 'cancelled':
+        return ['fas', 'times'];
+    }
+    return [];
+  }
+
+}
 </script>
 
 <style lang="scss">
-
-div.experiments-actions {
-  position: sticky;
-  top: 0;
-  display: flex;
-  align-items: stretch;
-  background: var(--nav-option-bg);
-  background: #fff;
-  border-bottom: 1px solid #ddd;
-  height: 2.75rem;
-
-  a {
-    height: calc(2.75rem - 1px);
-  }
-
-  input[type=text] {
-    flex-grow: 1;
-    border: 0;
-    border-radius: 0;
-    padding: .5rem 1rem;
-    background: #fff;
-    font-family: "Inconsolata", monospace;
-    height: 2.75rem;
-  }
-
-  label.filter-toggle, a {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    padding: 0 1rem;
-    color: #3071F2;
-    margin: 0;
-    background: #fff;
-    &:hover {
-      background: #040DBF;
-      background: #3071F2;
-      color: #fff;
-    }
-  }
+#game-table {
+  // TODO : move to global SCSS
+  // TODO : show again when scrolling bar is active
+  border-right: 0 !important;
 }
-
-  table.data-table {
-    border: 0;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-bottom: 0;
-
-    &.table-hover tbody tr:hover {
-      background: #fafbfc;
-    }
-
-    td, th {
-      border-width: 0;
-      border-bottom-width: 1px;
-      border-right-width: 1px;
-
-      &:last-child {
-        border-right-width: 0;
-      }
-
-      &.col-center {
-        text-align: center;
-      }
-    }
-
-    & > thead {
-      position: sticky;
-      top: 2.75rem;
-
-      & > tr > th {
-        font-weight: normal;
-        border-bottom-width: 1px;
-        color: #727f8e;
-        background-color: #eee;
-        border-color: #dbdfe2;
-        text-transform: uppercase;
-        font-size: .75em;
-        padding-top: .6rem;
-        padding-bottom: .5rem;
-      }
-    }
-
-    tr > td {
-      padding-top: .5rem;
-      padding-bottom: .5rem;
-    }
-
-    & > tbody > tr {
-      cursor: pointer;
-
-      &.active > td {
-        color: #fff;
-        background: #3071F2;
-      }
-
-      & > td {
-        &.monospaced {
-          font-family: "Inconsolata", monospace;
-        }
-        span.state-icon {
-          font-size: .66em;
-        }
-      }
-    }
-  }
-
-
-
+tr.selected {
+  background: #EBF6FC !important;
+}
+td.status-icon {
+  width: 4rem;
+}
+span.status-icon {
+  font-size: .66em;
+}
 </style>

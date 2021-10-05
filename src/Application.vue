@@ -9,7 +9,7 @@
 <script lang="ts">
 import {Component} from 'vue-property-decorator';
 import {VueAdapter} from '@/VueAdapter';
-import {ServerStatus} from '@/domain/types/Server';
+import {ServerStatus} from '@/domain/Service/ServerStatus';
 import ServerStatusIndicator from '@/components/ServerStatusIndicator.vue';
 import Loader from '@/components/Loader.vue';
 import ApplicationNavigation from '@/components/application/ApplicationNavigation.vue';

@@ -5,7 +5,7 @@ import jQuery from 'jquery';
 import {VueAdapter} from '@/VueAdapter';
 import App from './Application.vue';
 import router from './router';
-import store from './domain/RootStore';
+import store from './domain/Store/RootStoreImpl';
 import config from '@/config';
 
 // moment js (date and time formatting)

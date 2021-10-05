@@ -1,15 +1,12 @@
-import jobs from '@/domain/JobStore';
-import {brokerStore} from '@/domain/BrokerStore';
-import experiments from '@/domain/Experiment/ExperimentStore';
-import baselines from '@/domain/Baseline/BaselineStore';
-import {RootStoreState} from '@/domain/types/RootStore';
+import {brokerStoreImpl} from '@/domain/Broker/BrokerStoreImpl';
+import {RootStoreState} from '@/domain/Store/RootStore';
 import {ActionContext} from 'vuex';
-import {ServerStatus} from '@/domain/types/Server';
+import {ServerStatus} from '@/domain/Service/ServerStatus';
 import Vue from 'vue';
 import {RestClient} from '@/api/RestClient';
 import {Notification} from '@/domain/types/Notification';
 import {ServerStatusListener} from '@/util/ServerStatusListener';
-import {gameStore} from '@/domain/Game/GameStore';
+import {gameStoreImpl} from '@/domain/Game/GameStoreImpl';
 import moment from 'moment';
 
 let orchestratorServerStatusListener: ServerStatusListener | null = null;
@@ -24,11 +21,8 @@ export default {
     time: moment.now(),
   },
   modules: {
-    jobs,
-    brokers: brokerStore,
-    experiments,
-    baselines,
-    games: gameStore,
+    brokers: brokerStoreImpl,
+    games: gameStoreImpl,
   },
   getters: {
     orchestratorStatus: (state: RootStoreState) => {

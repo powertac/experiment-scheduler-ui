@@ -21,9 +21,8 @@
 
 <script lang="ts">
     import {Component, Prop} from 'vue-property-decorator';
-    import {VueAdapter} from '../VueAdapter';
-    import {JobState, JobStatus} from '@/domain/types/Job';
-    import {ServerStatus} from '@/domain/types/Server';
+    import {VueAdapter} from '@/VueAdapter';
+    import {ServerStatus} from '@/domain/Service/ServerStatus';
 
     @Component
     export default class ServerStatusIndicator extends VueAdapter {

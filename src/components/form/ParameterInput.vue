@@ -17,12 +17,11 @@
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Prop, Vue, Watch} from 'vue-property-decorator';
-    import Autocomplete from '@/components/form/Autocomplete.vue';
-    import {RestClient} from '@/api/RestClient';
-    import {Parameter} from '@/domain/types/Parameter';
+import {Component, Emit, Prop, Vue, Watch} from 'vue-property-decorator';
+import Autocomplete from '@/components/form/Autocomplete.vue';
+import {Parameter} from '@/domain/types/Parameter';
 
-    @Component({components: {autocomplete: Autocomplete}})
+@Component({components: {autocomplete: Autocomplete}})
     export default class ParameterInput extends Vue {
 
         @Prop({required: false, default: () => []})

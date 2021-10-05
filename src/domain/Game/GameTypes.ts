@@ -1,10 +1,6 @@
 import {BrokerSpec} from '@/domain/Broker/BrokerSpec';
-import {ActionContext, GetterTree} from 'vuex';
-import {RootStoreState} from '@/domain/types/RootStore';
-import {Parameter} from '@/domain/types/Parameter';
 
-// TODO : rename to GameSpec after removing old one
-export interface NewGameSpec {
+export interface GameSpec {
     name: string;
     baseGameId?: string;
     serverParameters: {[key: string]: string};
@@ -36,31 +32,4 @@ export interface GameRun {
     end: number;
     phase: string;
     failed: boolean;
-}
-
-export interface GameStoreState {
-    games: {[key: string]: Game};
-}
-
-export interface GameStoreGetters extends GetterTree<GameStoreState, RootStoreState> {
-    find: (state: GameStoreState, getters: GameStoreGetters) => (id: string) => Game|null;
-    findAll: (state: GameStoreState, getters: GameStoreGetters) => Game[];
-}
-
-export interface GameStoreActions {
-    load: (context: ActionContext<GameStoreState, RootStoreState>, id: string) => void;
-    loadAll: (context: ActionContext<GameStoreState, RootStoreState>) => void;
-    subscribe: (context: ActionContext<GameStoreState, RootStoreState>) => void;
-}
-
-export interface GameStoreMutations {
-    add: (state: GameStoreState, game: Game) => void;
-}
-
-export interface GameStore {
-    namespaced: boolean;
-    state: GameStoreState;
-    getters: GameStoreGetters;
-    mutations: GameStoreMutations;
-    actions: GameStoreActions;
 }

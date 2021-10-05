@@ -1,3 +1,5 @@
+// TODO : change references to string map and remove this concept
+
 export interface Parameter {
     key: string;
     value: string;

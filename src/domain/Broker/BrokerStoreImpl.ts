@@ -2,14 +2,13 @@ import Vue from 'vue';
 import {ActionContext} from 'vuex';
 import {StompClient} from '@/api/StompClient';
 import {RestClient} from '@/api/RestClient';
-import {JobStoreState} from '@/domain/types/JobStore';
-import {RootStoreState} from '@/domain/types/RootStore';
+import {RootStoreState} from '@/domain/Store/RootStore';
 import {NotificationLevel} from '@/domain/types/Notification';
 import {BrokerType} from '@/domain/types/Broker';
-import {BrokerStore, BrokerStoreState} from '@/domain/types/BrokerStore';
+import {BrokerStore, BrokerStoreState} from '@/domain/Broker/BrokerStore';
 import {Broker, BrokerImpl} from '@/domain/Broker/Broker';
 
-const brokerStore: BrokerStore = {
+const brokerStoreImpl: BrokerStore = {
   namespaced: true,
   state: {
     types: {},
@@ -53,7 +52,7 @@ const brokerStore: BrokerStore = {
     },
   },
   actions: {
-    refresh: (context: ActionContext<JobStoreState, RootStoreState>) => {
+    refresh: (context: ActionContext<BrokerStoreState, RootStoreState>) => {
       RestClient.brokerTypes()
         .then((types: BrokerType[]) => {
           types.filter((type) => type.name !== 'samplebroker')
@@ -65,7 +64,7 @@ const brokerStore: BrokerStore = {
           {root: true},
         ));
     },
-    subscribe: (context: ActionContext<JobStoreState, RootStoreState>) => {
+    subscribe: (context: ActionContext<BrokerStoreState, RootStoreState>) => {
       StompClient.subscribe('/brokers', (broker: Broker) => context.commit('add', broker));
     },
     loadAll: (context: ActionContext<BrokerStoreState, RootStoreState>) => {
@@ -76,4 +75,4 @@ const brokerStore: BrokerStore = {
   },
 };
 
-export {brokerStore};
+export {brokerStoreImpl};

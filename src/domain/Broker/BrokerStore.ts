@@ -1,8 +1,7 @@
 import {BrokerType} from '@/domain/types/Broker';
 import {ActionContext, GetterTree} from 'vuex';
-import {RootStoreState} from '@/domain/types/RootStore';
+import {RootStoreState} from '@/domain/Store/RootStore';
 import {Broker} from '@/domain/Broker/Broker';
-import {JobStoreState} from '@/domain/types/JobStore';
 
 export interface BrokerStoreState {
   types: { [key: string]: BrokerType };
@@ -23,8 +22,8 @@ export interface BrokerStoreMutations {
 }
 
 export interface BrokerStoreActions {
-  refresh: (context: ActionContext<JobStoreState, RootStoreState>) => void;
-  subscribe: (context: ActionContext<JobStoreState, RootStoreState>) => void;
+  refresh: (context: ActionContext<BrokerStoreState, RootStoreState>) => void;
+  subscribe: (context: ActionContext<BrokerStoreState, RootStoreState>) => void;
   loadAll: (context: ActionContext<BrokerStoreState, RootStoreState>) => void;
 }
 

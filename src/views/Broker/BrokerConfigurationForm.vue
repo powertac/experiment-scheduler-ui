@@ -48,7 +48,6 @@
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import {BrokerType} from '@/domain/types/Broker';
-    import {BrokerMutationAction, Treatment, TreatmentType} from '@/domain/Treatment/Treatment';
     import {BrokerSpec} from '@/domain/Broker/BrokerSpec';
 
     @Component

@@ -10,7 +10,6 @@
 <script lang="ts">
 import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
 import Autocomplete from '@/components/form/Autocomplete.vue';
-import {Job} from '@/domain/types/Job';
 import {Game} from '@/domain/Game/GameTypes';
 
 @Component({components: {Autocomplete}})
