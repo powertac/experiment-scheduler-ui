@@ -50,7 +50,10 @@ export default class BrokersTable extends Vue {
       if (!brokersByName.has(b.name)) {
         brokersByName.set(b.name, []);
       }
-      brokersByName.get(b.name).push(b);
+      const brokerGroup = brokersByName.get(b.name);
+      if (undefined !== brokerGroup) {
+        brokerGroup.push(b);
+      }
     });
     return brokersByName;
   }

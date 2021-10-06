@@ -1,4 +1,4 @@
-import {ActionContext, GetterTree} from 'vuex';
+import {ActionContext, ActionTree, GetterTree, Module, MutationTree} from 'vuex';
 import {RootStoreState} from '@/domain/Store/RootStore';
 import {Game} from '@/domain/Game/GameTypes';
 
@@ -11,17 +11,17 @@ export interface GameStoreGetters extends GetterTree<GameStoreState, RootStoreSt
   findAll: (state: GameStoreState, getters: GameStoreGetters) => Game[];
 }
 
-export interface GameStoreActions {
+export interface GameStoreActions extends ActionTree<GameStoreState, RootStoreState> {
   load: (context: ActionContext<GameStoreState, RootStoreState>, id: string) => void;
   loadAll: (context: ActionContext<GameStoreState, RootStoreState>) => void;
   subscribe: (context: ActionContext<GameStoreState, RootStoreState>) => void;
 }
 
-export interface GameStoreMutations {
+export interface GameStoreMutations extends MutationTree<GameStoreState> {
   add: (state: GameStoreState, game: Game) => void;
 }
 
-export interface GameStore {
+export interface GameStore extends Module<GameStoreState, RootStoreState> {
   namespaced: boolean;
   state: GameStoreState;
   getters: GameStoreGetters;

@@ -4,20 +4,6 @@
             <fa-icon icon="times" @click="closeForm" />
         </div>
         <div class="form-body">
-            <div class="mutation-selection" v-if="provideTreatment">
-                <div class="pill pill-selectable"
-                     :class="{'selected': mutationType === 'add'}"
-                     @click="selectMutation('add')">
-                    <fa-icon icon="plus" class="fa-icon" />
-                    Add broker
-                </div>
-                <div class="pill pill-selectable"
-                     :class="{'selected': mutationType === 'remove'}"
-                     @click="selectMutation('remove')">
-                    <fa-icon icon="minus" class="fa-icon" />
-                    Remove broker
-                </div>
-            </div>
             <div class="type-selection">
                 <div class="broker-pill broker-pill-selectable"
                      v-for="type in types"
@@ -28,13 +14,6 @@
                     </span>
                 </div>
             </div>
-            <!--<div v-if="name !== ''">
-                <div class="version-selection">
-                    <div class="pill pill-selectable selected">
-                        latest
-                    </div>
-                </div>
-            </div>-->
         </div>
         <div class="form-action-main"
              :class="{'disabled': !isValid}"
@@ -55,9 +34,6 @@
 
         @Prop({required: true})
         private types: BrokerType[];
-
-        @Prop({required: false, default: false})
-        private provideTreatment: boolean;
 
         @Prop({required: false, default: () => []})
         private disabledTypes: BrokerType[];
@@ -83,29 +59,13 @@
             };
         }
 
-        get treatment(): Treatment {
-            return {
-                type: TreatmentType.BrokerSet,
-                mutation: {
-                    action: this.mutationType,
-                    broker: this.broker
-                }
-            }
-        }
-
         get isValid(): boolean {
-            return (this.provideTreatment && this.isValidTreatment)
-                || this.isValidBroker;
+            return this.isValidBroker;
         }
 
         get isValidBroker(): boolean {
             return this.name !== ''
                 && this.version !== '';
-        }
-
-        get isValidTreatment(): boolean {
-            return this.isValidBroker
-                && this.mutationType != '';
         }
 
         private closeForm(): void {
@@ -137,12 +97,7 @@
                 // TODO: communicate error
                 return;
             }
-            if (this.provideTreatment) {
-                this.$emit('submit:treatment', this.treatment);
-            }
-            else {
-                this.$emit('submit:broker', this.broker);
-            }
+            this.$emit('submit:broker', this.broker);
         }
 
     }

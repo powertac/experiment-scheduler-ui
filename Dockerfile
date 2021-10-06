@@ -1,16 +1,14 @@
-FROM node:lts-alpine AS build
-WORKDIR /service-manager
-#RUN npm install -g @vue/cli
+FROM node:12-alpine AS build
+WORKDIR /opt/powertac/ui
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
 COPY . .
 RUN npm run build
 
-FROM node:lts-alpine
-WORKDIR /service-manager
+FROM node:12-alpine
+WORKDIR /opt/powertac/ui
 RUN npm i -g http-server
-COPY --from=build /service-manager/dist .
-VOLUME /service-manager/discovery.json
+COPY --from=build /opt/powertac/ui/dist .
 EXPOSE 80
-ENTRYPOINT ["http-server", "/service-manager", "-p", "80"]
+ENTRYPOINT ["http-server", "/opt/powertac/ui", "-p", "80"]
