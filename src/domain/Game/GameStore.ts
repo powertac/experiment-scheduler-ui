@@ -1,6 +1,6 @@
 import {ActionContext, ActionTree, GetterTree, Module, MutationTree} from 'vuex';
 import {RootStoreState} from '@/domain/Store/RootStore';
-import {Game} from '@/domain/Game/GameTypes';
+import {Game} from '@/domain/Game/Game';
 
 export interface GameStoreState {
   games: {[key: string]: Game};

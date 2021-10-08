@@ -9,7 +9,7 @@
       <div class="form-container">
         <h2 class="form-container-title">New Game</h2>
         <div class="field-group">
-          <label for="game-name" class="field-group-title le">Base game<br><small class="size font-weight-bold">(optional)</small></label>
+          <label for="game-name" class="field-group-title le">Base game<br><small class="size">(optional)</small></label>
           <div class="field-group-body">
             <game-selector @game-selected="setBaseGame($event)"
                            :initial-value="baseGame"
@@ -20,11 +20,11 @@
             <p v-if="!validBaseGame" class="text-danger font-italic font-weight-bold">This game has either no bootstrap file or no state log.</p>
             <table v-if="baseGame !== null && validBaseGame" class="mt-2">
               <tr>
-                <th class="pr-2 text-uppercase font-weight-normal" style="color: #555; font-size: .875em">Bootstrap</th>
+                <th class="pr-2 text-uppercase font-weight-normal" style="color: #555; font-size: .75em">Bootstrap</th>
                 <td><code>{{baseGame.files['BOOTSTRAP']}}</code></td>
               </tr>
               <tr>
-                <th class="text-uppercase font-weight-normal" style="color: #555; font-size: .875em">Seed</th>
+                <th class="text-uppercase font-weight-normal" style="color: #555; font-size: .75em">Seed</th>
                 <td><code>{{baseGame.files['STATE_LOG']}}</code></td>
               </tr>
             </table>
@@ -42,9 +42,7 @@
         <div class="field-group">
           <h5 class="field-group-title">Brokers</h5>
           <div class="field-group-body">
-            <broker-selector :types="availableTypes"
-                             :brokers="brokers"
-                             :callback="setBrokers"/>
+            <broker-selector :initially-selected="this.brokers" v-on:selected="setBrokers" />
           </div>
         </div>
         <div class="field-group">
@@ -100,13 +98,13 @@ import {TransientParameter} from '@/domain/types/Parameter';
 import uuid from 'uuid/v4';
 import {RestClient} from '@/api/RestClient';
 import ParameterInput from '@/components/form/ParameterInput.vue';
-import {Broker, BrokerType} from '@/domain/types/Broker';
-import BrokerSelector from '@/components/BrokerSelector.vue';
-import {BrokerSpec} from '@/domain/Broker/BrokerSpec';
 import GameSelector from '@/components/game/GameSelector.vue';
-import {Game, GameSpec} from '@/domain/Game/GameTypes';
+import {Game} from '@/domain/Game/Game';
+import BrokerSelector from '@/components/Broker/BrokerSelector.vue';
+import {Broker} from '@/domain/Broker/Broker';
+import {GameSpec} from '@/domain/Game/GameSpec';
 
-@Component({components: {'broker-selector': BrokerSelector, 'parameter': ParameterInput, 'game-selector': GameSelector}})
+@Component({components: {'parameter': ParameterInput, 'game-selector': GameSelector, 'broker-selector': BrokerSelector}})
 export default class GameForm extends Vue {
 
     @Prop({required: false, default: 'New Game'})
@@ -137,25 +135,21 @@ export default class GameForm extends Vue {
     }
 
     private created(): void {
-        this.serverParameters.push({
-            id: uuid(),
-            key: '',
-            value: '',
-        });
+        this.serverParameters.push({id: uuid(), key: '', value: ''});
         this.$store.dispatch('brokers/refresh');
         RestClient.supportedParams()
             .then((params) => this.allowedParameters = params.sort())
             .catch((e) => console.log(e));
-        const gameId = this.$route.params.id
+        const gameId = this.$route.params.id;
         if (gameId != undefined) {
-          this.setBaseGame( this.$store.getters['games/find'](gameId))
+          this.setBaseGame(this.$store.getters['games/find'](gameId))
         }
     }
 
     private setBaseGame(game: Game | null): void {
       if (null == game) return
       this.name = game.name
-      this.brokers = game.brokers.map((b) => { return {id: '', name: b.name, type: {name: b.name, image: 'IMAGE'}} })
+      this.brokers = game.brokers;
       this.baseGame = game
       this.$set(this, 'serverParameters', []);
       for (const param of Object.keys(game.serverParameters)) {
@@ -193,10 +187,6 @@ export default class GameForm extends Vue {
         }
     }
 
-    get availableTypes(): BrokerType[] {
-        return this.$store.getters['brokers/types'];
-    }
-
     get isValid(): boolean {
         if (this.withName && this.name === '') {
             return false;
@@ -215,11 +205,7 @@ export default class GameForm extends Vue {
     }
 
     private setBrokers(brokers: Broker[]): void {
-        this.brokers = brokers;
-    }
-
-    private removeBroker(broker: Broker): void {
-        this.$delete(this.brokers, this.brokers.indexOf(broker));
+      this.brokers = brokers;
     }
 
     private submit(): void {
@@ -236,7 +222,6 @@ export default class GameForm extends Vue {
     }
 
     private createGameSpec(): GameSpec {
-      let brokerSpecs: BrokerSpec[] = this.brokers.map((broker) => {return {name: broker.name, version: 'latest'}});
       const parameters: {[key: string]: string} = {};
       this.serverParameters
           .filter((param) => param.key !== '')
@@ -245,7 +230,7 @@ export default class GameForm extends Vue {
       return {
         name: this.name,
         baseGameId: this.baseGame != null ? this.baseGame.id : undefined,
-        brokers: brokerSpecs,
+        brokers: this.brokers,
         serverParameters: parameters
       };
     }
@@ -268,7 +253,6 @@ export default class GameForm extends Vue {
     background: #fafafa;
   }
 
-  // TODO : elevate to App
   div.content-actions {
     height: 2.75rem;
     justify-self: stretch;
@@ -276,7 +260,6 @@ export default class GameForm extends Vue {
     align-items: stretch;
     position: sticky;
     top: 0;
-    background: #fff;
     background: #fafafa;
     border-bottom: 1px solid #ddd;
     flex-shrink: 0;

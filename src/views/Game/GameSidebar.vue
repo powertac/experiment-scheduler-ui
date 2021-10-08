@@ -65,7 +65,7 @@ import {Component} from 'vue-property-decorator';
 import {VueAdapter} from '@/VueAdapter';
 import * as Date from '@/util/Date';
 import Duration from '@/components/time/Duration.vue';
-import {Game} from '@/domain/Game/GameTypes';
+import {Game} from '@/domain/Game/Game';
 
 @Component({components: {duration: Duration}})
   export default class GameSidebar extends VueAdapter {

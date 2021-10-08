@@ -10,7 +10,7 @@
 <script lang="ts">
 import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
 import Autocomplete from '@/components/form/Autocomplete.vue';
-import {Game} from '@/domain/Game/GameTypes';
+import {Game} from '@/domain/Game/Game';
 
 @Component({components: {Autocomplete}})
 export default class GameSelector extends Vue {

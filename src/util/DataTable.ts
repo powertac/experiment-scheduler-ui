@@ -1,6 +1,6 @@
-import {Game} from '@/domain/Game/GameTypes';
-import {BrokerSpec} from '@/domain/Broker/BrokerSpec';
+import {Game} from '@/domain/Game/Game';
 import {formatDate} from '@/util/Date';
+import {Broker} from '@/domain/Broker/Broker';
 
 export class DataTable {
 
@@ -26,7 +26,7 @@ export class DataTable {
     return game.name.toLowerCase().includes(term)
     || game.id.toLowerCase().includes(term)
     || game.brokers.reduce(
-      (includes: boolean, b: BrokerSpec) => includes || b.name.toLowerCase().includes(term), false)
+      (includes: boolean, b: Broker) => includes || b.name.toLowerCase().includes(term), false)
     || formatDate(game.createdAt).includes(term)
     || formatDate(game.end).includes(term);
   }

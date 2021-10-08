@@ -134,7 +134,7 @@
 import {Component, Vue} from 'vue-property-decorator';
 import Duration from '@/components/time/Duration.vue';
 import * as Date from '@/util/Date';
-import {Game} from '@/domain/Game/GameTypes';
+import {Game} from '@/domain/Game/Game';
 
 @Component({components: {duration: Duration}})
 export default class GameDetails extends Vue {

@@ -44,7 +44,7 @@
 <script lang="ts">
 import {Component} from 'vue-property-decorator';
 import {VueAdapter} from '@/VueAdapter';
-import {Game} from '@/domain/Game/GameTypes';
+import {Game} from '@/domain/Game/Game';
 import {formatDate} from '@/util/Date';
 import {DataTable} from '@/util/DataTable';
 

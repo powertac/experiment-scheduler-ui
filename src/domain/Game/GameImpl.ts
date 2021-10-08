@@ -1,5 +1,6 @@
-import {Game, GameRun} from '@/domain/Game/GameTypes';
-import {BrokerSpec} from '@/domain/Broker/BrokerSpec';
+import {Game} from '@/domain/Game/Game';
+import {Broker} from '@/domain/Broker/Broker';
+import {GameRun} from '@/domain/Game/GameRun';
 
 export default class GameImpl implements Game {
   public id: string;
@@ -11,9 +12,9 @@ export default class GameImpl implements Game {
   public createdAt: number;
   public files: { [role: string]: string };
   public cancelled: boolean;
-  private _brokers: BrokerSpec[];
+  private _brokers: Broker[];
 
-  constructor(id: string, bootstrap: File, brokers: BrokerSpec[], name: string, runs: GameRun[], seed: File,
+  constructor(id: string, bootstrap: File, brokers: Broker[], name: string, runs: GameRun[], seed: File,
               serverParameters: {[key: string]: string}, createdAt: number, files: { [role: string]: string }, cancelled: boolean) {
     this.id = id;
     this.bootstrap = bootstrap;
@@ -31,7 +32,7 @@ export default class GameImpl implements Game {
     this._brokers = brokers;
   }
 
-  get brokers(): BrokerSpec[] {
+  get brokers(): Broker[] {
     return this._brokers.slice().sort((a, b) => (a.name === b.name) ? 0 : (a.name >= b.name) ? 1 : -1);
   }
 

@@ -1,4 +1,4 @@
-import {Game} from '@/domain/Game/GameTypes';
+import {Game} from '@/domain/Game/Game';
 import Vue from 'vue';
 import {ActionContext} from 'vuex';
 import {RootStoreState} from '@/domain/Store/RootStore';

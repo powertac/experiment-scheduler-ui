@@ -1,9 +1,9 @@
 import axios, {AxiosError, AxiosResponse} from 'axios';
-import {BrokerType} from '@/domain/types/Broker';
 import {ServerStatus} from '@/domain/Service/ServerStatus';
 import config from '@/config';
-import {Game, GameSpec} from '@/domain/Game/GameTypes';
+import {Game} from '@/domain/Game/Game';
 import {Broker} from '@/domain/Broker/Broker';
+import {GameSpec} from '@/domain/Game/GameSpec';
 
 interface RestResponse {
     success: boolean;
@@ -13,15 +13,6 @@ interface RestResponse {
 }
 
 export class RestClient {
-
-    public static brokerTypes(): Promise<BrokerType[]> {
-        return new Promise<BrokerType[]>((resolve: (brokerTypes: BrokerType[]) => void,
-                                          reject: (error: AxiosError) => void) => {
-            axios.get(config.services.orchestrator.uri + '/brokers/types/')
-                .then((response: AxiosResponse<RestResponse>) => resolve(response.data.payload))
-                .catch((response: AxiosError) => reject(response));
-        });
-    }
 
     public static supportedParams(): Promise<string[]> {
         return new Promise<string[]>((resolve: (params: string[]) => void,
@@ -60,7 +51,7 @@ export class RestClient {
     public static createGame(spec: GameSpec): Promise<void> {
         return new Promise<void>((resolve: (response: void) => void, reject: (error: AxiosError) => void) => {
             axios.post(config.services.orchestrator.uri + '/games/', spec)
-              .then((response: AxiosResponse<void>) => resolve())
+              .then(() => resolve())
               .catch((error: AxiosError) => reject(error));
         });
     }
@@ -76,7 +67,7 @@ export class RestClient {
     public static createBroker(broker: Broker): Promise<void> {
         return new Promise<void>((resolve: (response: void) => void, reject: (error: AxiosError) => void) => {
             axios.post(config.services.orchestrator.uri + '/brokers/', broker)
-              .then((response: AxiosResponse<void>) => resolve())
+              .then(() => resolve())
               .catch((error: AxiosError) => reject(error));
         });
     }

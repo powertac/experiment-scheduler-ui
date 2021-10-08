@@ -5,7 +5,7 @@
 <script lang="ts">
     import {Component, Prop, Vue} from "vue-property-decorator";
     import moment from "moment";
-    import {Game} from '@/domain/Game/GameTypes';
+    import {Game} from '@/domain/Game/Game';
 
     const updateInterval: number = 1000;
 
