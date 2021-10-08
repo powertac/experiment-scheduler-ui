@@ -20,8 +20,6 @@ import {FontAwesomeIcon, FontAwesomeLayers} from '@fortawesome/vue-fontawesome';
 import './fontawesome';
 import {StompClient} from '@/api/StompClient';
 
-StompClient.initialize();
-
 // add font awesome component
 Vue.component('fa-icon', FontAwesomeIcon);
 Vue.component('fa-layers', FontAwesomeLayers);
@@ -39,14 +37,15 @@ Vue.use(Vuex);
 Vue.config.productionTip = false;
 
 config.load()
-    .then(() => {
-        new VueAdapter({
-                router,
-                store: new Vuex.Store(store),
-                render: (h) => h(App),
-            })
-        .$mount('#app');
-    })
-    .catch((error) => console.log(error));
+  .then(() => {
+      StompClient.initialize();
+      new VueAdapter({
+              router,
+              store: new Vuex.Store(store),
+              render: (h) => h(App),
+          })
+      .$mount('#app');
+  })
+  .catch((error) => console.log(error));
 
 

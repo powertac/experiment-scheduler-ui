@@ -136,7 +136,7 @@ export default class GameForm extends Vue {
 
     private created(): void {
         this.serverParameters.push({id: uuid(), key: '', value: ''});
-        this.$store.dispatch('brokers/refresh');
+        this.$store.dispatch('brokers/subscribe');
         RestClient.supportedParams()
             .then((params) => this.allowedParameters = params.sort())
             .catch((e) => console.log(e));
