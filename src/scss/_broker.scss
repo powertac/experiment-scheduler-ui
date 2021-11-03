@@ -1,0 +1,58 @@
+div.broker-pill {
+  display: flex;
+  width: 31%;
+  margin: 0 .5rem .5rem .5rem;
+  cursor: pointer;
+  border-radius: .2rem;
+
+  div.name {
+    border-top-left-radius: .2rem;
+    border-bottom-left-radius: .2rem;
+    border: 1px solid #ddd;
+    border-right-width: 0;
+    flex-grow: 1;
+    padding: .5rem 1rem;
+  }
+
+  div.version {
+    min-width: 33%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    border-top-right-radius: .2rem;
+    border-bottom-right-radius: .2rem;
+    padding: 0 1rem;
+    color: #555;
+    text-transform: uppercase;
+    font-size: .75em;
+    align-self: stretch;
+    border: 1px solid #ddd;
+    border-left-color: #eee;
+  }
+
+  &.disabled {
+    background: #fafafa;
+    cursor: not-allowed;
+    color: #bbb;
+    border-color: #ddd;
+    div.name, div.version {
+      text-decoration: line-through;
+      border-color: #ddd;
+    }
+    div.version {
+      color: #bbb;
+    }
+  }
+
+  &.selected {
+    color: #000aa3;
+    background: #F2F5FF;
+    div.name, div.version {
+      border-color: #A5B3E8;
+      color: #000aa3;
+    }
+    div.version {
+      border-left-color: rgba(165, 179, 232, .5);
+    }
+  }
+}

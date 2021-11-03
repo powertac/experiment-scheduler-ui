@@ -24,6 +24,7 @@ export default class App extends VueAdapter {
 
   private created(): void {
     this.$store.dispatch('activateOrchestratorStatusListener');
+    this.$store.dispatch('loadAvailableLocations');
     this.$store.dispatch('startClock');
     this.$store.dispatch('games/loadAll')
       .catch(() => console.error("unable to load games"));

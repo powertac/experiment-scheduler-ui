@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import {ActionContext} from 'vuex';
 import {StompClient} from '@/api/StompClient';
-import {RestClient} from '@/api/RestClient';
+import {OrchestratorClient} from '@/api/OrchestratorClient';
 import {RootStoreState} from '@/domain/Store/RootStore';
 import {BrokerStore, BrokerStoreState} from '@/domain/Broker/BrokerStore';
 import {Broker, BrokerImpl} from '@/domain/Broker/Broker';
@@ -31,7 +31,7 @@ const brokerStoreImpl: BrokerStore = {
       StompClient.subscribe('/brokers', (broker: Broker) => context.commit('add', broker));
     },
     loadAll: (context: ActionContext<BrokerStoreState, RootStoreState>) => {
-      RestClient.brokers()
+      OrchestratorClient.brokers()
         .then((brokers) => brokers.forEach((broker) => context.commit('add', broker)))
         .catch((error) => console.error(error));
     },

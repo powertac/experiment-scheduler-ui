@@ -34,7 +34,6 @@ import ApplicationBar from "@/components/application/ApplicationBar.vue";
         top: 0;
         display: flex;
         align-items: stretch;
-        background: var(--nav-option-bg);
         background: #fff;
         border-bottom: 1px solid #ddd;
         height: 2.75rem;

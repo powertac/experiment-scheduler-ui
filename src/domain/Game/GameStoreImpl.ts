@@ -2,7 +2,7 @@ import {Game} from '@/domain/Game/Game';
 import Vue from 'vue';
 import {ActionContext} from 'vuex';
 import {RootStoreState} from '@/domain/Store/RootStore';
-import {RestClient} from '@/api/RestClient';
+import {OrchestratorClient} from '@/api/OrchestratorClient';
 import {AxiosError} from 'axios';
 import GameImpl from '@/domain/Game/GameImpl';
 import {StompClient} from '@/api/StompClient';
@@ -40,12 +40,12 @@ const gameStoreImpl: GameStore = {
   },
   actions: {
     load: (context: ActionContext<GameStoreState, RootStoreState>, id: string): void => {
-      RestClient.game(id)
+      OrchestratorClient.game(id)
         .then((game: Game) => context.commit('add', game))
         .catch((error: AxiosError) => console.error(error));
     },
     loadAll: (context: ActionContext<GameStoreState, RootStoreState>): void => {
-      RestClient.games()
+      OrchestratorClient.games()
         .then((games: Game[]) => games.forEach((game: Game) => context.commit('add', game)))
         .catch((error: AxiosError) => console.error(error));
     },

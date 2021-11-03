@@ -12,7 +12,7 @@ interface RestResponse {
     games: Game[];
 }
 
-export class RestClient {
+export class OrchestratorClient {
 
     public static supportedParams(): Promise<string[]> {
         return new Promise<string[]>((resolve: (params: string[]) => void,

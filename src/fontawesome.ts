@@ -189,6 +189,15 @@ library.add(faSearchPlus);
 import { faInfo } from '@fortawesome/free-solid-svg-icons';
 library.add(faInfo);
 
+import { faMagic } from '@fortawesome/free-solid-svg-icons';
+library.add(faMagic);
+
+import { faHandPaper } from '@fortawesome/free-solid-svg-icons';
+library.add(faHandPaper);
+
+import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
+library.add(faAngleRight);
+
 // REGULAR
 import { faCaretSquareDown } from '@fortawesome/free-regular-svg-icons';
 library.add(faCaretSquareDown);

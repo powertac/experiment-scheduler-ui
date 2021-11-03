@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator';
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
 import {Broker} from '@/domain/Broker/Broker';
 
 @Component
@@ -24,7 +24,7 @@ export default class BrokerSelector extends Vue {
   @Prop({required: false, default: () => []})
   private initiallySelected: Broker[];
 
-  private readonly selected: {[key: string]: Broker|undefined};
+  private selected: {[key: string]: Broker|undefined};
 
   constructor() {
     super();
@@ -38,6 +38,13 @@ export default class BrokerSelector extends Vue {
       console.error('failed to load brokers');
     });
     this.initiallySelected.forEach((b) => this.toggleSelect(b));
+  }
+
+  @Watch('initiallySelected')
+  private updateSet(): void {
+    if (this.initiallySelected.length === 0) {
+      this.selected = {}
+    }
   }
 
   get brokers(): Broker[] {

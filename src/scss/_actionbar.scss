@@ -17,15 +17,14 @@ div.action-bar {
     padding: 0 1rem;
     color: #3071F2;
     margin: 0;
-    background: #fff;
+    background: inherit;
     text-decoration: none;
     .icon-left {
       margin-right: .66em;
     }
     &:hover {
-      // background: #040DBF;
-      // background: #3071F2;
       color: #fff;
+      background: #3071F2;
     }
   }
 
@@ -45,4 +44,8 @@ div.action-bar {
     }
   }
 
+}
+
+#view .form .action-bar {
+  background: #fafafa;
 }

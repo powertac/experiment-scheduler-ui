@@ -69,7 +69,7 @@
 import {Component, Vue} from 'vue-property-decorator';
 import Autocomplete from '@/components/form/Autocomplete.vue';
 import {Broker, BrokerImpl} from '@/domain/Broker/Broker';
-import {RestClient} from '@/api/RestClient';
+import {OrchestratorClient} from '@/api/OrchestratorClient';
 
 @Component({components: {'autocomplete': Autocomplete}})
 export default class BrokerForm extends Vue {
@@ -91,7 +91,7 @@ export default class BrokerForm extends Vue {
 
   private created(): void {
     this.$store.dispatch('brokers/loadAll');
-    RestClient.images()
+    OrchestratorClient.images()
         .then((images) => this.availableImages.push(...images))
         .catch((error) => console.log(error));
   }
@@ -146,7 +146,7 @@ export default class BrokerForm extends Vue {
         this.version,
         this.imageTag,
         this.enabled);
-    RestClient.createBroker(broker);
+    OrchestratorClient.createBroker(broker);
     this.$router.back();
   }
 

@@ -6,11 +6,17 @@ import GameSidebar from '@/views/Game/GameSidebar.vue';
 import GameDetails from '@/views/Game/GameDetails.vue';
 import BrokersTable from '@/views/Broker/BrokersTable.vue';
 import BrokerForm from '@/views/Broker/BrokerForm.vue';
+import BaselineTable from '@/views/Baseline/BaselineTable.vue';
+import BaselineForm from '@/views/Baseline/BaselineForm.vue';
 
 Vue.use(Router);
 
 export default new Router({
   routes: [
+    {
+      path: '/',
+      redirect: '/games',
+    },
     {
       path: '/games',
       component: GameTable,
@@ -45,6 +51,14 @@ export default new Router({
     {
       path: '/brokers/create',
       component: BrokerForm,
+    },
+    {
+      path: '/baselines',
+      component: BaselineTable,
+    },
+    {
+      path: '/baselines/create',
+      component: BaselineForm,
     },
   ],
 });

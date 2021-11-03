@@ -8,26 +8,36 @@ interface Service {
     uri: string;
 }
 
+interface Services {
+    orchestrator: Service|undefined;
+    weather: Service|undefined;
+}
+
 class ConfigurationProvider {
 
-    public services: {[key: string]: Service};
+    public services: Services;
     public mode: string;
 
     constructor() {
-        this.services = {};
+        this.services = {
+            orchestrator: undefined,
+            weather: undefined,
+        };
     }
 
     public load(): Promise<void> {
         return new Promise<void>((resolve: () => void, reject: (error: Error) => void) => {
-
             this.mode = undefined !== process.env.NODE_ENV ? process.env.NODE_ENV : '';
-
-            if (process.env.NODE_ENV === 'development' && undefined !== process.env.VUE_APP_ORCHESTRATOR_URI) {
-                this.services.orchestrator = {uri: process.env.VUE_APP_ORCHESTRATOR_URI};
+            if (process.env.NODE_ENV === 'development') {
+                if (undefined !== process.env.VUE_APP_ORCHESTRATOR_URI) {
+                    this.services.orchestrator = {uri: process.env.VUE_APP_ORCHESTRATOR_URI};
+                }
+                if (undefined !== process.env.VUE_APP_WEATHER_SERVER_URI) {
+                    this.services.weather = {uri: process.env.VUE_APP_WEATHER_SERVER_URI};
+                }
                 resolve();
                 return;
             }
-
             if (process.env.NODE_ENV === 'production') {
                 axios.get('http://' + window.location.host + '/discovery.json')
                     .then((response: AxiosResponse<ServiceUriConfig>) => {
@@ -37,7 +47,6 @@ class ConfigurationProvider {
                     .catch((errorResponse: AxiosError) => reject(errorResponse));
                 return;
             }
-
             reject(new Error('ConfigurationProvider could not be initialized.'));
         });
     }
