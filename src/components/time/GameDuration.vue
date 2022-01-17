@@ -5,7 +5,7 @@
 <script lang="ts">
     import {Component, Prop, Vue} from "vue-property-decorator";
     import moment from "moment";
-    import {Game} from '@/domain/Game/Game';
+    import {GameInterface} from '@/domain/Game/GameInterface';
 
     const updateInterval: number = 1000;
 
@@ -13,7 +13,7 @@
     export default class GameDuration extends Vue {
 
         @Prop({required: true})
-        private game: Game;
+        private game: GameInterface;
 
         private durationRepresentation: string;
         private stopUpdate: boolean;

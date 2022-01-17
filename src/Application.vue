@@ -32,6 +32,8 @@ export default class App extends VueAdapter {
         .catch(() => console.error('failed to subscribe to games channel'));
     this.$store.dispatch('brokers/subscribe')
         .catch(() => console.error('failed to subscribe to brokers channel'));
+    this.$store.dispatch('baselines/subscribe')
+        .catch(() => console.error('failed to subscribe to brokers channel'));
   }
 
 }

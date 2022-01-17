@@ -13,7 +13,40 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid" v-else>
+    <div class="status-header">
+      <div class="status-primary">
+        <h1 style="margin: 2rem 2rem 0 2rem">{{game.name}}</h1>
+        <div class="baseline-nav">
+          <button class="button" @click="activeTab = 'config'" :class="{'active': activeTab === 'config'}">
+            Configuration
+          </button>
+          <button class="button" @click="activeTab = 'files'" :class="{'active': activeTab === 'files'}">
+            Files
+          </button>
+        </div>
+      </div>
+      <div class="status-secondary">
+        <div class="tuple-table">
+          <div class="tuple">
+            <div class="key mr-4">ID</div>
+            <div class="value mono">{{game.id}}</div>
+          </div>
+          <!--<div class="tuple">
+            <div class="key">Start</div>
+            <div class="value mono" v-html="start"></div>
+          </div>
+          <div class="tuple">
+            <div class="key">End</div>
+            <div class="value mono" v-html="end"></div>
+          </div>-->
+          <div class="tuple">
+            <div class="key">Status</div>
+            <div class="value mono text-uppercase">{{game.status}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--<div class="container-fluid">
       <div class="row">
         <div class="col">
           <h1><small>@{{game.id}}</small><br>{{game.name}}</h1>
@@ -126,6 +159,61 @@
           </p>
         </div>
       </div>
+    </div>-->
+    <div class="block-container" v-if="activeTab === 'config'">
+      <div class="block" v-if="game.weather !== undefined">
+        <h5 class="block-title">Weather Configuration</h5>
+        <table class="table datatable">
+          <thead>
+          <tr>
+            <th>Location</th>
+            <th class="text-right">Start Date</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>{{game.weather.location}}</td>
+            <td class="text-right mono">{{formatWeatherDate(game.weather.startTime)}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="block ml-4">
+        <h5 class="block-title">Brokers</h5>
+        <table class="table datatable">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Version</th>
+            <th>Image</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="broker in game.brokers">
+            <td>{{broker.name}}</td>
+            <td>{{broker.version}}</td>
+            <td class="mono">{{broker.imageTag}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="block ml-4">
+        <h5 class="block-title">Parameters</h5>
+        <table class="table datatable">
+          <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Value</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="param of Object.keys(game.serverParameters)">
+            <td class="mono">{{param}}</td>
+            <td class="mono">{{game.serverParameters[param]}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -134,10 +222,18 @@
 import {Component, Vue} from 'vue-property-decorator';
 import Duration from '@/components/time/Duration.vue';
 import * as Date from '@/util/Date';
-import {Game} from '@/domain/Game/Game';
+import {GameInterface} from '@/domain/Game/GameInterface';
+import moment from 'moment';
 
 @Component({components: {duration: Duration}})
 export default class GameDetails extends Vue {
+
+  private activeTab: string;
+
+  constructor() {
+    super();
+    this.activeTab = 'config'
+  }
 
   private mounted(): void {
     this.$store.dispatch('games/load', this.gameId);
@@ -147,7 +243,7 @@ export default class GameDetails extends Vue {
     return this.$route.params.id;
   }
 
-  get game(): Game {
+  get game(): GameInterface {
     return this.$store.getters['games/find'](this.gameId);
   }
 
@@ -179,6 +275,10 @@ export default class GameDetails extends Vue {
         return ['fas', 'times'];
     }
     return [];
+  }
+
+  private formatWeatherDate(date: number): string {
+    return moment(date).format('L')
   }
 
 }
@@ -325,6 +425,46 @@ export default class GameDetails extends Vue {
   h2 {
     font-size: 1.75em;
     color: #212529;
+  }
+  div.status-header {
+    background: #fafafa;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+
+    div.status-secondary {
+      margin: 2rem 3rem;
+    }
+
+    div.status-primary {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      h1 {width: 100%}
+    }
+
+    div.baseline-nav {
+      padding: 1rem 2rem 0 2rem;
+      margin-bottom: -1px;
+      align-self: flex-end;
+
+      button {
+        border: 0;
+        background: inherit;
+        padding: .5rem 1rem;
+        color: #3071F2;
+
+        &.active {
+          color: #3071F2;
+          border-bottom: 1px solid #3071F2;
+          //background-image: radial-gradient(3rem at left 50% bottom -2rem, transparentize(#3071F2, .66) 0%, transparent 100%);
+        }
+
+        &:active, &:focus {
+          outline: none;
+        }
+      }
+    }
   }
 </style>
 

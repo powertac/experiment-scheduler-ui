@@ -198,6 +198,12 @@ library.add(faHandPaper);
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 library.add(faAngleRight);
 
+import { faRedo } from '@fortawesome/free-solid-svg-icons';
+library.add(faRedo);
+
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+library.add(faTrash);
+
 // REGULAR
 import { faCaretSquareDown } from '@fortawesome/free-regular-svg-icons';
 library.add(faCaretSquareDown);

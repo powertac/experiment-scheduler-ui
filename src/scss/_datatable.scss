@@ -44,9 +44,11 @@ table.datatable {
     padding-bottom: .5rem;
   }
 
-  & > tbody > tr {
+  &.clickable-rows > tbody > tr {
     cursor: pointer;
+  }
 
+  & > tbody > tr {
     & > td {
 
       &.monospaced {

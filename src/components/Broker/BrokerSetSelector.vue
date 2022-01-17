@@ -35,7 +35,7 @@ export default class BrokerSetSelector extends Vue {
   constructor() {
     super();
     this.currentSet = [];
-    this.sets = [];
+    this.sets = {};
   }
 
   private updateCurrentSet(brokers: Broker[]): void {

@@ -2,6 +2,7 @@ import axios, {AxiosError, AxiosResponse} from 'axios';
 
 interface ServiceUriConfig {
     orchestrator: string;
+    weather: string;
 }
 
 interface Service {
@@ -9,8 +10,8 @@ interface Service {
 }
 
 interface Services {
-    orchestrator: Service|undefined;
-    weather: Service|undefined;
+    orchestrator: Service;
+    weather: Service;
 }
 
 class ConfigurationProvider {
@@ -20,8 +21,8 @@ class ConfigurationProvider {
 
     constructor() {
         this.services = {
-            orchestrator: undefined,
-            weather: undefined,
+            orchestrator: {uri: ''},
+            weather: {uri: ''},
         };
     }
 
@@ -42,6 +43,7 @@ class ConfigurationProvider {
                 axios.get('http://' + window.location.host + '/discovery.json')
                     .then((response: AxiosResponse<ServiceUriConfig>) => {
                         this.services.orchestrator = {uri: response.data.orchestrator};
+                        this.services.weather = {uri: response.data.weather};
                         resolve();
                     })
                     .catch((errorResponse: AxiosError) => reject(errorResponse));

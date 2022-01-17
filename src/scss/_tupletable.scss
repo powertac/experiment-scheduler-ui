@@ -1,0 +1,16 @@
+.tuple-table {
+
+  div.tuple {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  div.key {
+    color: #8898aa;
+    font-size: .875em;
+    text-transform: uppercase;
+  }
+
+}

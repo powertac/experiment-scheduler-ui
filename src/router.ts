@@ -8,6 +8,7 @@ import BrokersTable from '@/views/Broker/BrokersTable.vue';
 import BrokerForm from '@/views/Broker/BrokerForm.vue';
 import BaselineTable from '@/views/Baseline/BaselineTable.vue';
 import BaselineForm from '@/views/Baseline/BaselineForm.vue';
+import BaselineDetails from '@/views/Baseline/BaselineDetails.vue';
 
 Vue.use(Router);
 
@@ -32,7 +33,7 @@ export default new Router({
       component: GameFormAlternative,
     },
     {
-      path: '/games/:id',
+      path: '/games/:gameId',
       name: 'game',
       components: {
         default: GameTable,
@@ -59,6 +60,17 @@ export default new Router({
     {
       path: '/baselines/create',
       component: BaselineForm,
+    },
+    {
+      path: '/baselines/:id/details',
+      component: BaselineDetails,
+    },
+    {
+      path: '/baselines/:id/details/:gameId',
+      components: {
+        default: BaselineDetails,
+        sidebar: GameSidebar,
+      },
     },
   ],
 });

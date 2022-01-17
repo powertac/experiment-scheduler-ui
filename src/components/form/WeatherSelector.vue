@@ -99,9 +99,11 @@ export default class WeatherSelector extends Vue {
   }
 
   private submit(): void {
-    this.$emit('submit', new WeatherConfigurationImpl(
-        this.selected,
-        this.startMoment.valueOf()));
+    if (this.selected != null) {
+      this.$emit('submit', new WeatherConfigurationImpl(
+          this.selected,
+          this.startMoment.valueOf()));
+    }
   }
 
 }

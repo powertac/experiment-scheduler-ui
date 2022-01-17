@@ -11,6 +11,7 @@ import moment from 'moment';
 import {WeatherLocation} from '@/domain/Location/WeatherLocation';
 import {WeatherServerClient} from '@/api/WeatherServerClient';
 import {WeatherLocationImpl} from '@/domain/Location/WeatherLocationImpl';
+import {baselineStoreImpl} from '@/domain/Baseline/BaselineStoreImpl';
 
 let orchestratorServerStatusListener: ServerStatusListener | null = null;
 
@@ -28,6 +29,7 @@ const rootStoreOptions: RootStoreOptions = {
     availableLocations: [],
   },
   modules: {
+    baselines: baselineStoreImpl,
     brokers: brokerStoreImpl,
     games: gameStoreImpl,
   },

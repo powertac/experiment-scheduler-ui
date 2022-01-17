@@ -1,9 +1,9 @@
 <template>
   <div id="game-sidebar">
     <div class="sidebar-actions">
-      <router-link to="/games">
+      <a @click="$router.go(-1)">
         <fa-icon icon="chevron-right" />
-      </router-link>
+      </a>
     </div>
     <div class="game-data" v-if="game !== null">
       <h3 class="title">
@@ -16,8 +16,20 @@
         <router-link :to="'/games/create/' + gameId" class="btn btn-sidebar" :class="{'disabled': !game.isValidTemplate}">
           <fa-icon class="btn-icon" icon="copy"  /> Use as template
         </router-link>
+        <a href="#" type="button" class="btn btn-sidebar" :class="{'disabled': game.status !== 'completed' && game.status !== 'failed'}" @click="rerun">
+          <fa-icon class="btn-icon" icon="redo"  /> Rerun game
+        </a>
+        <a href="#" type="button" class="btn btn-sidebar" :class="{'disabled': game.status === 'running' || game.baseline !== undefined}" @click="deleteGame">
+          <fa-icon class="btn-icon" icon="trash"  /> Delete game
+        </a>
       </div>
       <div class="game-meta">
+        <div class="game-meta-atom" v-if="baseline !== null">
+          <span class="label">Baseline</span>
+          <span class="value">
+            <router-link :to="'/baselines/' + game.baseline + '/details'">{{baseline.name}}</router-link>
+          </span>
+        </div>
         <div class="game-meta-atom">
           <span class="label">ID</span>
           <span class="value monospaced">{{game.id}}</span>
@@ -43,10 +55,23 @@
           <span class="value monospaced"><duration :start="game.start" :end="game.end" :should-tick="game.status === 'running'" /></span>
         </div>
       </div>
+      <div v-if="game.weather !== null">
+        <h5 class="section-header">Weather Configuration</h5>
+        <div class="game-meta" v-if="game.weather !== null">
+          <div class="game-meta-atom">
+            <span class="label">Location</span>
+            <span class="value">{{game.weather.location[0].toUpperCase() + game.weather.location.substr(1)}}</span>
+          </div>
+          <div class="game-meta-atom">
+            <span class="label">Start Time</span>
+            <span class="value monospaced">{{weatherDate}}</span>
+          </div>
+        </div>
+      </div>
       <h5 class="section-header">Brokers</h5>
       <div class="brokers">
         <div class="broker" v-for="broker in game.brokers" :key="broker.id">
-          {{broker.name}}
+          {{broker.name}} - {{broker.version}} <code>[{{broker.imageTag}}]</code>
         </div>
       </div>
       <h5 class="section-header">Parameters</h5>
@@ -65,22 +90,47 @@ import {Component} from 'vue-property-decorator';
 import {VueAdapter} from '@/VueAdapter';
 import * as Date from '@/util/Date';
 import Duration from '@/components/time/Duration.vue';
-import {Game} from '@/domain/Game/Game';
+import {GameInterface} from '@/domain/Game/GameInterface';
+import {Baseline} from '@/domain/Baseline/Baseline';
+import {WeatherConfigurationImpl} from '@/domain/Weather/WeatherConfigurationImpl';
+import moment from 'moment';
+import {OrchestratorClient} from '@/api/OrchestratorClient';
 
 @Component({components: {duration: Duration}})
   export default class GameSidebar extends VueAdapter {
 
     get gameId(): string {
-      return this.$route.params.id;
+      return this.$route.params.gameId;
     }
 
-    get game(): Game {
+    get game(): GameInterface {
       return this.$store.getters['games/find'](this.gameId);
+    }
+
+    get baseline(): Baseline|null {
+      return this.game.baseline === null
+          ? null
+          : this.$store.getters['baselines/find'](this.game.baseline);
+    }
+
+    get weatherDate(): string|null {
+      return this.game.weather === null
+          ? null
+          : moment(this.game.weather.startTime).format("L");
     }
 
     private formatDate(date: number|null): string {
       return Date.formatDate(date);
     }
+
+    private rerun(): void {
+      OrchestratorClient.rerunGame(this.game)
+    }
+
+  private deleteGame(): void {
+    OrchestratorClient.deleteGame(this.game)
+        .then(() => this.$store.commit('games/remove', this.game));
+  }
 
   }
 </script>
@@ -182,6 +232,10 @@ import {Game} from '@/domain/Game/Game';
       code {
         color: #212529;
       }
+    }
+
+    .section-header + div.game-meta {
+      padding-top: 0;
     }
 
     div.game-meta {

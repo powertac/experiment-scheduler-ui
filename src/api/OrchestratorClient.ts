@@ -1,15 +1,18 @@
 import axios, {AxiosError, AxiosResponse} from 'axios';
 import {ServerStatus} from '@/domain/Service/ServerStatus';
 import config from '@/config';
-import {Game} from '@/domain/Game/Game';
+import {GameInterface} from '@/domain/Game/GameInterface';
 import {Broker} from '@/domain/Broker/Broker';
 import {GameSpec} from '@/domain/Game/GameSpec';
+import {BaselineSpec} from '@/domain/Baseline/BaselineSpec';
+import {BaselineData} from '@/domain/Baseline/BaselineData';
+import {GameData} from '@/domain/Game/GameData';
 
 interface RestResponse {
     success: boolean;
     message: string;
     payload: any;
-    games: Game[];
+    games: GameInterface[];
 }
 
 export class OrchestratorClient {
@@ -32,18 +35,18 @@ export class OrchestratorClient {
         });
     }
 
-    public static games(): Promise<Game[]> {
-        return new Promise<Game[]>((resolve: (games: Game[]) => void, reject: (error: AxiosError) => void) => {
+    public static games(): Promise<GameData[]> {
+        return new Promise<GameData[]>((resolve: (games: GameData[]) => void, reject: (error: AxiosError) => void) => {
             axios.get(config.services.orchestrator.uri + '/games/')
-              .then((response: AxiosResponse<Game[]>) => resolve(response.data))
+              .then((response: AxiosResponse<GameData[]>) => resolve(response.data))
               .catch((error: AxiosError) => reject(error));
         });
     }
 
-    public static game(id: string): Promise<Game> {
-        return new Promise<Game>((resolve: (games: Game) => void, reject: (error: AxiosError) => void) => {
+    public static game(id: string): Promise<GameData> {
+        return new Promise<GameData>((resolve: (games: GameData) => void, reject: (error: AxiosError) => void) => {
             axios.get(config.services.orchestrator.uri + '/games/' + id)
-              .then((response: AxiosResponse<Game>) => resolve(response.data))
+              .then((response: AxiosResponse<GameData>) => resolve(response.data))
               .catch((error: AxiosError) => reject(error));
         });
     }
@@ -51,6 +54,22 @@ export class OrchestratorClient {
     public static createGame(spec: GameSpec): Promise<void> {
         return new Promise<void>((resolve: (response: void) => void, reject: (error: AxiosError) => void) => {
             axios.post(config.services.orchestrator.uri + '/games/', spec)
+              .then(() => resolve())
+              .catch((error: AxiosError) => reject(error));
+        });
+    }
+
+    public static rerunGame(game: GameInterface): Promise<void> {
+        return new Promise<void>((resolve: (response: void) => void, reject: (error: AxiosError) => void) => {
+            axios.post(config.services.orchestrator.uri + '/games/' + game.id + '/rerun')
+              .then(() => resolve())
+              .catch((error: AxiosError) => reject(error));
+        });
+    }
+
+    public static deleteGame(game: GameInterface): Promise<void> {
+        return new Promise<void>((resolve: (response: void) => void, reject: (error: AxiosError) => void) => {
+            axios.delete(config.services.orchestrator.uri + '/games/' + game.id)
               .then(() => resolve())
               .catch((error: AxiosError) => reject(error));
         });
@@ -76,6 +95,22 @@ export class OrchestratorClient {
         return new Promise<Image[]>((resolve: (response: Image[]) => void, reject: (error: AxiosError) => void) => {
             axios.get(config.services.orchestrator.uri + '/docker/images/')
               .then((response: AxiosResponse<Image[]>) => resolve(response.data))
+              .catch((error: AxiosError) => reject(error));
+        });
+    }
+
+    public static createBaseline(spec: BaselineSpec): Promise<void> {
+        return new Promise<void>((resolve: (response: void) => void, reject: (error: AxiosError) => void) => {
+            axios.post(config.services.orchestrator.uri + '/baselines/', spec)
+              .then(() => resolve())
+              .catch((error: AxiosError) => reject(error));
+        });
+    }
+
+    public static baselines(): Promise<BaselineData[]> {
+        return new Promise<BaselineData[]>((resolve: (response: BaselineData[]) => void, reject: (error: AxiosError) => void) => {
+            axios.get(config.services.orchestrator.uri + '/baselines/')
+              .then((response) => resolve(response.data))
               .catch((error: AxiosError) => reject(error));
         });
     }

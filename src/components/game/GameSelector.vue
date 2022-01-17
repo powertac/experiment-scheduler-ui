@@ -10,16 +10,16 @@
 <script lang="ts">
 import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
 import Autocomplete from '@/components/form/Autocomplete.vue';
-import {Game} from '@/domain/Game/Game';
+import {GameInterface} from '@/domain/Game/GameInterface';
 
 @Component({components: {Autocomplete}})
 export default class GameSelector extends Vue {
 
   @Prop({required: false, default: () => {}})
-  private filter: (game: Game) => boolean
+  private filter: (game: GameInterface) => boolean
 
   @Prop({required: false, default: null})
-  private initialValue: Game | null
+  private initialValue: GameInterface | null
 
   private mounted() {
     this.$store.dispatch('games/loadAll').then(() => {
@@ -44,13 +44,13 @@ export default class GameSelector extends Vue {
   get gameList(): string[] {
     let jobs = this.$store.getters['games/findAll'];
     return jobs
-        .sort((a: Game, b: Game) => b.start - a.start)
+        .sort((a: GameInterface, b: GameInterface) => b.start - a.start)
         .filter(this.filter)
         .map(this.gameLabel);
   }
 
   @Emit('game-selected')
-  private selectGame(label: string): Game | null {
+  private selectGame(label: string): GameInterface | null {
     const games = this.$store.getters['games/findAll']
     for (const index in games) {
       if (this.gameLabel(games[index]) == label) {
@@ -60,7 +60,7 @@ export default class GameSelector extends Vue {
     return null
   }
 
-  private gameLabel(game: Game): string {
+  private gameLabel(game: GameInterface): string {
     return `${game.id} - ${game.name}`;
   }
 

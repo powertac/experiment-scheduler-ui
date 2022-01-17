@@ -99,7 +99,7 @@ import uuid from 'uuid/v4';
 import {OrchestratorClient} from '@/api/OrchestratorClient';
 import ParameterInput from '@/components/form/ParameterInput.vue';
 import GameSelector from '@/components/game/GameSelector.vue';
-import {Game} from '@/domain/Game/Game';
+import {GameInterface} from '@/domain/Game/GameInterface';
 import BrokerSelector from '@/components/Broker/BrokerSelector.vue';
 import {Broker} from '@/domain/Broker/Broker';
 import {GameSpec} from '@/domain/Game/GameSpec';
@@ -123,7 +123,7 @@ export default class GameForm extends Vue {
     private serverParameters: TransientParameter[];
     private brokers: Broker[];
     private allowedParameters: string[];
-    private baseGame: Game | null;
+    private baseGame: GameInterface | null;
 
     constructor() {
         super();
@@ -146,7 +146,7 @@ export default class GameForm extends Vue {
         }
     }
 
-    private setBaseGame(game: Game | null): void {
+    private setBaseGame(game: GameInterface | null): void {
       if (null == game) return
       this.name = game.name
       this.brokers = game.brokers;

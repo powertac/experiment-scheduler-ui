@@ -11,13 +11,13 @@
         <th class="col-center">Status</th>
         <th>Broker</th>
         <th>Version</th>
-        <th>Image name</th>
+        <th>Image</th>
       </tr>
       </thead>
       <tbody v-for="brokerName in brokersGroupedByName.keys()" :key="brokerName">
       <tr v-for="version in brokersGroupedByName.get(brokerName)" :key="version.version">
         <td class="col-center broker-status" :class="{'enabled': version.enabled}">
-          {{version.enabled ? 'enabled' : 'disabled'}}
+          {{version.enabled ? 'available' : 'unavailable'}}
         </td>
         <td>{{brokerName}}</td>
         <td>{{version.version}}</td>
@@ -62,6 +62,11 @@ export default class BrokersTable extends Vue {
 </script>
 
 <style lang="scss" scoped>
+
+table.datatable td {
+  cursor: auto;
+}
+
 .broker-list-content {
   padding: 2rem 3rem;
   h1 {
