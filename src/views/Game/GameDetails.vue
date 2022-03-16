@@ -21,8 +21,8 @@
             <button class="button" @click="activeTab = 'config'" :class="{'active': activeTab === 'config'}">
               Configuration
             </button>
-            <button class="button" @click="activeTab = 'files'" :class="{'active': activeTab === 'files'}">
-              Files
+            <button class="button" @click="activeTab = 'runs'" :class="{'active': activeTab === 'runs'}">
+              Runs
             </button>
           </div>
         </div>
@@ -216,6 +216,17 @@
           </table>
         </div>
       </div>
+      <div v-if="activeTab === 'runs'">
+        <div class="run" v-for="run in game.runs" :key="run.id" :class="{'active': activeRun === run.id}">
+          <div class="run-header" @click="activeRun = activeRun === run.id ? '' : run.id">
+            <fa-icon :icon="activeRun === run.id ? 'chevron-up' : 'chevron-down'" />
+            <div class="run-start mono">Start: {{formatRunDate(run.start)}}</div>
+            <div class="run-id mono">{{run.id}}</div>
+            <div class="run-status">{{run.phase}} - {{run.failed}}</div>
+          </div>
+          <run-details :run="run" class="run-details" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -226,15 +237,18 @@ import Duration from '@/components/time/Duration.vue';
 import * as Date from '@/util/Date';
 import {GameInterface} from '@/domain/Game/GameInterface';
 import moment from 'moment';
+import GameRunDetails from '@/components/game/GameRunDetails.vue';
 
-@Component({components: {duration: Duration}})
+@Component({components: {'run-details': GameRunDetails}})
 export default class GameDetails extends Vue {
 
   private activeTab: string;
+  private activeRun: string;
 
   constructor() {
     super();
-    this.activeTab = 'config'
+    this.activeTab = 'runs'
+    this.activeRun = '';
   }
 
   private mounted(): void {
@@ -283,10 +297,25 @@ export default class GameDetails extends Vue {
     return moment(date).format('L')
   }
 
+  private formatRunDate(date: number): string {
+    return moment(date).format('L LT');
+  }
+
 }
 </script>
 
 <style lang="scss" scoped>
+
+div.run {
+  .run-details {
+    display: none;
+  }
+  &.active .run-details {
+    display: flex;
+  }
+}
+
+
   h1 {
     margin: 2rem 0 3rem 0;
     small {
@@ -466,6 +495,26 @@ export default class GameDetails extends Vue {
           outline: none;
         }
       }
+    }
+  }
+  div.run {
+    div.run-header {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      background: #fafafa;
+      padding: 1rem 2rem;
+      border-bottom: 2px solid #ddd;
+
+      & > * {
+        margin-right: 2rem;
+      }
+    }
+    &.active {
+      div.run-header {
+        border-color: #3071F2;
+      }
+      svg {color: #3071F2}
     }
   }
 </style>

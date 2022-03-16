@@ -25,7 +25,8 @@
         <tr v-for="game in games"
             :key="game.id"
             :class="{'selected': game.id === selectedGameId}"
-            @click="showDetails(game.id)">
+            @click="showSidebar(game.id)"
+            @dblclick="showDetails(game.id)">
           <td class="col-center status-icon">
             <span class="status-icon"><fa-icon :icon="statusIcon(game.status)" /></span>
           </td>
@@ -77,8 +78,12 @@ export default class GameTable extends VueAdapter {
         .catch(() => console.log("unable to load games"));
   }
 
-  private showDetails(id: string): void {
+  private showSidebar(id: string): void {
     this.$router.push({name: 'game', params: {'gameId': id}});
+  }
+
+  private showDetails(id: string): void {
+    this.$router.push({name: 'game-details', params: {id}});
   }
 
   private formatDate(date: number): string {

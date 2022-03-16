@@ -49,7 +49,7 @@ export default class Game implements GameInterface {
       return 'completed';
     } else if (this.activeRun !== undefined) {
       return 'running';
-    } else if (this.runs.length < 5) {
+    } else if (this.runs.length < 3) {
       return 'queued';
     }
     return 'failed';

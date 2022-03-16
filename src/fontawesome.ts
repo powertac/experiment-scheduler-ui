@@ -204,6 +204,12 @@ library.add(faRedo);
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 library.add(faTrash);
 
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+library.add(faChevronDown);
+
+import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
+library.add(faChevronUp);
+
 // REGULAR
 import { faCaretSquareDown } from '@fortawesome/free-regular-svg-icons';
 library.add(faCaretSquareDown);
