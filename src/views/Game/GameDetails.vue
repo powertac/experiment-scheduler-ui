@@ -32,14 +32,6 @@
               <div class="key mr-4">ID</div>
               <div class="value mono">{{game.id}}</div>
             </div>
-            <!--<div class="tuple">
-              <div class="key">Start</div>
-              <div class="value mono" v-html="start"></div>
-            </div>
-            <div class="tuple">
-              <div class="key">End</div>
-              <div class="value mono" v-html="end"></div>
-            </div>-->
             <div class="tuple">
               <div class="key">Status</div>
               <div class="value mono text-uppercase">{{game.status}}</div>
@@ -47,120 +39,6 @@
           </div>
         </div>
       </div>
-      <!--<div class="container-fluid">
-        <div class="row">
-          <div class="col">
-            <h1><small>@{{game.id}}</small><br>{{game.name}}</h1>
-          </div>
-        </div>
-        <div class="row align-items-stretch" id="game-status-bar">
-          <div class="col-sm-2 game-state-container">
-            <div class="game-state">
-              <div class="label">Status</div>
-              <div class="value" :class="gameStatusClass">
-                <fa-icon class="state-icon" :icon="statusIcon" />
-                <span>{{game.status}}</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-2">
-            <div class="game-status">
-              <div class="label">Start</div>
-              <div class="value"><span v-html="start"></span></div>
-            </div>
-            <div class="game-status">
-              <div class="label">End</div>
-              <div class="value" v-html="end"></div>
-            </div>
-            <div class="game-status">
-              <div class="label">Duration</div>
-              <div class="value"><duration :start="game.start" :end="game.end" :should-tick="game.status === 'running'" /></div>
-            </div>
-          </div>
-        </div>
-        <div class="row mt-5">
-          <div class="col-md-6">
-            <h2>Brokers</h2>
-            <table class="table info-table" v-if="game.brokers.length > 0">
-              <thead>
-              <tr>
-                <th>Broker</th>
-                <th>Image</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="broker in game.brokers">
-                <td>{{broker.name}}</td>
-                <td><code>{{broker.version}}</code></td>
-              </tr>
-              </tbody>
-            </table>
-            <p v-else>
-              <em>There are brokers configured for this game. This should never happen...</em>
-            </p>
-          </div>
-        </div>
-        <div class="row mt-4">
-          <div class="col-md-6">
-            <h2>Parameters</h2>
-            <table class="table info-table" v-if="Object.values(game.serverParameters).length > 0">
-              <thead>
-              <tr>
-                <th>Parameter</th>
-                <th>Value</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="parameter in Object.keys(game.serverParameters)">
-                <td><code>{{parameter}}</code></td>
-                <td><code>{{game.serverParameters[parameter]}}</code></td>
-              </tr>
-              </tbody>
-            </table>
-            <p v-else>
-              <em>There are no simulation parameters set for this game.</em>
-            </p>
-          </div>
-        </div>
-        <div class="row mt-4">
-          <div class="col-md-6">
-            <h2>Files</h2>
-            <table class="table info-table" v-if="Object.values(game.files).length > 0">
-              <thead>
-              <tr>
-                <th>File type</th>
-                <th>Path</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-if="game.files['BOOTSTRAP'] !== undefined">
-                <td>Bootstrap</td>
-                <td><code>{{ game.files['BOOTSTRAP'] }}</code></td>
-              </tr>
-              <tr v-if="game.files['PROPERTIES'] !== undefined">
-                <td>Properties</td>
-                <td><code>{{ game.files['PROPERTIES'] }}</code></td>
-              </tr>
-              <tr v-if="game.files['SEED'] !== undefined">
-                <td>Seed</td>
-                <td><code>{{ game.files['SEED'] }}</code></td>
-              </tr>
-              <tr v-if="game.files['STATE_LOG'] !== undefined">
-                <td>State log</td>
-                <td><code>{{ game.files['STATE_LOG'] }}</code></td>
-              </tr>
-              <tr v-if="game.files['TRACE_LOG'] !== undefined">
-                <td>Trace log</td>
-                <td><code>{{ game.files['TRACE_LOG'] }}</code></td>
-              </tr>
-              </tbody>
-            </table>
-            <p v-else>
-              <em>There are no files available for this game.</em>
-            </p>
-          </div>
-        </div>
-      </div>-->
       <div class="block-container" v-if="activeTab === 'config'">
         <div class="block" v-if="game.weather !== undefined && game.weather !== null">
           <h5 class="block-title">Weather Configuration</h5>
@@ -233,7 +111,6 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import Duration from '@/components/time/Duration.vue';
 import * as Date from '@/util/Date';
 import {GameInterface} from '@/domain/Game/GameInterface';
 import moment from 'moment';

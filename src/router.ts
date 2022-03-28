@@ -9,6 +9,7 @@ import BrokerForm from '@/views/Broker/BrokerForm.vue';
 import BaselineTable from '@/views/Baseline/BaselineTable.vue';
 import BaselineForm from '@/views/Baseline/BaselineForm.vue';
 import BaselineDetails from '@/views/Baseline/BaselineDetails.vue';
+import TreatmentEditor from '@/views/Treatment/TreatmentEditor.vue';
 
 Vue.use(Router);
 
@@ -71,6 +72,10 @@ export default new Router({
         default: BaselineDetails,
         sidebar: GameSidebar,
       },
+    },
+    {
+      path: '/treatments/editor',
+      component: TreatmentEditor,
     },
   ],
 });

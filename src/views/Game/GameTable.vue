@@ -17,8 +17,8 @@
           <th class="col-center">ID</th>
           <th>Name</th>
           <th>Brokers</th>
-          <th>Created at</th>
-          <th>Completed at</th>
+          <th class="text-center">Created at</th>
+          <th class="text-center">Completed at</th>
         </tr>
         </thead>
         <tbody>
@@ -32,9 +32,9 @@
           </td>
           <td class="col-center monospaced">{{game.id.substr(0, 8)}}</td>
           <td>{{game.name}}</td>
-          <td>{{game.brokers.map((b) => b.name).join(", ")}}</td>
-          <td class="monospaced">{{formatDate(game.createdAt)}}</td>
-          <td class="monospaced" v-html="formatDate(game.end)"></td>
+          <td class="mono" v-html="game.brokers.map((b) => b.name + ':<code>' + b.version + '</code>').join(', ')"></td>
+          <td class="monospaced text-center">{{formatDate(game.createdAt)}}</td>
+          <td class="monospaced text-center" v-html="formatDate(game.end)"></td>
         </tr>
         </tbody>
       </table>

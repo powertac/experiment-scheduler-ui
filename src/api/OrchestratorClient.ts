@@ -7,6 +7,8 @@ import {GameSpec} from '@/domain/Game/GameSpec';
 import {BaselineSpec} from '@/domain/Baseline/BaselineSpec';
 import {BaselineData} from '@/domain/Baseline/BaselineData';
 import {GameData} from '@/domain/Game/GameData';
+import {TreatmentSpec} from '@/domain/Treatment/Treatment';
+import {FileNode} from '@/domain/File/FileNode';
 
 interface RestResponse {
     success: boolean;
@@ -112,6 +114,22 @@ export class OrchestratorClient {
             axios.get(config.services.orchestrator.uri + '/baselines/')
               .then((response) => resolve(response.data))
               .catch((error: AxiosError) => reject(error));
+        });
+    }
+
+    public static createTreatment(spec: TreatmentSpec<any>): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            axios.post(config.services.orchestrator.uri + '/treatments/', spec)
+              .then((response) => resolve(response.data))
+              .catch((error) => reject(error));
+        });
+    }
+
+    public static runFiles(runId: string): Promise<FileNode> {
+        return new Promise<FileNode>((resolve, reject) => {
+            axios.get(config.services.orchestrator.uri + '/files/run/' + runId)
+              .then((response) => resolve(response.data))
+              .catch((error) => reject(error));
         });
     }
 

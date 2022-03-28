@@ -13,6 +13,18 @@
       </div>
       Baselines
     </router-link>
+    <!--<router-link class="nav-option" to="/modifiers/editor">
+      <div class="nav-icon">
+        <fa-icon icon="asterisk" transform="shrink-2" class="nav-option-icon" />
+      </div>
+      Modifiers
+    </router-link>-->
+    <router-link class="nav-option" to="/treatments/editor">
+      <div class="nav-icon">
+        <fa-icon icon="code-branch" transform="shrink-2" class="nav-option-icon" />
+      </div>
+      Treatments
+    </router-link>
     <router-link class="nav-option" to="/brokers">
       <div class="nav-icon">
         <fa-icon icon="chess" transform="shrink-2" class="nav-option-icon" />

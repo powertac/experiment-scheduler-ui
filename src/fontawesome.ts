@@ -210,6 +210,12 @@ library.add(faChevronDown);
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 library.add(faChevronUp);
 
+import {faFolder} from '@fortawesome/free-solid-svg-icons';
+library.add(faFolder);
+
+import {faFile} from '@fortawesome/free-solid-svg-icons';
+library.add(faFile);
+
 // REGULAR
 import { faCaretSquareDown } from '@fortawesome/free-regular-svg-icons';
 library.add(faCaretSquareDown);
