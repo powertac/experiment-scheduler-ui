@@ -1,13 +1,13 @@
 import {BrokerSet} from '@/domain/Broker/BrokerSet';
 import {WeatherConfigurationData} from '@/domain/Weather/WeatherConfigurationData';
-import Game from '@/domain/Game/Game';
+import {GameData} from '@/domain/Game/GameData';
 
 export interface BaselineData {
   id: string;
   name: string;
   brokerSets: BrokerSet[];
   weatherConfigurations: WeatherConfigurationData[];
-  games: Game[];
+  games: GameData[];
   createdAt: number;
   commonParameters: {[key: string]: string};
 }

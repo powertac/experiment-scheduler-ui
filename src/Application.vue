@@ -141,6 +141,5 @@ export default class App extends VueAdapter {
   // TODO : find a more appropriate selector; otherwise the '#app' prefix is always required to override style
   #app code {
     font-family: "Inconsolata", monospace;
-    font-size: .9em;
   }
 </style>

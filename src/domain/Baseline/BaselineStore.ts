@@ -2,8 +2,6 @@ import {BaselineData} from '@/domain/Baseline/BaselineData';
 import {ActionContext, ActionTree, GetterTree, Module, MutationTree} from 'vuex';
 import {RootStoreState} from '@/domain/Store/RootStore';
 import {Baseline} from '@/domain/Baseline/Baseline';
-import {GameInterface} from '@/domain/Game/GameInterface';
-import {GameStoreState} from '@/domain/Game/GameStore';
 
 export interface BaselineStoreState {
   baselines: { [key: string]: Baseline };

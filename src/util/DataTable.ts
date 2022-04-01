@@ -1,10 +1,10 @@
-import {GameInterface} from '@/domain/Game/GameInterface';
 import {formatDate} from '@/util/Date';
 import {Broker} from '@/domain/Broker/Broker';
+import Game from '@/domain/Game/Game';
 
 export class DataTable {
 
-  public static matchGames(term: string, game: GameInterface): boolean {
+  public static matchGames(term: string, game: Game): boolean {
     const terms: string[] = term.split('|')
       .map((t: string) => t.trim())
       .filter((t: string) => t.length > 1)
@@ -14,7 +14,7 @@ export class DataTable {
       : true;
   }
 
-  public static defaultSortGames(a: GameInterface, b: GameInterface): number {
+  public static defaultSortGames(a: Game, b: Game): number {
     if (a.status !== b.status) {              // sort by status first
       return a.statusIndex - b.statusIndex;
     } else if (a.createdAt !== b.createdAt) { // ... then by creation date (desc)
@@ -24,7 +24,7 @@ export class DataTable {
     }
   }
 
-  private static matchSingleGame(term: string, game: GameInterface): boolean {
+  private static matchSingleGame(term: string, game: Game): boolean {
     return game.name.toLowerCase().includes(term)
     || game.id.toLowerCase().includes(term)
     || game.brokers.reduce(

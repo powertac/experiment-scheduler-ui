@@ -1,6 +1,6 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 
-import { faUserSecret, faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import {faUserSecret, faCheckCircle, faTimesCircle, faCaretDown} from '@fortawesome/free-solid-svg-icons';
 import { faCheckSquare, faRunning, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 library.add(faUserSecret);
 library.add(faCheckCircle);

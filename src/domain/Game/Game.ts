@@ -1,9 +1,10 @@
-import {GameInterface} from '@/domain/Game/GameInterface';
 import {Broker} from '@/domain/Broker/Broker';
 import {GameRun} from '@/domain/Game/GameRun';
 import {WeatherConfigurationData} from '@/domain/Weather/WeatherConfigurationData';
+import {GameData} from '@/domain/Game/GameData';
 
-export default class Game implements GameInterface {
+export default class Game {
+
   public id: string;
   public bootstrap: File;
   public name: string;
@@ -11,27 +12,27 @@ export default class Game implements GameInterface {
   public seed: File;
   public serverParameters: {[key: string]: string};
   public createdAt: number;
-  public files: { [role: string]: string };
   public cancelled: boolean;
   public weather: WeatherConfigurationData;
-  public baseline: string;
+  public baseline: string|null;
   private _brokers: Broker[];
+  private base: string|null;
+  private treatment: string|null;
 
-  constructor(id: string, bootstrap: File, brokers: Broker[], name: string, runs: GameRun[], seed: File,
-              serverParameters: {[key: string]: string}, createdAt: number, files: { [role: string]: string },
-              cancelled: boolean, weather: WeatherConfigurationData, baseline: string) {
-    this.id = id;
-    this.bootstrap = bootstrap;
-    this.brokers = brokers;
-    this.name = name;
-    this.runs = runs;
-    this.seed = seed;
-    this.serverParameters = serverParameters;
-    this.createdAt = createdAt;
-    this.files = files;
-    this.cancelled = cancelled;
-    this.weather = weather;
-    this.baseline = baseline;
+  constructor(data: GameData) {
+    this.id = data.id;
+    this.bootstrap = data.bootstrap;
+    this.brokers = data.brokers;
+    this.name = data.name;
+    this.runs = data.runs;
+    this.seed = data.seed;
+    this.serverParameters = data.serverParameters;
+    this.createdAt = data.createdAt;
+    this.cancelled = data.cancelled;
+    this.weather = data.weather;
+    this.baseline = data.baseline;
+    this.base = data.base;
+    this.treatment = data.treatment;
   }
 
   set brokers(brokers) {
@@ -104,7 +105,7 @@ export default class Game implements GameInterface {
     }
     let hasStateLog = false;
     let hasBootstrapFile = false;
-    for (const key in this.files) {
+    for (const key in this.files) { // FIXME : check orchestrator for this information
       hasStateLog = hasStateLog || (key === 'STATE_LOG');
       hasBootstrapFile = hasBootstrapFile || (key === 'BOOTSTRAP');
     }

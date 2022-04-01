@@ -1,19 +1,18 @@
 <template>
   <div class="file-node">
-    <fa-icon class="icon" :icon="icon" v-if="isRoot" />
-    <span class="file-name" @click="openContextMenu">{{ isRoot ? path : node.name}}{{ node.directory && !isRoot ? '/' : ''}}</span>
-    <file-node class="child" :node="child" v-for="child in node.children" :key="child.path" />
-    <div class="file-actions" v-if="showContextMenu" :style="contextMenuStyle" v-click-outside="() => showContextMenu = false">
-      <button type="button">Download {{ node.directory ? 'files' : 'file' }}</button>
-      <button type="button">Copy path</button>
-    </div>
+    <span class="file-name" :class="{'selectable': selectable && !node.directory, 'selected': selected}" @click="selectSelf">
+      {{isRoot ? '.../' : ''}}{{node.name}}{{ node.directory && !isRoot ? '/' : ''}}
+    </span>
+    <file-node class="child" :node="child" v-for="child in node.children" :key="child.path"
+               :selected-node="selectedNode"
+               :selectable="selectable"
+               @file-selected="selectFile" />
   </div>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator';
+import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
 import {FileNode} from '@/domain/File/FileNode';
-import ClickEvent = JQuery.ClickEvent;
 
 @Component({name: 'file-node'})
 export default class FileTreeNode extends Vue {
@@ -21,41 +20,34 @@ export default class FileTreeNode extends Vue {
   @Prop({required: true})
   private node: FileNode;
 
+  @Prop({required: false, default: () => null})
+  private selectedNode: FileNode|null;
+
   @Prop({required: false, default: () => false})
   private isRoot: boolean;
 
-  private showContextMenu: boolean;
-  private contextMenuX: number;
-  private contextMenuY: number;
-
-  constructor() {
-    super();
-    this.showContextMenu = false;
-    this.contextMenuX = 0;
-    this.contextMenuY = 0;
-  }
-
-  get icon(): string {
-    return this.node.directory
-        ? 'folder'
-        : 'file';
-  }
+  @Prop({required: false, default: () => false})
+  private selectable: boolean;
 
   get path(): string {
     return this.node.path.replace("file://", "");
   }
 
-  get contextMenuStyle(): {[key: string]: string} {
-    return {
-      top: this.contextMenuY + 'px',
-      left: this.contextMenuX + 'px'
-    };
+  get selected(): boolean {
+    return this.selectedNode !== null
+        ? this.node.path === this.selectedNode.path
+        : false;
   }
 
-  private openContextMenu(event: ClickEvent): void {
-    this.contextMenuX = Math.round(event.clientX - (<DOMRect> this.$el.getBoundingClientRect()).x);
-    this.contextMenuY = Math.round(event.clientY - (<DOMRect> this.$el.getBoundingClientRect()).y);
-    this.showContextMenu = true;
+  private selectSelf(): void {
+    if (!this.node.directory) {
+      this.selectFile(this.node);
+    }
+  }
+
+  @Emit('file-selected')
+  private selectFile(file: FileNode): FileNode|null {
+    return this.selectable ? file : null;
   }
 
 }
@@ -68,15 +60,29 @@ $line-style: solid;
 $line-width: 1px;
 .file-node {
   position: relative;
-  padding-left: 1rem;
+  padding-left: .75rem;
   font-family: "Inconsolata", monospace;
+  flex-wrap: nowrap;
   .file-name {
     display: inline-block;
-    //padding-left: .15rem;
     line-height: 1.75;
+    word-break: keep-all;
+    white-space: nowrap;
+    color: #475569;
+    padding-left: .4rem;
+    padding-right: .4rem;
+    &.selectable {
+      cursor: pointer;
+      color: #1E293B;
+    }
+    &.selected {
+      color: #0F172A;
+      background: #F1F5F9;
+      border-radius: .2rem;
+    }
   }
   &.child {
-    margin-left: .45rem;
+    margin-left: .66rem;
     border-left: $line-width $line-style $line-color;
     &:before {
       content: "";
@@ -84,12 +90,12 @@ $line-width: 1px;
       top: 0;
       left: 0;
       height: .85rem;
-      width: .5rem;
+      width: .66rem;
       border-bottom: $line-width $line-style $line-color;
     }
     &:last-child {
       border-left: 0;
-      padding-left: calc(1rem + $line-width);
+      padding-left: calc(.75rem + $line-width);
       &:before {
         border-left: $line-width $line-style $line-color;
       }

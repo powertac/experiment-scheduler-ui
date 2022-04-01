@@ -4,13 +4,13 @@
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator';
-import {GameInterface} from '@/domain/Game/GameInterface';
+import Game from '@/domain/Game/Game';
 
 @Component
 export default class GameStatusIcon extends Vue {
 
   @Prop({required: true})
-  private game: GameInterface;
+  private game: Game;
 
   get icon(): string[] {
     switch (this.game.status) {

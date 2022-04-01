@@ -1,7 +1,6 @@
 import axios, {AxiosError, AxiosResponse} from 'axios';
 import {ServerStatus} from '@/domain/Service/ServerStatus';
 import config from '@/config';
-import {GameInterface} from '@/domain/Game/GameInterface';
 import {Broker} from '@/domain/Broker/Broker';
 import {GameSpec} from '@/domain/Game/GameSpec';
 import {BaselineSpec} from '@/domain/Baseline/BaselineSpec';
@@ -9,12 +8,13 @@ import {BaselineData} from '@/domain/Baseline/BaselineData';
 import {GameData} from '@/domain/Game/GameData';
 import {TreatmentSpec} from '@/domain/Treatment/Treatment';
 import {FileNode} from '@/domain/File/FileNode';
+import Game from '@/domain/Game/Game';
 
 interface RestResponse {
     success: boolean;
     message: string;
     payload: any;
-    games: GameInterface[];
+    games: GameData[];
 }
 
 export class OrchestratorClient {
@@ -61,7 +61,7 @@ export class OrchestratorClient {
         });
     }
 
-    public static rerunGame(game: GameInterface): Promise<void> {
+    public static rerunGame(game: Game): Promise<void> {
         return new Promise<void>((resolve: (response: void) => void, reject: (error: AxiosError) => void) => {
             axios.post(config.services.orchestrator.uri + '/games/' + game.id + '/rerun')
               .then(() => resolve())
@@ -69,7 +69,7 @@ export class OrchestratorClient {
         });
     }
 
-    public static deleteGame(game: GameInterface): Promise<void> {
+    public static deleteGame(game: Game): Promise<void> {
         return new Promise<void>((resolve: (response: void) => void, reject: (error: AxiosError) => void) => {
             axios.delete(config.services.orchestrator.uri + '/games/' + game.id)
               .then(() => resolve())
@@ -128,6 +128,14 @@ export class OrchestratorClient {
     public static runFiles(runId: string): Promise<FileNode> {
         return new Promise<FileNode>((resolve, reject) => {
             axios.get(config.services.orchestrator.uri + '/files/run/' + runId)
+              .then((response) => resolve(response.data))
+              .catch((error) => reject(error));
+        });
+    }
+
+    public static fileContent(file: FileNode): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            axios.get(config.services.orchestrator.uri + '/files', {params: {path: file.path, offset: 0, length: 5000}})
               .then((response) => resolve(response.data))
               .catch((error) => reject(error));
         });

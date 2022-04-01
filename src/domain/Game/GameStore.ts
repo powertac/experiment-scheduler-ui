@@ -1,7 +1,7 @@
 import {ActionContext, ActionTree, GetterTree, Module, MutationTree} from 'vuex';
 import {RootStoreState} from '@/domain/Store/RootStore';
-import {GameInterface} from '@/domain/Game/GameInterface';
 import {GameData} from '@/domain/Game/GameData';
+import Game from '@/domain/Game/Game';
 
 export interface GameStore extends Module<GameStoreState, RootStoreState> {
   namespaced: boolean;
@@ -12,17 +12,17 @@ export interface GameStore extends Module<GameStoreState, RootStoreState> {
 }
 
 export interface GameStoreState {
-  games: {[key: string]: GameInterface};
+  games: {[key: string]: Game};
 }
 
 export interface GameStoreGetters extends GetterTree<GameStoreState, RootStoreState> {
-  find: (state: GameStoreState, getters: GameStoreGetters) => (id: string) => GameInterface|null;
-  findAll: (state: GameStoreState, getters: GameStoreGetters) => GameInterface[];
+  find: (state: GameStoreState, getters: GameStoreGetters) => (id: string) => Game|null;
+  findAll: (state: GameStoreState, getters: GameStoreGetters) => Game[];
 }
 
 export interface GameStoreMutations extends MutationTree<GameStoreState> {
   add: (state: GameStoreState, game: GameData) => void;
-  remove: (state: GameStoreState, game: GameInterface) => void;
+  remove: (state: GameStoreState, game: Game) => void;
 }
 
 export interface GameStoreActions extends ActionTree<GameStoreState, RootStoreState> {

@@ -90,11 +90,10 @@ import {Component} from 'vue-property-decorator';
 import {VueAdapter} from '@/VueAdapter';
 import * as Date from '@/util/Date';
 import Duration from '@/components/time/Duration.vue';
-import {GameInterface} from '@/domain/Game/GameInterface';
 import {Baseline} from '@/domain/Baseline/Baseline';
-import {WeatherConfigurationImpl} from '@/domain/Weather/WeatherConfigurationImpl';
 import moment from 'moment';
 import {OrchestratorClient} from '@/api/OrchestratorClient';
+import Game from '@/domain/Game/Game';
 
 @Component({components: {duration: Duration}})
   export default class GameSidebar extends VueAdapter {
@@ -103,7 +102,7 @@ import {OrchestratorClient} from '@/api/OrchestratorClient';
       return this.$route.params.gameId;
     }
 
-    get game(): GameInterface {
+    get game(): Game {
       return this.$store.getters['games/find'](this.gameId);
     }
 

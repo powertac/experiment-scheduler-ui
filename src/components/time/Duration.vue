@@ -6,7 +6,7 @@
 import {Component, Prop, Vue} from 'vue-property-decorator';
 import moment from 'moment';
 
-@Component
+@Component({name: 'duration'})
 export default class Duration extends Vue {
 
   @Prop({required: true})

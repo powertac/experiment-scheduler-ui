@@ -21,12 +21,12 @@ import ApplicationBar from "@/components/application/ApplicationBar.vue";
   #view {
     display: flex;
     flex-grow: 1;
-    overflow-y: auto;
     .view {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
       overflow-y: auto;
+      align-self: stretch;
       border-right: 1px solid #ddd;
 
       div.action-bar {

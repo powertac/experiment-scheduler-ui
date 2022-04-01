@@ -23,9 +23,6 @@
           <button class="button" @click="activeTab = 'config'" :class="{'active': activeTab === 'config'}">
             Configuration
           </button>
-          <!--<button class="button" @click="activeTab = 'files'" :class="{'active': activeTab === 'files'}">
-            Files
-          </button>-->
         </div>
       </div>
       <div class="status-secondary">
@@ -141,12 +138,12 @@
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
 import Duration from '@/components/time/Duration.vue';
-import {GameInterface} from '@/domain/Game/GameInterface';
 import {Baseline} from '@/domain/Baseline/Baseline';
 import {DataTable} from '@/util/DataTable';
 import GameStatusIcon from '@/components/game/GameStatusIcon.vue';
 import {formatDate} from '@/util/Date';
 import moment from 'moment';
+import Game from '@/domain/Game/Game';
 
 @Component({components: {duration: Duration, 'status-icon': GameStatusIcon}})
 export default class BaselineDetails extends Vue {
@@ -170,11 +167,11 @@ export default class BaselineDetails extends Vue {
     return this.$store.getters['baselines/find'](this.baselineId);
   }
 
-  get games(): GameInterface[] {
+  get games(): Game[] {
     return this.baseline.games.sort((DataTable.defaultSortGames));
   }
 
-  private showSidebar(game: GameInterface): void {
+  private showSidebar(game: Game): void {
     this.$router.push('/baselines/' + this.baselineId + '/details/' + game.id)
   }
 

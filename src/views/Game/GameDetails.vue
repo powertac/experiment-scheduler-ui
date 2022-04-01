@@ -94,17 +94,7 @@
           </table>
         </div>
       </div>
-      <div v-if="activeTab === 'runs'">
-        <div class="run" v-for="run in game.runs" :key="run.id" :class="{'active': activeRun === run.id}">
-          <div class="run-header" @click="activeRun = activeRun === run.id ? '' : run.id">
-            <fa-icon :icon="activeRun === run.id ? 'chevron-up' : 'chevron-down'" />
-            <div class="run-start mono">Start: {{formatRunDate(run.start)}}</div>
-            <div class="run-id mono">{{run.id}}</div>
-            <div class="run-status">{{run.phase}} - {{run.failed}}</div>
-          </div>
-          <run-details :run="run" class="run-details" />
-        </div>
-      </div>
+      <runs :game="game" v-if="game !== undefined && activeTab === 'runs'" />
     </div>
   </div>
 </template>
@@ -112,11 +102,12 @@
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
 import * as Date from '@/util/Date';
-import {GameInterface} from '@/domain/Game/GameInterface';
 import moment from 'moment';
-import GameRunDetails from '@/components/game/GameRunDetails.vue';
+import GameRunSelector from '@/components/game/GameRunSelector.vue';
+import FileTreeViewer from '@/components/file/FileTreeViewer.vue';
+import Game from '@/domain/Game/Game';
 
-@Component({components: {'run-details': GameRunDetails}})
+@Component({components: {GameRunSelector, FileTreeViewer}})
 export default class GameDetails extends Vue {
 
   private activeTab: string;
@@ -136,7 +127,7 @@ export default class GameDetails extends Vue {
     return this.$route.params.id;
   }
 
-  get game(): GameInterface {
+  get game(): Game {
     return this.$store.getters['games/find'](this.gameId);
   }
 

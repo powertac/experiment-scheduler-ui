@@ -10,9 +10,10 @@ export interface GameData {
   seed: File;
   serverParameters: {[key: string]: string};
   createdAt: number;
-  files: { [role: string]: string };
   cancelled: boolean;
   brokers: Broker[];
   weather: WeatherConfigurationData;
-  baseline: string;
+  baseline: string|null;
+  base: string|null;
+  treatment: string|null;
 }

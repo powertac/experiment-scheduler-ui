@@ -45,9 +45,9 @@
 <script lang="ts">
 import {Component} from 'vue-property-decorator';
 import {VueAdapter} from '@/VueAdapter';
-import {GameInterface} from '@/domain/Game/GameInterface';
 import {formatDate} from '@/util/Date';
 import {DataTable} from '@/util/DataTable';
+import Game from '@/domain/Game/Game';
 
 @Component
 export default class GameTable extends VueAdapter {
@@ -65,10 +65,10 @@ export default class GameTable extends VueAdapter {
     return this.$route.params.id;
   }
 
-  get games(): GameInterface[] {
+  get games(): Game[] {
     const games = this.$store.getters['games/findAll'];
     return games.slice()
-        .filter((g: GameInterface) => DataTable.matchGames(this.search, g))
+        .filter((g: Game) => DataTable.matchGames(this.search, g))
         .sort(DataTable.defaultSortGames);
   }
 
