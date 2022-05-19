@@ -2,27 +2,32 @@ import {Broker} from '@/domain/Broker/Broker';
 import {GameRun} from '@/domain/Game/GameRun';
 import {WeatherConfigurationData} from '@/domain/Weather/WeatherConfigurationData';
 import {GameData} from '@/domain/Game/GameData';
+import {Treatment} from '@/domain/Treatment/Treatment';
+import {findOrFail} from '@/domain/FindOrFail';
+import store from '@/domain/Store/RootStoreImpl';
+import {Baseline} from '@/domain/Baseline/Baseline';
 
 export default class Game {
 
-  public id: string;
-  public bootstrap: File;
-  public name: string;
-  public runs: GameRun[];
-  public seed: File;
-  public serverParameters: {[key: string]: string};
-  public createdAt: number;
-  public cancelled: boolean;
-  public weather: WeatherConfigurationData;
-  public baseline: string|null;
-  private _brokers: Broker[];
-  private base: string|null;
-  private treatment: string|null;
+  public readonly id: string;
+  public readonly bootstrap: File;
+  public readonly name: string;
+  public readonly runs: GameRun[];
+  public readonly seed: File;
+  public readonly serverParameters: {[key: string]: string};
+  public readonly createdAt: number;
+  public readonly cancelled: boolean;
+  public readonly weather: WeatherConfigurationData;
+  public readonly isValidTemplate: boolean;
+  public readonly baselineId: string|null;
+  private readonly baseId: string|null;
+  private readonly treatmentId: string|null;
+  private readonly _brokers: Broker[];
 
   constructor(data: GameData) {
     this.id = data.id;
     this.bootstrap = data.bootstrap;
-    this.brokers = data.brokers;
+    this._brokers = data.brokers;
     this.name = data.name;
     this.runs = data.runs;
     this.seed = data.seed;
@@ -30,17 +35,33 @@ export default class Game {
     this.createdAt = data.createdAt;
     this.cancelled = data.cancelled;
     this.weather = data.weather;
-    this.baseline = data.baseline;
-    this.base = data.base;
-    this.treatment = data.treatment;
+    this.baselineId = data.baselineId !== undefined ? data.baselineId : null;
+    this.baseId = data.baseId !== undefined ? data.baseId : null;
+    this.treatmentId = data.treatmentId !== undefined ? data.treatmentId : null;
+    this.isValidTemplate = data.isValidTemplate;
   }
 
-  set brokers(brokers) {
-    this._brokers = brokers;
+  get baseline(): Baseline|null {
+    return this.baselineId !== null
+      ? findOrFail<Baseline>(() => store.getters['baselines/find'](this.baselineId))
+      : null;
+  }
+
+  get base(): Game|null {
+    return this.baseId !== null
+      ? findOrFail<Game>(() => store.getters['games/find'](this.baseId))
+      : null;
+  }
+
+  get treatment(): Treatment<any>|null {
+    return this.treatmentId !== null
+      ? findOrFail<Treatment<any>>(() => store.getters['treatments/find'](this.treatmentId))
+      : null;
   }
 
   get brokers(): Broker[] {
-    return this._brokers.slice().sort((a, b) => (a.name === b.name) ? 0 : (a.name >= b.name) ? 1 : -1);
+    return this._brokers.slice()
+      .sort((a, b) => (a.name === b.name) ? 0 : (a.name >= b.name) ? 1 : -1);
   }
 
   get status(): string {
@@ -97,19 +118,6 @@ export default class Game {
       end = this.activeRun.end;
     }
     return end !== null ? end : -1;
-  }
-
-  get isValidTemplate(): boolean {
-    if ('completed' !== this.status) {
-      return false;
-    }
-    let hasStateLog = false;
-    let hasBootstrapFile = false;
-    for (const key in this.files) { // FIXME : check orchestrator for this information
-      hasStateLog = hasStateLog || (key === 'STATE_LOG');
-      hasBootstrapFile = hasBootstrapFile || (key === 'BOOTSTRAP');
-    }
-    return hasStateLog && hasBootstrapFile;
   }
 
 }

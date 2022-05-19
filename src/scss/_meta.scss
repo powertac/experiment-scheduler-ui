@@ -1,0 +1,20 @@
+table.meta {
+  th {
+    font-weight: normal;
+    text-transform: uppercase;
+    font-size: .9em;
+    color: #64748B;
+    padding-right: 2rem;
+  }
+  td {
+    text-align: right;
+    &.monospaced {
+      font-family: "Inconsolata", monospace;
+    }
+    svg.link-icon {
+      font-size: .9em;
+      margin-right: .33rem;
+      color: #60A5FA;
+    }
+  }
+}

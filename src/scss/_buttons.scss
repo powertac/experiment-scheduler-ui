@@ -1,0 +1,17 @@
+.button {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: .66em 1em;
+  border-radius: .2rem;
+  cursor: pointer;
+
+  .button-icon {
+    font-size: .875em;
+    margin-left: .66em;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    background: #eee;
+  }
+}

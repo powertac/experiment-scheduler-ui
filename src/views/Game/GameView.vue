@@ -11,15 +11,70 @@
     </div>
     <template v-else>
       <div class="game-view-header">
-        <h1 class="game-view-title">
-          {{game.name}}
-          <small class="text-muted">ID: {{game.id}}</small>
-        </h1>
-        <div class="game-relationships">
-          <div class="game-group" v-if="baseline !== null">
-            Baseline: <router-link :to="'/baselines/' + baseline.id">{{baseline.name}}</router-link>
-          </div>
-          <div class="game-base"></div>
+        <div class="game-view-header-block">
+          <h1 class="game-view-title">{{game.name}}</h1>
+          <table class="meta">
+            <tr>
+              <th>ID</th>
+              <td class="mono">{{game.id}}</td>
+            </tr>
+            <tr>
+              <th>Created at</th>
+              <td class="mono"><format-date :date="game.createdAt" /></td>
+            </tr>
+            <tr v-if="game.baseline !== null">
+              <th>Baseline</th>
+              <td><router-link :to="'/baselines/' + game.baseline.id + '/details'">
+                <fa-icon icon="seedling" class="link-icon" />
+                {{game.baseline.name}}
+              </router-link></td>
+            </tr>
+            <tr v-if="game.treatment !== null">
+              <th>Treatment</th>
+              <td><router-link :to="'/treatments/' + game.treatment.id">
+                <fa-icon icon="code-branch" class="link-icon" />
+                {{game.treatment.name}}
+              </router-link></td>
+            </tr>
+            <tr v-if="game.base !== null">
+              <th>Base game</th>
+              <td><router-link :to="'/games/' + game.base.id + '/runs'">
+                <fa-icon icon="dice-d6" class="link-icon" />
+                {{game.base.name}}
+              </router-link></td>
+            </tr>
+          </table>
+        </div>
+        <div class="game-view-header-block">
+          <h2>Brokers</h2>
+          <table class="brokers">
+            <tr v-for="broker in game.brokers" :key="broker.id">
+              <th>{{ broker.name }}</th>
+              <td>{{ broker.version }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="game-view-header-block" v-if="game.weather !== null">
+          <h2>Weather</h2>
+          <table class="meta">
+            <tr>
+              <th>Location</th>
+              <td>{{game.weather.location}}</td>
+            </tr>
+            <tr>
+              <th>Start date</th>
+              <td class="mono"><format-date :date="game.weather.startTime"/></td>
+            </tr>
+          </table>
+        </div>
+        <div class="game-view-header-block" v-if="Object.keys(game.serverParameters).length > 0">
+          <h2>Parameters</h2>
+          <table class="meta">
+            <tr v-for="param in Object.keys(game.serverParameters)" :key="param">
+              <th>{{param}}</th>
+              <th>{{game.serverParameters[param]}}</th>
+            </tr>
+          </table>
         </div>
       </div>
       <game-run-selector :runs="game.runs" @run-selected="selectRun" />
@@ -33,12 +88,13 @@ import {Component, Vue} from 'vue-property-decorator';
 import GameRunSelector from '@/components/game/GameRunSelector.vue';
 import {GameRun} from '@/domain/Game/GameRun';
 import FileTreeViewer from '@/components/file/FileTreeViewer.vue';
-import {FileNode} from '@/domain/File/FileNode';
+import FileNode from '@/domain/File/FileNode';
 import {OrchestratorClient} from '@/api/OrchestratorClient';
-import {Baseline} from '@/domain/Baseline/Baseline';
 import Game from '@/domain/Game/Game';
+import FormattedDate from '@/components/time/FormattedDate.vue';
+import FormatDate from '@/components/time/FormattedDate.vue';
 
-@Component({components: {GameRunSelector, FileTreeViewer}})
+@Component({components: {FormatDate, GameRunSelector, FileTreeViewer, FormattedDate}})
 export default class GameView extends Vue {
 
   private selectedRun: GameRun|null;
@@ -62,12 +118,6 @@ export default class GameView extends Vue {
     return this.$store.getters['games/find'](this.gameId);
   }
 
-  get baseline(): Baseline|null {
-    return this.game.baseline === null
-        ? null
-        : this.$store.getters['baselines/find'](this.game.baseline);
-  }
-
   private selectRun(run: GameRun|null): void {
     this.selectedRun = run;
     if (null != run) {
@@ -85,11 +135,12 @@ div.game-view {
   display: flex;
   overflow: hidden;
   height: 100vh;
+  flex-direction: row;
 }
 div.game-view-header {
+  display: flex;
   background: #F1F5F9;
   border-bottom: 1px solid #CBD5E1;
-  padding: 2rem;
 
   .game-view-title {
     display: flex;
@@ -99,6 +150,17 @@ div.game-view-header {
       font-size: 1rem;
       font-family: "Inconsolata", monospace;
     }
+  }
+  div.game-view-header-block {
+    min-width: 18rem;
+    padding: 1.75rem 2.33rem;
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  div.game-view-header-block + div.game-view-header-block {
+    border-left: 1px solid #CBD5E1;
   }
 }
 </style>

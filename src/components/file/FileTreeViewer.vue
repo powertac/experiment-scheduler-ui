@@ -1,6 +1,6 @@
 <template>
-  <div class="file-tree-viewer"  v-on:mousemove="resizeX" v-on:click="stopResizeX">
-      <div class="run-navigator" :style="{'width': navigatorWidth + 'px'}">
+  <div class="file-tree-viewer"  v-on:mousemove="resizeX" v-on:click="stopResizeX" :class="{'unselectable': resizing}">
+      <div class="run-navigator" :style="{'width': navigatorWidth + 'px'}" :class="{'unselectable': resizing}">
         <file-node :node="root" :is-root="true" :selected-node="currentFile" :selectable="true" @file-selected="selectFile" />
       </div>
       <div class="resizer" :class="{'active': resizing}"
@@ -8,13 +8,13 @@
            v-on:mouseup="stopResizeX">
         <div class="resizer-center-line"></div>
       </div>
-      <file-viewer :file="currentFile" :class="{'unselectable': resizing}" />
+      <file-viewer :file="currentFile" />
   </div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-import {FileNode} from '@/domain/File/FileNode';
+import FileNode from '@/domain/File/FileNode';
 import FileViewer from '@/components/file/FileViewer.vue';
 import {OrchestratorClient} from '@/api/OrchestratorClient';
 import MouseMoveEvent = JQuery.MouseMoveEvent;
@@ -78,6 +78,9 @@ export default class FileTreeViewer extends Vue {
   display: flex;
   flex-grow: 1;
   overflow: auto;
+  &.unselectable {
+    -webkit-user-select: none;
+  }
 }
 div.run-navigator {
   display: flex;

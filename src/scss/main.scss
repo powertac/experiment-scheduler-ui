@@ -7,10 +7,12 @@
 @import "statusbar";
 @import "tupletable";
 @import "block";
+@import "meta";
+@import "buttons";
 
 html, body, #app {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  // overflow: hidden;
 }
 

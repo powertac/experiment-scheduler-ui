@@ -34,6 +34,13 @@ export default class App extends VueAdapter {
         .catch(() => console.error('failed to subscribe to brokers channel'));
     this.$store.dispatch('baselines/subscribe')
         .catch(() => console.error('failed to subscribe to brokers channel'));
+    this.$store.dispatch('brokers/loadAll')
+        .catch(() => console.error("unable to load brokers"));
+    this.$store.dispatch('treatments/loadAll')
+        .catch(() => console.error("unable to load treatments"));
+    this.$store.dispatch('baselines/loadAll')
+        .catch(() => console.error("unable to load baselines"));
+    // FIXME : wait till all loading ops are completed before showing the page
   }
 
 }

@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import GameFormAlternative from '@/views/Game/GameForm.vue';
-import resizing from '@/views/Game/GameTable.vue';
+import GameTable from '@/views/Game/GameTable.vue';
 import GameSidebar from '@/views/Game/GameSidebar.vue';
-import GameDetails from '@/views/Game/GameDetails.vue';
 import BrokersTable from '@/views/Broker/BrokersTable.vue';
 import BrokerForm from '@/views/Broker/BrokerForm.vue';
 import BaselineTable from '@/views/Baseline/BaselineTable.vue';
@@ -11,7 +10,8 @@ import BaselineForm from '@/views/Baseline/BaselineForm.vue';
 import BaselineDetails from '@/views/Baseline/BaselineDetails.vue';
 import TreatmentEditor from '@/views/Treatment/TreatmentEditor.vue';
 import GameView from '@/views/Game/GameView.vue';
-import GameTable from '@/views/Game/GameTable.vue';
+import TreatmentTable from '@/views/Treatment/TreatmentTable.vue';
+import TreatmentView from '@/views/Treatment/TreatmentView.vue';
 
 Vue.use(Router);
 
@@ -82,6 +82,21 @@ export default new Router({
     {
       path: '/treatments/editor',
       component: TreatmentEditor,
+    },
+    {
+      path: '/treatments/',
+      component: TreatmentTable,
+    },
+    {
+      path: '/treatments/:id/games/:gameId',
+      components: {
+        default: TreatmentView,
+        sidebar: GameSidebar,
+      },
+    },
+    {
+      path: '/treatments/:id/games',
+      component: TreatmentView,
     },
   ],
 });

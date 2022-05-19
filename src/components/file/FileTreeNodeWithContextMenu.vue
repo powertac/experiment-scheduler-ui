@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator';
-import {FileNode} from '@/domain/File/FileNode';
+import FileNode from '@/domain/File/FileNode';
 import ClickEvent = JQuery.ClickEvent;
 
 @Component({name: 'file-node'})
@@ -66,7 +66,6 @@ export default class FileTreeNodeWithContextMenu extends Vue {
 $icon-color: #CBD5E1;
 $line-color: #CBD5E1;
 $line-style: solid;
-$line-width: 1px;
 .file-node {
   position: relative;
   padding-left: 1rem;
@@ -81,7 +80,7 @@ $line-width: 1px;
   }
   &.child {
     margin-left: .45rem;
-    border-left: $line-width $line-style $line-color;
+    border-left: 1px $line-style $line-color;
     &:before {
       content: "";
       position: absolute;
@@ -89,13 +88,13 @@ $line-width: 1px;
       left: 0;
       height: .85rem;
       width: .5rem;
-      border-bottom: $line-width $line-style $line-color;
+      border-bottom: 1px $line-style $line-color;
     }
     &:last-child {
       border-left: 0;
-      padding-left: calc(1rem + $line-width);
+      padding-left: calc(1rem + 1px);
       &:before {
-        border-left: $line-width $line-style $line-color;
+        border-left: 1px $line-style $line-color;
       }
     }
   }

@@ -24,6 +24,12 @@ export default class BrokerSelector extends Vue {
   @Prop({required: false, default: () => []})
   private initiallySelected: Broker[];
 
+  @Prop({required: false, default: () => []})
+  private brokerSet: Broker[];
+
+  @Prop({required: false, default: () => true})
+  private multiSelect: boolean;
+
   private selected: {[key: string]: Broker|undefined};
 
   constructor() {
@@ -48,7 +54,9 @@ export default class BrokerSelector extends Vue {
   }
 
   get brokers(): Broker[] {
-    return this.$store.getters['brokers/findAll'];
+    return this.brokerSet.length > 0
+        ? this.brokerSet
+        : this.$store.getters['brokers/findAll'];
   }
 
   get enabledBrokers(): Broker[] {
@@ -58,6 +66,9 @@ export default class BrokerSelector extends Vue {
   private toggleSelect(broker: Broker): void {
     if (broker.enabled && broker.id != undefined) {
       const value = this.selected[broker.id] === undefined ? broker : undefined;
+      if (!this.multiSelect) {
+        Object.keys(this.selected).forEach(key => Vue.set(this.selected, key, undefined));
+      }
       Vue.set(this.selected, broker.id, value);
       this.$emit('selected', Object.values(this.selected).filter((b) => b != undefined));
     }
@@ -69,15 +80,14 @@ export default class BrokerSelector extends Vue {
 <style scoped lang="scss">
 div.broker-selector {
   display: flex;
-  margin-left: -.5rem;
-  margin-right: -.5rem;
+  gap: .66rem;
   flex-flow: row wrap;
-  justify-content: center;
+  //justify-content: center;
 
   div.broker {
     display: flex;
     width: 31%;
-    margin: 0 .5rem .5rem .5rem;
+    //margin: 0 .5rem .5rem .5rem;
     cursor: pointer;
     border-radius: .2rem;
     div.name {

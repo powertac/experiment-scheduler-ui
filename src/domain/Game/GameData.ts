@@ -13,7 +13,8 @@ export interface GameData {
   cancelled: boolean;
   brokers: Broker[];
   weather: WeatherConfigurationData;
-  baseline: string|null;
-  base: string|null;
-  treatment: string|null;
+  baselineId: string|undefined;
+  baseId: string|undefined;
+  treatmentId: string|undefined;
+  isValidTemplate: boolean;
 }

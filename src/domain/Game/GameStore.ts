@@ -17,6 +17,7 @@ export interface GameStoreState {
 
 export interface GameStoreGetters extends GetterTree<GameStoreState, RootStoreState> {
   find: (state: GameStoreState, getters: GameStoreGetters) => (id: string) => Game|null;
+  findSome: (state: GameStoreState, getters: GameStoreGetters) => (ids: string[]) => Game[];
   findAll: (state: GameStoreState, getters: GameStoreGetters) => Game[];
 }
 

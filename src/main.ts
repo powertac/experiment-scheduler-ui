@@ -6,7 +6,6 @@ import App from './Application.vue';
 import router from './router';
 import rootStore from './domain/Store/RootStoreImpl';
 import config from '@/config';
-import vClickOutside from 'v-click-outside'; // FIXME : move to 'vue-global-events' after upgrade to vue3
 
 // moment js (date and time formatting)
 import moment from 'moment';
@@ -27,7 +26,6 @@ Vue.component('fa-layers', FontAwesomeLayers);
 // set date and time locale
 moment.locale(navigator.language);
 Vue.use(Vuex);
-Vue.use(vClickOutside);
 Vue.config.productionTip = false;
 
 config.load()

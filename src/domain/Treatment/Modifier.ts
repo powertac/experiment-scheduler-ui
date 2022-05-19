@@ -8,3 +8,9 @@ export interface Modifier extends ModifierSpec {
   type: string;
   name: string;
 }
+
+export interface ModifierData {
+  id: string;
+  type: string;
+  name: string;
+}

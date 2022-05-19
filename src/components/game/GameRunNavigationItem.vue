@@ -13,7 +13,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 import {GameRun} from '@/domain/Game/GameRun';
 import {OrchestratorClient} from '@/api/OrchestratorClient';
 import FileTreeNode from '@/components/file/FileTreeNode.vue';
-import {FileNode} from '@/domain/File/FileNode';
+import FileNode from '@/domain/File/FileNode';
 import FormattedDate from '@/components/time/FormattedDate.vue';
 
 @Component({components: {'file-node': FileTreeNode, 'date': FormattedDate}})

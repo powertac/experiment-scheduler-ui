@@ -4,7 +4,7 @@ import {RootStoreState} from '@/domain/Store/RootStore';
 import {OrchestratorClient} from '@/api/OrchestratorClient';
 import {AxiosError} from 'axios';
 import {StompClient} from '@/api/StompClient';
-import {GameStore, GameStoreState} from '@/domain/Game/GameStore';
+import {GameStore, GameStoreGetters, GameStoreState} from '@/domain/Game/GameStore';
 import {GameData} from '@/domain/Game/GameData';
 import Game from '@/domain/Game/Game';
 
@@ -20,6 +20,9 @@ const gameStoreImpl: GameStore = {
     },
     findAll: (state: GameStoreState): Game[] => {
       return Object.values(state.games);
+    },
+    findSome: (state: GameStoreState) => (ids: string[]): Game[] => {
+      return ids.map((id) => state.games[id]);
     },
   },
   mutations: {

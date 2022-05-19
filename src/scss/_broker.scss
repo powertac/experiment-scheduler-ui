@@ -56,3 +56,15 @@ div.broker-pill {
     }
   }
 }
+
+table.brokers {
+  th {
+    font-weight: normal;
+    padding-right: 2rem;
+  }
+  td {
+    font-size: .9rem;
+    text-transform: uppercase;
+    vertical-align: bottom;
+  }
+}

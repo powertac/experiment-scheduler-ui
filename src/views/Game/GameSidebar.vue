@@ -19,7 +19,7 @@
         <a href="#" type="button" class="btn btn-sidebar" :class="{'disabled': game.status !== 'completed' && game.status !== 'failed'}" @click="rerun">
           <fa-icon class="btn-icon" icon="redo"  /> Rerun game
         </a>
-        <a href="#" type="button" class="btn btn-sidebar" :class="{'disabled': game.status === 'running' || game.baseline !== undefined}" @click="deleteGame">
+        <a href="#" type="button" class="btn btn-sidebar" :class="{'disabled': game.status === 'running' || game.baselineId !== undefined}" @click="deleteGame">
           <fa-icon class="btn-icon" icon="trash"  /> Delete game
         </a>
       </div>
@@ -27,7 +27,7 @@
         <div class="game-meta-atom" v-if="baseline !== null">
           <span class="label">Baseline</span>
           <span class="value">
-            <router-link :to="'/baselines/' + game.baseline + '/details'">{{baseline.name}}</router-link>
+            <router-link :to="'/baselines/' + game.baselineId + '/details'">{{baseline.name}}</router-link>
           </span>
         </div>
         <div class="game-meta-atom">
@@ -107,9 +107,9 @@ import Game from '@/domain/Game/Game';
     }
 
     get baseline(): Baseline|null {
-      return this.game.baseline === null
+      return this.game.baselineId === null
           ? null
-          : this.$store.getters['baselines/find'](this.game.baseline);
+          : this.$store.getters['baselines/find'](this.game.baselineId);
     }
 
     get weatherDate(): string|null {

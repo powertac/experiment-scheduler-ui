@@ -19,7 +19,7 @@
       </div>
       Modifiers
     </router-link>-->
-    <router-link class="nav-option" to="/treatments/editor">
+    <router-link class="nav-option" to="/treatments">
       <div class="nav-icon">
         <fa-icon icon="code-branch" transform="shrink-2" class="nav-option-icon" />
       </div>

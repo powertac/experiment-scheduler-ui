@@ -10,7 +10,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import {TreatmentSpec} from '@/domain/Treatment/Treatment';
-import {ReplaceBrokerModifierSpec} from '@/domain/Treatment/ReplaceBrokerModifierSpec';
+import {ReplaceBrokerModifierSpec} from '@/domain/Treatment/ReplaceBrokerModifier';
 
 export default class ModifierEditor extends Vue {
 

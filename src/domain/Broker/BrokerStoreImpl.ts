@@ -12,6 +12,8 @@ const brokerStoreImpl: BrokerStore = {
     brokers: {},
   },
   getters: {
+    find: (state: BrokerStoreState) => (id: string) =>
+      id in state.brokers ? state.brokers[id] : null,
     findAll: (state: BrokerStoreState) => {
       return Object.values(state.brokers)
         .sort((a, b) => a.name.localeCompare(b.name));

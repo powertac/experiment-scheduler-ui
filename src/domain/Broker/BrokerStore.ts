@@ -7,6 +7,7 @@ export interface BrokerStoreState {
 }
 
 export interface BrokerStoreGetters extends GetterTree<BrokerStoreState, RootStoreState> {
+  find: (state: BrokerStoreState) => (id: string) => Broker|null;
   findAll: (state: BrokerStoreState) => Broker[];
 }
 

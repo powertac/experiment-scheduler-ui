@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-import {FileNode} from '@/domain/File/FileNode';
+import FileNode from '@/domain/File/FileNode';
 import {OrchestratorClient} from '@/api/OrchestratorClient';
 
 @Component

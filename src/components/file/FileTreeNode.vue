@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
-import {FileNode} from '@/domain/File/FileNode';
+import FileNode from '@/domain/File/FileNode';
 
 @Component({name: 'file-node'})
 export default class FileTreeNode extends Vue {
@@ -95,7 +95,7 @@ $line-width: 1px;
     }
     &:last-child {
       border-left: 0;
-      padding-left: calc(.75rem + $line-width);
+      padding-left: calc(.75rem + 1px);
       &:before {
         border-left: $line-width $line-style $line-color;
       }
