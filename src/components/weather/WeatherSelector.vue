@@ -52,12 +52,13 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator';
+import {Component, Emit, Vue} from 'vue-property-decorator';
 import {WeatherLocation} from '@/domain/Location/WeatherLocation';
 import moment from 'moment';
 import {WeatherConfigurationImpl} from '@/domain/Weather/WeatherConfigurationImpl';
+import {WeatherConfigurationData} from '@/domain/Weather/WeatherConfigurationData';
 
-@Component
+@Component({name: "weather-selector"})
 export default class WeatherSelector extends Vue {
 
   private selected: WeatherLocation|null;
@@ -104,6 +105,14 @@ export default class WeatherSelector extends Vue {
           this.selected,
           this.startMoment.valueOf()));
     }
+    this.updateWeatherConfig();
+  }
+
+  @Emit('update-weather-config')
+  private updateWeatherConfig(): WeatherConfigurationData|null {
+    return this.selected != null
+        ? {location: this.selected.name, startTime: this.startMoment.valueOf()}
+        : null;
   }
 
 }

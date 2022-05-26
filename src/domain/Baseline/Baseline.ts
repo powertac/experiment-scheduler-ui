@@ -12,7 +12,7 @@ export class Baseline extends GameGroupImpl {
   public weatherConfigurations: WeatherConfigurationData[];
   public games: Game[];
   public createdAt: number;
-  commonParameters: {[key: string]: string};
+  public commonParameters: {[key: string]: string};
 
   constructor(data: BaselineData) {
     super();

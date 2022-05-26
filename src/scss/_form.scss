@@ -102,3 +102,16 @@ div.form {
     }
   }
 }
+
+/* Updated forms */
+input.text-input {
+  border: 1px solid #ccc;
+  padding: .5em 1em .6em 1em;
+  outline: none;
+  color: #444;
+
+  &:focus {
+    border-color: #80bdff;
+    color: #222;
+  }
+}

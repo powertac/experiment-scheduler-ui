@@ -9,6 +9,7 @@ import {GameData} from '@/domain/Game/GameData';
 import {TreatmentData, TreatmentSpec} from '@/domain/Treatment/Treatment';
 import FileNode from '@/domain/File/FileNode';
 import Game from '@/domain/Game/Game';
+import {BaselineConfig} from '@/domain/Baseline/BaselineConfig';
 
 interface RestResponse {
     success: boolean;
@@ -146,6 +147,14 @@ export class OrchestratorClient {
             axios.get(config.services.orchestrator.uri + '/files', {params: {path: file.path, offset: 0, length: 5000}})
               .then((response) => resolve(response.data))
               .catch((error) => reject(error));
+        });
+    }
+
+    public static generateBaseline(baselineConfig: BaselineConfig): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+           axios.post(config.services.orchestrator.uri + '/baselines/generate', baselineConfig)
+             .then(() => resolve())
+             .catch((e) => reject(e));
         });
     }
 

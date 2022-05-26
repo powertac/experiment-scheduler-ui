@@ -85,7 +85,7 @@ import uuid from 'uuid/v4';
 import BrokerSetSelector from '@/components/Broker/BrokerSetSelector.vue';
 import {Broker} from '@/domain/Broker/Broker';
 import {WeatherLocation} from '@/domain/Location/WeatherLocation';
-import WeatherSelector from '@/components/form/WeatherSelector.vue';
+import WeatherSelector from '@/components/weather/WeatherSelector.vue';
 import {WeatherConfiguration} from '@/domain/Weather/WeatherConfiguration';
 import {BaselineData} from '@/domain/Baseline/BaselineData';
 import {BaselineSpec} from '@/domain/Baseline/BaselineSpec';

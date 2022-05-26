@@ -12,6 +12,7 @@ import TreatmentEditor from '@/views/Treatment/TreatmentEditor.vue';
 import GameView from '@/views/Game/GameView.vue';
 import TreatmentTable from '@/views/Treatment/TreatmentTable.vue';
 import TreatmentView from '@/views/Treatment/TreatmentView.vue';
+import BaselineEditorView from '@/views/Baseline/BaselineEditorView.vue';
 
 Vue.use(Router);
 
@@ -97,6 +98,10 @@ export default new Router({
     {
       path: '/treatments/:id/games',
       component: TreatmentView,
+    },
+    {
+      path: '/experimental/baseline-editor',
+      component: BaselineEditorView,
     },
   ],
 });

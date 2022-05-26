@@ -1,6 +1,6 @@
 <template>
     <div class="autocomplete">
-        <input type="text" class="form-control"
+        <input type="text" class="text-input"
                :id="inputElementId"
                v-model="search"
                @focus="open"
@@ -28,7 +28,7 @@
     import {matchAndMark, removeHtml} from '@/util/StringUtils';
     import uuid from 'uuid/v4';
 
-    @Component
+    @Component({name: 'autocomplete'})
     export default class Autocomplete extends Vue {
 
         @Prop({required: true})
@@ -208,18 +208,6 @@
     div.autocomplete.br-r-0 input.form-control {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
-    }
-
-    input[type=text] {
-        outline:0;
-        -webkit-box-shadow:none;
-        box-shadow:none;
-      outline:0;
-      -webkit-box-shadow:none;
-      box-shadow:none;
-      border-radius: 0;
-      padding: .5em 1em;
-      height: auto;
     }
 
 </style>

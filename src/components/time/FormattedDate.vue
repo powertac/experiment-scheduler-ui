@@ -6,7 +6,7 @@
 import {Component, Prop, Vue} from 'vue-property-decorator';
 import moment from 'moment';
 
-@Component({name: 'format-date'})
+@Component({name: 'formatted-date'})
 export default class FormattedDate extends Vue {
 
   @Prop({required: true})
