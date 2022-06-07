@@ -7,8 +7,6 @@ import {BaselineConfig} from '@/domain/Baseline/BaselineConfig';
 @Component({components: {'baseline-editor': BaselineEditor}})
 export default class BaselineEditorView extends Vue {
 
-  private 
-
   private createBaseline(baselineConfig: BaselineConfig): void {
     OrchestratorClient.generateBaseline(baselineConfig)
   }
