@@ -103,7 +103,13 @@
         </table>
       </div>
     </div>
-    <table class="table datatable table-hover table-bordered clickable-rows" v-if="activeTab === 'games'">
+    <div class="view-content" v-else>
+      <div class="view-content-main">
+        <game-table :games="games" @game-selected="selectedGame = $event" />
+      </div>
+      <game-sidebar :game="selectedGame" v-if="selectedGame !== null" class="view-content-sidebar" />
+    </div>
+    <!--<table class="table datatable table-hover table-bordered clickable-rows" v-if="activeTab === 'games'">
       <thead>
       <tr>
         <th class="col-center">Status</th>
@@ -128,7 +134,7 @@
         <td class="monospaced text-right" v-html="formatDate(game.end)"></td>
       </tr>
       </tbody>
-    </table>
+    </table>-->
     <div class="baseline-files" v-if="activeTab === 'files'">
       <h3>FILES</h3>
     </div>
@@ -144,15 +150,19 @@ import GameStatusIcon from '@/components/game/GameStatusIcon.vue';
 import {formatDate} from '@/util/Date';
 import moment from 'moment';
 import Game from '@/domain/Game/Game';
+import GameTable from '@/components/game/GameTable.vue';
+import GameSidebar from '@/components/game/GameSidebar.vue';
 
-@Component({components: {duration: Duration, 'status-icon': GameStatusIcon}})
+@Component({components: {GameTable, duration: Duration, 'status-icon': GameStatusIcon, GameSidebar}})
 export default class BaselineDetails extends Vue {
 
   private activeTab: string;
+  private selectedGame: Game|null;
 
   constructor() {
     super();
     this.activeTab = 'games';
+    this.selectedGame = null;
   }
 
   private mounted(): void {

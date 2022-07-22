@@ -1,10 +1,7 @@
 <template>
-  <div id="content">
-    <div id="view">
-      <router-view class="view" />
-      <router-view class="sidebar" name="sidebar" />
-    </div>
-    <!--<app-bar class="bar" />-->
+  <div id="main">
+    <router-view id="view" />
+    <!--<app-bar id="bottom-bar" />-->
   </div>
 </template>
 
@@ -18,6 +15,7 @@ import ApplicationBar from "@/components/application/ApplicationBar.vue";
 </script>
 
 <style lang="scss">
+  /*
   #view {
     display: flex;
     flex-grow: 1;
@@ -78,5 +76,5 @@ import ApplicationBar from "@/components/application/ApplicationBar.vue";
     flex-direction: column;
     background: var(--view-bg);
     align-items: stretch;
-  }
+  }*/
 </style>

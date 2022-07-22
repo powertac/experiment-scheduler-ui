@@ -28,6 +28,7 @@ export interface GameStoreMutations extends MutationTree<GameStoreState> {
 
 export interface GameStoreActions extends ActionTree<GameStoreState, RootStoreState> {
   load: (context: ActionContext<GameStoreState, RootStoreState>, id: string) => void;
+  loadNext: (context: ActionContext<GameStoreState, RootStoreState>, start: number, limit: number) => void;
   loadAll: (context: ActionContext<GameStoreState, RootStoreState>) => void;
   subscribe: (context: ActionContext<GameStoreState, RootStoreState>) => void;
 }

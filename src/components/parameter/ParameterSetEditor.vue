@@ -1,19 +1,23 @@
 <script lang="ts">
 import {Component, Emit, Vue} from 'vue-property-decorator';
 import Autocomplete from '@/components/form/Autocomplete.vue';
+import ParametersTable from '@/components/parameter/ParametersTable.vue';
 
-@Component({name: 'parameter-set-editor', components: {Autocomplete}})
+@Component({name: 'parameter-set-editor', components: {ParametersTable, Autocomplete}})
 export default class ParameterSetEditor extends Vue {
 
   private currentParamKey: string;
   private currentParamValue: string;
   private parameters: {[key: string]: string};
 
+  private paramKeyReloadIndex: number;
+
   constructor() {
     super();
     this.currentParamKey = "";
     this.currentParamValue = "";
     this.parameters = {};
+    this.paramKeyReloadIndex = 0;
   }
 
   private created(): void {
@@ -27,6 +31,9 @@ export default class ParameterSetEditor extends Vue {
   @Emit('parameters-updated')
   private addParam(): {[key: string]: string} {
     Vue.set(this.parameters, this.currentParamKey, this.currentParamValue);
+    this.currentParamKey = '';
+    this.currentParamValue = '';
+    this.paramKeyReloadIndex = this.paramKeyReloadIndex + 1;
     return this.parameters;
   }
 
@@ -42,25 +49,17 @@ export default class ParameterSetEditor extends Vue {
 <template>
   <div class="parameter-set-editor">
     <div class="parameter-input">
-      <autocomplete class="text-input" :items="supportedParameters"
+      <autocomplete :items="supportedParameters"
+                    :reload-index="paramKeyReloadIndex"
                     v-on:item-changed="currentParamKey = $event"
                     v-on:item-selected="currentParamKey = $event" />
       <div class="key-value-separator">
         =
       </div>
-      <input v-model="currentParamValue" type="text" class="text-input" />
-      <button type="button" @click="addParam()">ADD</button>
+      <input v-model="currentParamValue" type="text" class="text-input current-param-value" />
+      <button type="button" @click="addParam()">Set parameter</button>
     </div>
-    <table class="parameters">
-      <tbody>
-      <tr v-for="parameterKey in Object.keys(parameters)" :key="parameterKey">
-        <td><button type="button" @click="removeParam(parameterKey)"><fa-icon icon="times" /></button></td>
-        <td class="mono">{{parameterKey}}</td>
-        <td>=</td>
-        <td class="text-right mono">{{parameters[parameterKey]}}</td>
-      </tr>
-      </tbody>
-    </table>
+    <parameters-table :parameters="parameters" :params-removable="true" @remove-param="removeParam" />
   </div>
 </template>
 
@@ -68,7 +67,8 @@ export default class ParameterSetEditor extends Vue {
 
 <style lang="scss">
 button[type=button] {
-  font-size: .875em;
+  font-size: .75em;
+  text-transform: uppercase;
   border: 1px solid #ddd;
   border-radius: .2rem;
   padding: .6rem .85rem .6rem .875rem;
@@ -88,12 +88,23 @@ div.parameter-input {
   width: 100%;
   flex-wrap: nowrap;
   align-items: stretch;
+  margin-bottom: .66rem;
+
+  div.autocomplete {
+    flex-grow: .7;
+  }
+
+  input.current-param-value {
+    flex-grow: .3;
+    border-radius: 0;
+  }
 
   div.autocomplete > input.text-input {
-    border-top-left-radius: .2rem;
-    border-bottom-left-radius: .2rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
     min-width: 25rem;
     text-align: left;
+    width: 100%;
   }
 
   div.key-value-separator {
@@ -102,6 +113,7 @@ div.parameter-input {
     padding: 0 1rem;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
+    background: #F1F5F9;
   }
 
   input.text-input {
@@ -116,14 +128,6 @@ div.parameter-input {
     &:hover {
       border-left-color: #A5B4FC;
     }
-  }
-}
-
-table.parameters {
-  margin: .5rem 0;
-
-  td {
-    padding: .2rem .4rem;
   }
 }
 </style>

@@ -1,56 +1,3 @@
-<template>
-  <div class="weather-selector">
-    <div class="selection-group">
-      <div class="selection-group-label">
-        Location
-      </div>
-      <div class="selection-group-body">
-        <div class="location-pill"
-             v-for="location in availableLocations"
-             :key="location.name"
-             :class="{'selected': location === selected}"
-             @click="select(location)">
-          <div class="name text-capitalize">
-            {{location.name}}
-          </div>
-          <div class="time-range">
-            <div class="date-from">
-              {{location.minTime.format(dateFormat)}}
-            </div>
-            <fa-icon icon="arrow-right" class="arrow-right" />
-            <div class="date-to">
-              {{location.maxTime.format(dateFormat)}}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="selection-group" :class="{'disabled': selected === null}">
-      <div class="selection-group-label">
-        <label for="weather-start-date">Start date</label>
-      </div>
-      <div class="selection-group-body">
-        <div class="start-date">
-          <input type="date" id="weather-start-date" class="form-control"
-                 v-model="startDate"
-                 :disabled="selected === null"
-                 :class="{'disabled': selected === null}"
-                 :min="selected !== null ? selected.minTime.format('YYYY-MM-DD') : ''"
-                 :max="selected !== null ? selected.maxTime.format('YYYY-MM-DD') : ''">
-        </div>
-      </div>
-    </div>
-    <div class="selection-group mt-2">
-      <div class="selection-group-label"></div>
-      <div class="selection-group-body">
-        <button type="button" class="btn btn-block btn-primary" :class="{'disabled': !isValid}" :disabled="!isValid" @click="submit">
-          Add weather configuration
-        </button>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import {Component, Emit, Vue} from 'vue-property-decorator';
 import {WeatherLocation} from '@/domain/Location/WeatherLocation';
@@ -96,7 +43,6 @@ export default class WeatherSelector extends Vue {
 
   private select(location: WeatherLocation): void {
     Vue.set(this, 'selected', location);
-    Vue.set(this, 'startDate', location.minTime.format('YYYY-MM-DD'));
   }
 
   private submit(): void {
@@ -118,75 +64,123 @@ export default class WeatherSelector extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
+<template>
+  <div class="weather-selector">
+      <table class="key-value">
+        <thead>
+        <tr>
+          <th></th>
+          <th>Location</th>
+          <th class="text-center">Available time range</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="location in availableLocations"
+            :key="location.name"
+            :class="{'selected': location === selected}"
+            @click="select(location)">
+          <td class="text-center">
+            <fa-icon :icon="selected && selected.name === location.name ? ['far', 'check-circle'] : ['far', 'circle']" />
+          </td>
+          <td class="text-capitalize">{{location.name}}</td>
+          <td class="text-center">
+            {{location.minTime.format(dateFormat)}}
+            <fa-icon icon="arrow-right" class="arrow-right" />
+            {{location.maxTime.format(dateFormat)}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="start-date">
+        <label for="weather-start-date">Start date</label>
+        <input type="date" id="weather-start-date"
+               v-model="startDate"
+               :disabled="selected === null"
+               :class="{'disabled': selected === null}"
+               :min="selected !== null ? selected.minTime.format('YYYY-MM-DD') : ''"
+               :max="selected !== null ? selected.maxTime.format('YYYY-MM-DD') : ''">
+      </div>
+    <button type="button" class="button button-block" :class="{'disabled': !isValid}" :disabled="!isValid" @click="submit">
+      Set weather conditions
+    </button>
+  </div>
+</template>
 
-div.selection-group {
+
+
+<style scoped lang="scss">
+div.weather-selector {
+  border-radius: .2rem;
   display: flex;
-  justify-content: left;
+  flex-direction: column;
   align-items: start;
 
-  div.selection-group-label {
-    min-width: 15%;
-    font-size: 1.25rem;
-    margin: .2rem 0;
-  }
-  div.selection-group-body {
-    min-width: 66%;
-  }
-}
+  table.key-value {
 
-div.location-pill {
-  display: flex;
-  margin-bottom: .5rem;
-  cursor: pointer;
-  border-radius: .2rem;
+    tbody > tr > td {
+      cursor: pointer;
+      color: #1E293B;
 
-  div.name {
-    border-top-left-radius: .2rem;
-    border-bottom-left-radius: .2rem;
-    border: 1px solid #ddd;
-    border-right-width: 0;
-    flex-grow: 1;
-    padding: .5rem 1rem;
-  }
+      &:first-child {
+        padding-right: 0;
+      }
 
-  div.time-range {
-    text-transform: uppercase;
-    min-width: 33%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-top-right-radius: .2rem;
-    border-bottom-right-radius: .2rem;
-    border: 1px solid #ddd;
-    padding: .5rem 1rem;
-    font-size: .875em;
+      &:nth-child(2) {
+        padding-right: 3rem;
+      }
+    }
+
+    tbody > tr.selected > td {
+      background: #CCFBF1;
+      color: #115E59;
+    }
 
     .arrow-right {
+      font-size: .7rem;
+      margin: 0 .66rem;
+    }
+
+  }
+
+  div.start-date {
+    margin-top: .66rem;
+    width: 100%;
+
+    label {
+      text-transform: uppercase;
       font-size: .75em;
-      margin: 0 1em;
-      align-self: center;
+      font-weight: normal;
+      border: 1px solid #CBD5E1;
+      border-bottom-color: #E2E8F0;
+      background: #F1F5F9;
+      color: #1E293B;
+      padding: .33rem;
+      width: 100%;
+      text-align: center;
+      border-radius: .2rem .2rem 0 0;
+      margin: 0;
+    }
+
+    input[type=date] {
+      text-align: center;
+      border-radius: 0 0 .2rem .2rem;
+      padding: .66rem 2rem;
+      height: auto;
+      cursor: pointer;
+      width: 100%;
+      outline: none;
+      border: 1px solid #CBD5E1;
+      border-top: 0;
+
+      &[disabled=disabled] {
+        background: #F1F5F9;
+        cursor: not-allowed;
+      }
     }
   }
-
-  &.selected {
-    color: #000aa3;
-    background: #F2F5FF;
-    div.name, div.time-range {
-      border-color: #A5B3E8;
-      color: #000aa3;
-    }
-    div.time-range {
-      border-left-color: rgba(165, 179, 232, .5);
-    }
-  }
-
 }
-
-input[type=date] {
-  text-align: center;
-  border-radius: .2rem;
-  padding: .5rem 1rem;
-  height: auto;
+button[type=button].button {
+  margin-top: .66rem;
+  padding: 1.1em 1.66em .9em 1.66em;
 }
 </style>

@@ -47,6 +47,7 @@ export class OrchestratorClient {
     }
 
     public static game(id: string): Promise<GameData> {
+        console.log(id)
         return new Promise<GameData>((resolve: (games: GameData) => void, reject: (error: AxiosError) => void) => {
             axios.get(config.services.orchestrator.uri + '/games/' + id)
               .then((response: AxiosResponse<GameData>) => resolve(response.data))

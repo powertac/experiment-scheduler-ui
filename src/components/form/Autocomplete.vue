@@ -37,6 +37,9 @@
         @Prop({required: false, default: ''})
         public initialValue: string;
 
+        @Prop({required: false, default: () => 0})
+        private reloadIndex: number;
+
         private search: string;
         private isOpen: boolean;
         private selectedItemIndex: number;
@@ -63,6 +66,11 @@
         @Emit('item-changed')
         private onItemChange(item: string): string {
             return item;
+        }
+
+        @Watch("reloadIndex")
+        private onReload() {
+          this.search = '';
         }
 
         @Emit('item-selected')

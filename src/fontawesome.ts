@@ -1,11 +1,9 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 
-import {faUserSecret, faCheckCircle, faTimesCircle, faCaretDown} from '@fortawesome/free-solid-svg-icons';
-import { faCheckSquare, faRunning, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
+import {faUserSecret, faTimesCircle} from '@fortawesome/free-solid-svg-icons';
+import {faRunning, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 library.add(faUserSecret);
-library.add(faCheckCircle);
 library.add(faTimesCircle);
-library.add(faCheckSquare);
 library.add(faRunning);
 library.add(faAngleDoubleDown);
 
@@ -35,9 +33,6 @@ library.add(faEdit);
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 library.add(faCheck);
-
-import { faCircle } from '@fortawesome/free-solid-svg-icons';
-library.add(faCircle);
 
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 library.add(faChevronLeft);
@@ -216,9 +211,27 @@ library.add(faFolder);
 import {faFile} from '@fortawesome/free-solid-svg-icons';
 library.add(faFile);
 
+import {faCircle as solidCircle} from '@fortawesome/free-solid-svg-icons';
+library.add(solidCircle);
+
+import {faRulerCombined} from '@fortawesome/free-solid-svg-icons';
+library.add(faRulerCombined);
+
+import {faSlidersH} from '@fortawesome/free-solid-svg-icons';
+library.add(faSlidersH);
+
 // REGULAR
 import { faCaretSquareDown } from '@fortawesome/free-regular-svg-icons';
 library.add(faCaretSquareDown);
 
 import { faCaretSquareUp } from '@fortawesome/free-regular-svg-icons';
 library.add(faCaretSquareUp);
+
+import {faCircle} from '@fortawesome/free-regular-svg-icons';
+library.add(faCircle);
+
+import {faCheckCircle} from '@fortawesome/free-regular-svg-icons';
+library.add(faCheckCircle);
+
+import {faQuestionCircle as questionCircleRegular} from '@fortawesome/free-regular-svg-icons';
+library.add(questionCircleRegular);

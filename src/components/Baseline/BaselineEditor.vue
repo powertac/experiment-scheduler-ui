@@ -1,12 +1,12 @@
 <script lang="ts">
 import {Component, Emit, Vue} from 'vue-property-decorator';
-import GameConfigEditor from '@/components/game/GameConfigEditor.vue';
+import GameEditor from '@/components/game/GameEditor.vue';
 import {GameMultiplierBaselineGenerator} from '@/domain/Baseline/GameMultiplierBaseline';
 import {BaselineConfig} from '@/domain/Baseline/BaselineConfig';
 import GameConfigCard from '@/components/game/GameConfigCard.vue';
 import {GameConfig} from '@/domain/Game/GameConfig';
 
-@Component({components: {'game-editor': GameConfigEditor, GameConfigCard}})
+@Component({components: {'game-editor': GameEditor, GameConfigCard}})
 export default class BaselineEditor extends Vue {
 
   private name: string;
@@ -49,25 +49,27 @@ export default class BaselineEditor extends Vue {
 </script>
 
 <template>
-  <form id="game-form" @submit="updateBaseline">
-    <h1>Baseline</h1>
-    <div>
-      <label for="baseline-name">Name</label>
-      <input type="text" id="baseline-name" class="text-input" v-model="name" />
+  <form>
+    <div class="editor-block">
+      <h2><label for="baseline-name">Name</label></h2>
+      <input type="text" id="baseline-name" class="text-input w-full" v-model="name" />
     </div>
-    <div>
-      <label for="baseline-multiplier">Multiplier</label>
-      <input type="number" id="baseline-multiplier" class="text-input" v-model="multiplier" />
+    <div class="editor-block">
+      <h2><label for="baseline-multiplier">Multiplier</label></h2>
+      <input type="number" id="baseline-multiplier" class="text-input text-center" v-model="multiplier" />
     </div>
-    <div>
-      <game-editor @update-game-config="addGameConfig" />
+    <div class="editor-block">
+      <game-editor @update-game="addGameConfig" submit-label="Set game config" v-if="gameConfigs.length < 1" />
       <game-config-card v-for="(config, index) in gameConfigs" :config="config" :index="index + 1" :key="index" />
     </div>
     <div>
-      <button type="submit" :disabled="!baselineConfig.isValid">Submit</button>
+      <button class="button editor-submit" type="button" :disabled="!baselineConfig.isValid" @click="updateBaseline">Submit</button>
     </div>
   </form>
 </template>
 
 <style lang="scss" scoped>
+h2 > label {
+  margin-bottom: 0;
+}
 </style>

@@ -40,6 +40,9 @@ const gameStoreImpl: GameStore = {
         .then((game: GameData) => context.commit('add', game))
         .catch((error: AxiosError) => console.error(error));
     },
+    loadNext: (context: ActionContext<GameStoreState, RootStoreState>, start, limit): void => {
+
+    },
     loadAll: (context: ActionContext<GameStoreState, RootStoreState>): void => {
       OrchestratorClient.games()
         .then((games: GameData[]) => games.forEach((game: GameData) => context.commit('add', game)))

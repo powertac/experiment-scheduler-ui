@@ -53,7 +53,7 @@ export default class FileTreeNode extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $icon-color: #CBD5E1;
 $line-color: #CBD5E1;
 $line-style: solid;

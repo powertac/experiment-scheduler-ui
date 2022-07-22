@@ -3,8 +3,7 @@
         <h6>Server Parameters</h6>
         <div class="parameters">
             <div class="parameter" v-for="param of parameters" :key="param.id">
-                <autocomplete class="autocomplete col param-left"
-                              :items="allowedParameters" ></autocomplete>
+                <autocomplete class="autocomplete col param-left" :items="allowedParameters" ></autocomplete>
                 <div class="separator">=</div>
                 <div class="col">
                     <input type="text" class="form-control" >

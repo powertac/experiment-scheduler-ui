@@ -1,44 +1,18 @@
 <template>
   <div class="view">
-    <div id="treatment-details" class="view">
-      <div class="action-bar">
-        <router-link to="/treatments">
-          <fa-icon icon="arrow-left" class="icon" /> Back
-        </router-link>
-      </div>
+      <view-action-bar />
       <template v-if="treatment !== null">
         <treatment-header :treatment="treatment" />
-        <table class="table datatable table-hover table-bordered clickable-rows">
-          <thead>
-          <tr>
-            <th class="col-center">Status</th>
-            <th class="col-center">ID</th>
-            <th>Name</th>
-            <th>Location</th>
-            <th class="text-right">Simulation Time</th>
-            <th>Brokers</th>
-            <th class="text-right">Completed at</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="game in treatment.games" :key="game.id" @click="showSidebar(game)">
-            <td class="col-center status-icon">
-              <span class="status-icon"><status-icon :game="game" /></span>
-            </td>
-            <td class="col-center monospaced">{{game.id.substr(0, 8)}}</td>
-            <td>{{game.name}}</td>
-            <td>{{game.weather.location}}</td>
-            <td class="monospaced text-right" v-html="formatWeatherDate(game.weather.startTime)"></td>
-            <td>{{game.brokers.map((b) => b.name).join(", ")}}</td>
-            <td class="monospaced text-right" v-html="formatDate(game.end)"></td>
-          </tr>
-          </tbody>
-        </table>
+        <div class="view-content">
+          <div class="view-content-main">
+            <game-table :games="treatment.games" @game-selected="selectedGame = $event" />
+          </div>
+          <game-sidebar :game="selectedGame" v-if="selectedGame !== null" class="view-content-sidebar" />
+        </div>
       </template>
       <div class="loader" v-else>
         LOADING...
       </div>
-    </div>
   </div>
 </template>
 
@@ -54,9 +28,21 @@ import { formatDate } from '@/util/Date';
 import GameStatusIcon from '@/components/game/GameStatusIcon.vue';
 import TreatmentHeader from '@/components/Treatment/TreatmentHeader.vue';
 import Game from '@/domain/Game/Game';
+import GameTable from '@/components/game/GameTable.vue';
+import GameSidebar from '@/components/game/GameSidebar.vue';
+import ViewActionBar from '@/components/application/ViewActionBar.vue';
 
-@Component({components: {FormatDate, TreatmentHeader, 'status-icon': GameStatusIcon}})
+@Component({components: {
+    ViewActionBar,
+    FormatDate, TreatmentHeader, 'status-icon': GameStatusIcon, GameTable, GameSidebar}})
 export default class TreatmentView extends Vue {
+
+  private selectedGame: Game|null;
+
+  constructor() {
+    super();
+    this.selectedGame = null;
+  }
 
   get treatmentId(): string {
     return this.$route.params.id;

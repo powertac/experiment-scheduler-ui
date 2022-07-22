@@ -1,59 +1,6 @@
 <template>
-  <div id="bar">
-    <div class="bar-navigation">
-      <a class="bar-button " @click="showContent = !showContent">
-        <fa-icon :icon="showContent ? 'angle-down' : 'angle-up'" />
-      </a>
-      <a class="bar-button" :class="{'active': showMessages, 'has-updates': hasMessageUpdates}" @click="toggleMessages">
-        <fa-icon class="update" icon="circle" />
-        <fa-icon class="fa-icon" icon="inbox" />
-        Messages
-      </a>
-      <a class="bar-button">
-        <fa-icon class="update" icon="circle" />
-        <fa-icon class="fa-icon" :icon="hasRunningGames ? 'play' : 'pause'" />
-        Running Games
-      </a>
-      <a class="bar-button align-right">
-        <fa-icon class="update" icon="circle" />
-        <fa-icon class="fa-icon server-status" icon="circle" />
-        Server Status
-      </a>
-    </div>
-    <div class="bar-content" v-if="showContent">
-      <div class="messages" v-if="showMessages">
-        <div class="message">
-          <div class="timestamp">5 Minutes ago</div>
-          <h4 class="title">
-            <span class="label error">ERROR</span>
-            Could not update 'Test Simulation'
-          </h4>
-          <p class="description">While trying to update the </p>
-          <div class="reference">
-            <fa-icon class="fa-icon" icon="arrow-right" />
-            <span class="type">[ Game ]</span>
-            <a href="#">Test Simulation</a>
-          </div>
-        </div>
-        <div class="message">
-          <div class="timestamp">12 Minutes ago</div>
-          <h4 class="title">
-            <span class="label success">Success</span>
-            Finished 'Test Simulation'
-          </h4>
-          <div class="reference">
-            <fa-icon class="fa-icon" icon="arrow-right" />
-            <span class="type">[ Game ]</span>
-            <a href="#">Test Simulation</a>
-          </div>
-          <div class="reference">
-            <fa-icon class="fa-icon" icon="arrow-right" />
-            <span class="type">[ Broker ]</span>
-            <a href="#">EWIIS3</a>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div>
+    <h3>Bottom Bar</h3>
   </div>
 </template>
 

@@ -15,9 +15,9 @@ export class DataTable {
   }
 
   public static defaultSortGames(a: Game, b: Game): number {
-    if (a.status !== b.status) {              // sort by status first
+    /*if (a.status !== b.status) {              // sort by status first
       return a.statusIndex - b.statusIndex;
-    } else if (a.createdAt !== b.createdAt) { // ... then by creation date (desc)
+    } else */ if (a.createdAt !== b.createdAt) { // ... then by creation date (desc)
       return b.createdAt - a.createdAt;
     } else {
       return a.name.localeCompare(b.name);

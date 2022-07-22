@@ -12,10 +12,13 @@ export default class FormattedDate extends Vue {
   @Prop({required: true})
   private date: number|null;
 
+  @Prop({required: false, default: () => 'L HH:mm'})
+  private format: string;
+
   get formattedDate():string {
     return (null === this.date || -1 === this.date)
         ? '&mdash;'
-        : moment(this.date).format('L HH:mm');
+        : moment(this.date).format(this.format);
   }
 
 }

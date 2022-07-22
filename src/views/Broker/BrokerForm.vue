@@ -9,6 +9,19 @@
     <div class="form-container">
       <h2 class="form-container-title">New Broker</h2>
       <div class="field-group">
+        <label class="field-group-title le">Image tag</label>
+        <div class="field-group-body">
+          <autocomplete :items="availableImageTags"
+                        :initial-value="imageTag"
+                        @item-selected="chooseImageTag($event)"
+                        @item-changed="chooseImageTag($event)"/>
+          <p v-if="imageTag.length > 2 && !imageExists">
+            The image you are referring to does not exists. The broker will not be available until the corresponding
+            image is created.
+          </p>
+        </div>
+      </div>
+      <div class="field-group">
         <label class="field-group-title le">Name</label>
         <div class="field-group-body">
           <autocomplete :items="brokerNames"
@@ -21,19 +34,6 @@
         <label for="broker-version" class="field-group-title le">Version</label>
         <div class="field-group-body">
           <input type="text" v-model="version" class="form-control" id="broker-version">
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-group-title le">Image tag</label>
-        <div class="field-group-body">
-          <autocomplete :items="availableImageTags"
-                        :initial-value="imageTag"
-                        @item-selected="chooseImageTag($event)"
-                        @item-changed="chooseImageTag($event)"/>
-          <p v-if="imageTag.length > 2 && !imageExists">
-            The image you are referring to does not exists. The broker will not be available until the corresponding
-            image is created.
-          </p>
         </div>
       </div>
       <div class="field-group alternative-actions">

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import GameFormAlternative from '@/views/Game/GameForm.vue';
-import GameTable from '@/views/Game/GameTable.vue';
+import GameTableView from '@/views/Game/GameTableView.vue';
 import GameSidebar from '@/views/Game/GameSidebar.vue';
 import BrokersTable from '@/views/Broker/BrokersTable.vue';
 import BrokerForm from '@/views/Broker/BrokerForm.vue';
@@ -9,10 +9,13 @@ import BaselineTable from '@/views/Baseline/BaselineTable.vue';
 import BaselineForm from '@/views/Baseline/BaselineForm.vue';
 import BaselineDetails from '@/views/Baseline/BaselineDetails.vue';
 import TreatmentEditor from '@/views/Treatment/TreatmentEditor.vue';
-import GameView from '@/views/Game/GameView.vue';
+import GameView from '@/views/Game/Game.vue';
 import TreatmentTable from '@/views/Treatment/TreatmentTable.vue';
 import TreatmentView from '@/views/Treatment/TreatmentView.vue';
 import BaselineEditorView from '@/views/Baseline/BaselineEditorView.vue';
+import NewGameView from '@/views/Game/NewGameView.vue';
+import GameDetails from '@/views/Game/GameDetails.vue';
+import GameConfigView from '@/views/Game/GameConfigView.vue';
 
 Vue.use(Router);
 
@@ -24,12 +27,12 @@ export default new Router({
     },
     {
       path: '/games',
-      component: GameTable,
+      component: GameTableView,
     },
     {
       path: '/games/create',
       name: 'create-game',
-      component: GameFormAlternative,
+      component: NewGameView,
     },
     {
       path: '/games/create/:id',
@@ -39,19 +42,26 @@ export default new Router({
     {
       path: '/games/:gameId',
       name: 'game',
-      components: {
-        default: GameTable,
-        sidebar: GameSidebar,
-      },
+      redirect: (to) => ({name: 'game-config', params: {gameId: to.params.gameId}}),
     },
     {
       path: '/games/:id/details',
       redirect: '/games/:id/runs',
     },
     {
+      path: '/games/:gameId/files',
+      name: 'game-files',
+      redirect: (to) => ({name: 'game-runs', params: {id: to.params.gameId}}),
+    },
+    {
       path: '/games/:id/runs',
-      name: 'game-details',
+      name: 'game-runs',
       component: GameView,
+    },
+    {
+      path: '/games/:id/config',
+      name: 'game-config',
+      component: GameConfigView,
     },
     {
       path: '/brokers',

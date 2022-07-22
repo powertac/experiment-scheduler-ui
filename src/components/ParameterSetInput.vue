@@ -1,6 +1,7 @@
 <template>
   <div>
-    <parameter v-for="param in serverParameters" :key="param.id"
+    <parameter v-for="param in serverParameters"
+               :key="param.id"
                :initial-key="param.key"
                :initial-value="param.value"
                :allowedParameters="supportedParameters"

@@ -106,12 +106,51 @@ div.form {
 /* Updated forms */
 input.text-input {
   border: 1px solid #ccc;
-  padding: .5em 1em .6em 1em;
+  padding: .55em 1em .6em 1em;
   outline: none;
   color: #444;
+  border-radius: .2rem;
 
   &:focus {
     border-color: #80bdff;
     color: #222;
+  }
+
+  &.w-full {
+    width: 100%;
+  }
+}
+
+h1.editor-title {
+  margin: 3.66rem 0 2.33rem 0;
+}
+
+div.editor-block {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.33rem;
+    margin-bottom: .66rem;
+
+    svg.is-valid {
+      font-size: .75em;
+      margin-right: .33em;
+    }
+  }
+}
+
+button.editor-submit {
+  text-transform: uppercase;
+  padding: 1.1em 3.33em 1em 3.33em;
+  transition: all ease-in-out .15s;
+  background: #CCFBF1;
+  color: #0F766E;
+  border-color: #14B8A6;
+
+  &[disabled=disabled] {
+    background: #F1F5F9;
+    color: #94A3B8;
+    cursor: not-allowed;
+    border-color: #CBD5E1;
   }
 }

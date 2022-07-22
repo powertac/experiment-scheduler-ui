@@ -1,6 +1,5 @@
 <template>
     <div class="parameter">
-        <!-- TODO : make outer corners round; include trash in line... redesign all the things! -->
         <autocomplete class="autocomplete col br-0 "
                       @item-selected="key = $event"
                       @item-changed="key = $event"

@@ -1,24 +1,8 @@
-<template>
-  <div class="broker-selector">
-    <div class="broker"
-         :class="{'selected': selected[broker.id] !== undefined, 'disabled': !broker.enabled}"
-         v-for="broker in enabledBrokers"
-         @click="toggleSelect(broker)">
-      <div class="name">
-        {{broker.name}}
-      </div>
-      <div class="version">
-        {{broker.version}}
-      </div>
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
 import {Broker} from '@/domain/Broker/Broker';
 
-@Component
+@Component({name: "broker-selector"})
 export default class BrokerSelector extends Vue {
 
   @Prop({required: false, default: () => []})
@@ -77,17 +61,36 @@ export default class BrokerSelector extends Vue {
 }
 </script>
 
+<template>
+  <div class="broker-selector">
+    <div class="broker"
+         :class="{'selected': selected[broker.id] !== undefined, 'disabled': !broker.enabled}"
+         v-for="broker in enabledBrokers"
+         @click="toggleSelect(broker)">
+      <div class="name">
+        {{broker.name}}
+      </div>
+      <div class="version">
+        {{broker.version}}
+      </div>
+    </div>
+  </div>
+</template>
+
 <style scoped lang="scss">
 div.broker-selector {
   display: flex;
   gap: .66rem;
   flex-flow: row wrap;
-  //justify-content: center;
+  background: #F1F5F9;
+  padding: .66rem 1rem;
+  border-radius: .2rem;
+  justify-content: space-between;
 
   div.broker {
     display: flex;
-    width: 31%;
-    //margin: 0 .5rem .5rem .5rem;
+    min-width: 24%;
+    background: #fff;
     cursor: pointer;
     border-radius: .2rem;
     div.name {
@@ -129,15 +132,14 @@ div.broker-selector {
       }
     }
     &.selected {
-      color: #000aa3;
-      background: #F2F5FF;
-      //box-shadow: 0 0 0 .15rem rgba(0,123,255,.25);
+      color: #134E4A;
+      background: #CCFBF1;
       div.name, div.version {
-        border-color: #A5B3E8;
-        color: #000aa3;
+        border-color: #14B8A6;
+        color: #134E4A;
       }
       div.version {
-        border-left-color: rgba(165, 179, 232, .5);
+        border-left-color: rgba(20, 173, 89, .33);
       }
     }
   }

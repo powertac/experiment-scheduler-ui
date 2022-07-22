@@ -1,16 +1,17 @@
 <template>
   <div class="game-view">
-    <div class="action-bar">
+    <!--<div class="action-bar">
       <a @click="$router.go(-1)">
         <fa-icon class="icon" icon="arrow-left" />
         Back
       </a>
-    </div>
+    </div>-->
     <div class="loader" v-if="game === null">
       LOADING
     </div>
     <template v-else>
-      <div class="game-view-header">
+      <game-view-header :game="game" />
+      <!--<div class="game-view-header">
         <div class="game-view-header-block">
           <h1 class="game-view-title">{{game.name}}</h1>
           <table class="meta">
@@ -76,7 +77,7 @@
             </tr>
           </table>
         </div>
-      </div>
+      </div>-->
       <game-run-selector :runs="game.runs" @run-selected="selectRun" />
       <file-tree-viewer :root="selectedRunRootNode" v-if="selectedRunRootNode !== null" />
     </template>
@@ -93,8 +94,9 @@ import {OrchestratorClient} from '@/api/OrchestratorClient';
 import Game from '@/domain/Game/Game';
 import FormattedDate from '@/components/time/FormattedDate.vue';
 import FormatDate from '@/components/time/FormattedDate.vue';
+import GameViewHeader from '@/components/game/GameViewHeader.vue';
 
-@Component({components: {FormatDate, GameRunSelector, FileTreeViewer, FormattedDate}})
+@Component({components: {GameViewHeader, FormatDate, GameRunSelector, FileTreeViewer, FormattedDate}})
 export default class GameView extends Vue {
 
   private selectedRun: GameRun|null;
@@ -138,10 +140,6 @@ div.game-view {
   flex-direction: row;
 }
 div.game-view-header {
-  display: flex;
-  background: #F1F5F9;
-  border-bottom: 1px solid #CBD5E1;
-
   .game-view-title {
     display: flex;
     flex-direction: column;
@@ -151,13 +149,13 @@ div.game-view-header {
       font-family: "Inconsolata", monospace;
     }
   }
-  div.game-view-header-block {
+  /*div.game-view-header-block {
     min-width: 18rem;
     padding: 1.75rem 2.33rem;
     h2 {
       font-size: 1.5rem;
     }
-  }
+  }*/
 
   div.game-view-header-block + div.game-view-header-block {
     border-left: 1px solid #CBD5E1;

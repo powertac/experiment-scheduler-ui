@@ -1,5 +1,5 @@
 <template>
-  <fa-icon :icon="icon" />
+  <fa-icon :icon="icon" class="game-status-icon" />
 </template>
 
 <script lang="ts">

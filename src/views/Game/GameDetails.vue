@@ -124,7 +124,7 @@ export default class GameDetails extends Vue {
   }
 
   get gameId(): string {
-    return this.$route.params.id;
+    return this.$route.params.gameId;
   }
 
   get game(): Game {

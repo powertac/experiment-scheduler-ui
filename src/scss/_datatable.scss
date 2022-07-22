@@ -3,6 +3,7 @@ table.datatable {
   border-collapse: separate;
   border-spacing: 0;
   margin-bottom: 0;
+  overflow: scroll;
 
   &.table-hover tbody tr:hover {
     background: #fafbfc;
@@ -24,7 +25,7 @@ table.datatable {
 
   & > thead {
     position: sticky;
-    top: 2.75rem;
+    top: 0;
 
     & > tr > th {
       font-weight: normal;
@@ -63,5 +64,15 @@ table.datatable {
         height: 1.5rem;
       }
     }
+  }
+
+  tr.selected {
+    background: #F0FDFA !important;
+  }
+  td.status-icon {
+    width: 4rem;
+  }
+  span.status-icon {
+    font-size: .66em;
   }
 }

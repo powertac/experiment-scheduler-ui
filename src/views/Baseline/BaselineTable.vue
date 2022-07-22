@@ -2,11 +2,11 @@
   <div class="view">
     <div id="baseline-table" class="view">
       <div class="action-bar">
-        <router-link to="/baselines/create">
+        <!--<router-link to="/baselines/create">
           <fa-icon icon="plus" class="icon-left" /> New baseline
-        </router-link>
+        </router-link>-->
         <router-link to="/experimental/baseline-editor">
-          <fa-icon icon="plus" class="icon-left" /> Baseline Editor
+          <fa-icon icon="plus" class="icon-left" /> New baseline
         </router-link>
       </div>
       <div class="loader" v-if="isLoading">

@@ -3,6 +3,7 @@ import {WeatherConfigurationData} from '@/domain/Weather/WeatherConfigurationDat
 
 export interface GameConfig {
   id?: string;
+  name?: string;
   brokers: Broker[];
   parameters: {[key: string]: string};
   weather?: WeatherConfigurationData;
