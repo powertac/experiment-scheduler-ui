@@ -5,6 +5,8 @@ import {DataTable} from '@/util/DataTable';
 import Game from '@/domain/Game/Game';
 import GameTable from '@/components/game/GameTable.vue';
 import GameSidebar from '@/components/game/GameSidebar.vue';
+import {GamePage} from '@/api/GamePage';
+import {OrchestratorClient} from '@/api/OrchestratorClient';
 
 @Component({components: {GameSidebar, GameTable}})
 export default class GameTableView extends VueAdapter {
@@ -12,23 +14,31 @@ export default class GameTableView extends VueAdapter {
   private isLoading: boolean;
   private search: string;
   private selectedGame: Game|null;
+  private gameCount: number;
 
   constructor() {
     super();
     this.isLoading = true;
     this.search = '';
     this.selectedGame = null;
+    this.gameCount = 0;
   }
 
   private mounted() {
     this.$store.dispatch('games/loadAll')
         .then(() => this.isLoading = false)
         .catch(() => console.log("unable to load games"));
+    OrchestratorClient.gameCount()
+        .then((count) => this.gameCount = count)
+        .catch((error) => console.error(error));
   }
 
-  // TODO : load per search
-  // TODO : load per filter
-  // TODO : load next
+  private loadNext(): void {
+    // TODO : add sorting
+    // TODO : add filter
+    this.$store.dispatch('games/loadNext', new GamePage(this.games.length - 1, 10))
+        .catch((error) => console.error(error));
+  }
 
   get games(): Game[] {
     const games = this.$store.getters['games/findAll'];
@@ -54,11 +64,33 @@ export default class GameTableView extends VueAdapter {
     <div class="view-content" v-else>
       <div class="view-content-main">
         <game-table :games="games" @game-selected="selectedGame = $event" />
+        <div class="loader" @click="loadNext" v-if="games.length < gameCount">
+          Load more ...
+        </div>
+        <div class="loader disabled" v-else>
+          All entities loaded.
+        </div>
       </div>
       <game-sidebar :game="selectedGame" v-if="selectedGame !== null" class="view-content-sidebar" />
     </div>
 
   </div>
 </template>
+
+<style lang="scss">
+div.loader {
+  width: 100%;
+  background: #FAFAF9;
+  border-bottom: 1px solid #E7E5E4;
+  text-align: center;
+  padding: 1rem 0;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 600;
+  &.disabled {
+    color: #E7E5E4;
+  }
+}
+</style>
 
 

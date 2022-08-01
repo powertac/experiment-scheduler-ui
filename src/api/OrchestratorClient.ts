@@ -46,8 +46,23 @@ export class OrchestratorClient {
         });
     }
 
+    public static gamePage(start: number, limit: number): Promise<GameData[]> {
+        return new Promise<GameData[]>((resolve: (games: GameData[]) => void, reject: (error: AxiosError) => void) => {
+            axios.get(config.services.orchestrator.uri + '/games/?start=' + start + '&limit=' + limit)
+              .then((response: AxiosResponse<GameData[]>) => resolve(response.data))
+              .catch((error: AxiosError) => reject(error));
+        });
+    }
+
+    public static gameCount(): Promise<number> {
+        return new Promise<number>((resolve: (count: number) => void, reject: (error: AxiosError) => void) => {
+            axios.get(config.services.orchestrator.uri + '/games/count')
+              .then((response: AxiosResponse<number>) => resolve(response.data))
+              .catch((error: AxiosError) => reject(error));
+        });
+    }
+
     public static game(id: string): Promise<GameData> {
-        console.log(id)
         return new Promise<GameData>((resolve: (games: GameData) => void, reject: (error: AxiosError) => void) => {
             axios.get(config.services.orchestrator.uri + '/games/' + id)
               .then((response: AxiosResponse<GameData>) => resolve(response.data))
@@ -145,7 +160,7 @@ export class OrchestratorClient {
 
     public static fileContent(file: FileNode): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            axios.get(config.services.orchestrator.uri + '/files', {params: {path: file.path, offset: 0, length: 5000}})
+            axios.get(config.services.orchestrator.uri + '/files', {params: {path: file.path, offset: 0, length: 9999}})
               .then((response) => resolve(response.data))
               .catch((error) => reject(error));
         });

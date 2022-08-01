@@ -7,6 +7,7 @@ import {StompClient} from '@/api/StompClient';
 import {GameStore, GameStoreGetters, GameStoreState} from '@/domain/Game/GameStore';
 import {GameData} from '@/domain/Game/GameData';
 import Game from '@/domain/Game/Game';
+import {GamePage} from '@/api/GamePage';
 
 const gameStoreImpl: GameStore = {
   namespaced: true,
@@ -40,8 +41,10 @@ const gameStoreImpl: GameStore = {
         .then((game: GameData) => context.commit('add', game))
         .catch((error: AxiosError) => console.error(error));
     },
-    loadNext: (context: ActionContext<GameStoreState, RootStoreState>, start, limit): void => {
-
+    loadNext: (context: ActionContext<GameStoreState, RootStoreState>, page: GamePage): void => {
+      OrchestratorClient.gamePage(page.start, page.limit)
+        .then((games) => games.forEach((game) => context.commit('add', game)))
+        .catch((error: AxiosError) => console.error(error));
     },
     loadAll: (context: ActionContext<GameStoreState, RootStoreState>): void => {
       OrchestratorClient.games()

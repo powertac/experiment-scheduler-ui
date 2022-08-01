@@ -2,6 +2,7 @@ import {ActionContext, ActionTree, GetterTree, Module, MutationTree} from 'vuex'
 import {RootStoreState} from '@/domain/Store/RootStore';
 import {GameData} from '@/domain/Game/GameData';
 import Game from '@/domain/Game/Game';
+import {GamePage} from '@/api/GamePage';
 
 export interface GameStore extends Module<GameStoreState, RootStoreState> {
   namespaced: boolean;
@@ -28,7 +29,7 @@ export interface GameStoreMutations extends MutationTree<GameStoreState> {
 
 export interface GameStoreActions extends ActionTree<GameStoreState, RootStoreState> {
   load: (context: ActionContext<GameStoreState, RootStoreState>, id: string) => void;
-  loadNext: (context: ActionContext<GameStoreState, RootStoreState>, start: number, limit: number) => void;
+  loadNext: (context: ActionContext<GameStoreState, RootStoreState>, page: GamePage) => void;
   loadAll: (context: ActionContext<GameStoreState, RootStoreState>) => void;
   subscribe: (context: ActionContext<GameStoreState, RootStoreState>) => void;
 }
