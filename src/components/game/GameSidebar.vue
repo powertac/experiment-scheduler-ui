@@ -57,7 +57,7 @@ export default class GameSidebar extends Vue {
     </h3>
     <game-status-block :game="game" />
     <div class="game-actions">
-      <router-link :to="'/games/' + game.id + '/runs'" class="button">
+      <router-link :to="'/games/' + game.id + '/config'" class="button">
         <fa-icon icon="eye" class="icon" />
         Details
       </router-link>

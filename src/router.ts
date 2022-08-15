@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import GameFormAlternative from '@/views/Game/GameForm.vue';
 import GameTableView from '@/views/Game/GameTableView.vue';
-import GameSidebar from '@/views/Game/GameSidebar.vue';
 import BrokersTable from '@/views/Broker/BrokersTable.vue';
 import BrokerForm from '@/views/Broker/BrokerForm.vue';
 import BaselineTable from '@/views/Baseline/BaselineTable.vue';
@@ -14,7 +13,6 @@ import TreatmentTable from '@/views/Treatment/TreatmentTable.vue';
 import TreatmentView from '@/views/Treatment/TreatmentView.vue';
 import BaselineEditorView from '@/views/Baseline/BaselineEditorView.vue';
 import NewGameView from '@/views/Game/NewGameView.vue';
-import GameDetails from '@/views/Game/GameDetails.vue';
 import GameConfigView from '@/views/Game/GameConfigView.vue';
 import GameStorageView from '@/views/Game/GameStorageView.vue';
 import StorageView from '@/views/System/StorageView.vue';
@@ -84,7 +82,7 @@ export default new Router({
     },
     {
       path: '/baselines/create',
-      component: BaselineForm,
+      component: BaselineEditorView,
     },
     {
       path: '/baselines/:id/details',
@@ -92,10 +90,7 @@ export default new Router({
     },
     {
       path: '/baselines/:id/details/:gameId',
-      components: {
-        default: BaselineDetails,
-        sidebar: GameSidebar,
-      },
+      component: BaselineDetails,
     },
     {
       path: '/treatments/editor',
@@ -107,10 +102,7 @@ export default new Router({
     },
     {
       path: '/treatments/:id/games/:gameId',
-      components: {
-        default: TreatmentView,
-        sidebar: GameSidebar,
-      },
+      component: TreatmentView,
     },
     {
       path: '/treatments/:id/games',

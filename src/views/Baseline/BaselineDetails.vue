@@ -24,7 +24,7 @@ export default class BaselineDetails extends Vue {
 
   constructor() {
     super();
-    this.activeTab = 'export';
+    this.activeTab = 'games';
     this.selectedGame = null;
     this.exportMessage = "Just copy and paste for now ... ;)";
     this.exportTarget = "";
