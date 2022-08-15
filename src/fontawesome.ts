@@ -220,6 +220,9 @@ library.add(faRulerCombined);
 import {faSlidersH} from '@fortawesome/free-solid-svg-icons';
 library.add(faSlidersH);
 
+import {faHdd} from '@fortawesome/free-solid-svg-icons';
+library.add(faHdd);
+
 // REGULAR
 import { faCaretSquareDown } from '@fortawesome/free-regular-svg-icons';
 library.add(faCaretSquareDown);

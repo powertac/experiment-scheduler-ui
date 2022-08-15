@@ -154,3 +154,28 @@ button.editor-submit {
     border-color: #CBD5E1;
   }
 }
+
+.input-block {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+
+  .input-prefix {
+    display: flex;
+    align-items: center;
+    padding: 0 .66rem 0 1rem;
+    background: #FAFAF9;
+    border-width: 1px 0 1px 1px;
+    border-style: solid;
+    border-color: #ccc;
+    border-top-left-radius: .2rem;
+    border-bottom-left-radius: .2rem;
+  }
+
+  .input-prefix + * {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    padding-left: .66rem;
+  }
+
+}

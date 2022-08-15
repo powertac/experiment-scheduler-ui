@@ -44,6 +44,6 @@ export default class ParametersTable extends Vue {
 
 <style lang="scss">
 table.key-value {
-  width: 100%;
+  //width: 100%;
 }
 </style>

@@ -8,6 +8,9 @@ import GameSidebar from '@/components/game/GameSidebar.vue';
 import {GamePage} from '@/api/GamePage';
 import {OrchestratorClient} from '@/api/OrchestratorClient';
 
+// TODO : load config from server
+const pageSize = 50;
+
 @Component({components: {GameSidebar, GameTable}})
 export default class GameTableView extends VueAdapter {
 
@@ -25,7 +28,7 @@ export default class GameTableView extends VueAdapter {
   }
 
   private mounted() {
-    this.$store.dispatch('games/loadAll')
+    this.$store.dispatch('games/loadAll') // FIXME : this isn't load all anymore but loading the first page
         .then(() => this.isLoading = false)
         .catch(() => console.log("unable to load games"));
     OrchestratorClient.gameCount()
@@ -36,7 +39,7 @@ export default class GameTableView extends VueAdapter {
   private loadNext(): void {
     // TODO : add sorting
     // TODO : add filter
-    this.$store.dispatch('games/loadNext', new GamePage(this.games.length - 1, 10))
+    this.$store.dispatch('games/loadNext', new GamePage(this.games.length - 1, pageSize))
         .catch((error) => console.error(error));
   }
 

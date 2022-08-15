@@ -63,6 +63,10 @@ export default class GameViewHeader extends Vue {
         <fa-icon icon="file" class="icon" />
         Files
       </router-link>
+      <router-link :to="{name: 'game-storage', params: {gameId: game.id}}">
+        <fa-icon icon="hdd" class="icon" />
+        Storage
+      </router-link>
     </div>
   </div>
 </template>

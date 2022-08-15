@@ -1,3 +1,81 @@
+<script lang="ts">
+import {Component, Vue} from 'vue-property-decorator';
+import Duration from '@/components/time/Duration.vue';
+import {Baseline} from '@/domain/Baseline/Baseline';
+import {DataTable} from '@/util/DataTable';
+import GameStatusIcon from '@/components/game/GameStatusIcon.vue';
+import {formatDate} from '@/util/Date';
+import moment from 'moment';
+import Game from '@/domain/Game/Game';
+import GameTable from '@/components/game/GameTable.vue';
+import GameSidebar from '@/components/game/GameSidebar.vue';
+import BaselineClient from '@/api/BaselineClient';
+import ApplicationClient from '@/api/ApplicationClient';
+
+@Component({components: {GameTable, duration: Duration, 'status-icon': GameStatusIcon, GameSidebar}})
+export default class BaselineDetails extends Vue {
+
+  private activeTab: string;
+  private selectedGame: Game|null;
+  private exportMessage: string;
+  private exportTarget: string;
+  private hostUri: string;
+  private hostExportBasePath: string;
+
+  constructor() {
+    super();
+    this.activeTab = 'export';
+    this.selectedGame = null;
+    this.exportMessage = "Just copy and paste for now ... ;)";
+    this.exportTarget = "";
+    this.hostUri = "";
+    this.hostExportBasePath = "";
+  }
+
+  private mounted(): void {
+    this.$store.dispatch('baselines/loadAll');
+    ApplicationClient.hostExportBasePath()
+        .then((hostExportBasePath) => this.hostExportBasePath = hostExportBasePath)
+        .catch((error) => console.log("could not load host base export path", error));
+  }
+
+  get baselineId(): string {
+    return this.$route.params.id;
+  }
+
+  get baseline(): Baseline {
+    return this.$store.getters['baselines/find'](this.baselineId);
+  }
+
+  get games(): Game[] {
+    return this.baseline.games.sort((DataTable.defaultSortGames));
+  }
+
+  private showSidebar(game: Game): void {
+    this.$router.push('/baselines/' + this.baselineId + '/details/' + game.id)
+  }
+
+  private exportBaseline(): void {
+    Vue.set(this, 'exportMessage', 'Exporting to ' + this.exportTarget + ' ...');
+    BaselineClient.export(this.baseline.id, this.exportTarget, this.hostUri)
+        .then(() => Vue.set(this, 'exportMessage', 'Exported successfully.'))
+        .catch((error) => {
+          console.error(error);
+          Vue.set(this, 'exportMessage', 'Export failed!');
+        });
+  }
+
+  private formatWeatherDate(date: number): string {
+    return moment(date).format('L')
+  }
+
+  private formatDate(date: number): string {
+    return formatDate(date);
+  }
+
+}
+</script>
+
 <template>
   <div id="game-details" class="view">
     <div class="action-bar">
@@ -22,6 +100,9 @@
           </button>
           <button class="button" @click="activeTab = 'config'" :class="{'active': activeTab === 'config'}">
             Configuration
+          </button>
+          <button class="button" @click="activeTab = 'export'" :class="{'active': activeTab === 'export'}">
+            Export
           </button>
         </div>
       </div>
@@ -103,98 +184,29 @@
         </table>
       </div>
     </div>
+    <div class="p-5"  v-else-if="activeTab === 'export'">
+      <h2 class="mb-4">Export files</h2>
+      <p><strong>USE WITH CARE! ANOTHER QUICK N DIRTY FEATURE!</strong></p>
+      <div>
+        <h4 class="mt-4">Target directory (relative to export path)</h4>
+        <div class="input-block">
+          <div class="input-prefix">{{ hostExportBasePath }}</div>
+          <input type="text" v-model="exportTarget" placeholder="path/to/baseline/export" class="text-input w-50" />
+        </div>
+        <h4 class="mt-3">Host URI</h4>
+        <input type="text" v-model="hostUri" placeholder="https://host.uri/" class="text-input w-50" />
+        <button class="button mt-4 submit-button" @click="exportBaseline">export</button>
+        <p class="mt-4">{{exportMessage}}</p>
+      </div>
+    </div>
     <div class="view-content" v-else>
       <div class="view-content-main">
         <game-table :games="games" @game-selected="selectedGame = $event" />
       </div>
       <game-sidebar :game="selectedGame" v-if="selectedGame !== null" class="view-content-sidebar" />
     </div>
-    <!--<table class="table datatable table-hover table-bordered clickable-rows" v-if="activeTab === 'games'">
-      <thead>
-      <tr>
-        <th class="col-center">Status</th>
-        <th class="col-center">ID</th>
-        <th>Name</th>
-        <th>Location</th>
-        <th class="text-right">Simulation Time</th>
-        <th>Brokers</th>
-        <th class="text-right">Completed at</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="game in games" :key="game.id" @click="showSidebar(game)">
-        <td class="col-center status-icon">
-          <span class="status-icon"><status-icon :game="game" /></span>
-        </td>
-        <td class="col-center monospaced">{{game.id.substr(0, 8)}}</td>
-        <td>{{game.name}}</td>
-        <td>{{game.weather.location}}</td>
-        <td class="monospaced text-right" v-html="formatWeatherDate(game.weather.startTime)"></td>
-        <td>{{game.brokers.map((b) => b.name).join(", ")}}</td>
-        <td class="monospaced text-right" v-html="formatDate(game.end)"></td>
-      </tr>
-      </tbody>
-    </table>-->
-    <div class="baseline-files" v-if="activeTab === 'files'">
-      <h3>FILES</h3>
-    </div>
   </div>
 </template>
-
-<script lang="ts">
-import {Component, Vue} from 'vue-property-decorator';
-import Duration from '@/components/time/Duration.vue';
-import {Baseline} from '@/domain/Baseline/Baseline';
-import {DataTable} from '@/util/DataTable';
-import GameStatusIcon from '@/components/game/GameStatusIcon.vue';
-import {formatDate} from '@/util/Date';
-import moment from 'moment';
-import Game from '@/domain/Game/Game';
-import GameTable from '@/components/game/GameTable.vue';
-import GameSidebar from '@/components/game/GameSidebar.vue';
-
-@Component({components: {GameTable, duration: Duration, 'status-icon': GameStatusIcon, GameSidebar}})
-export default class BaselineDetails extends Vue {
-
-  private activeTab: string;
-  private selectedGame: Game|null;
-
-  constructor() {
-    super();
-    this.activeTab = 'games';
-    this.selectedGame = null;
-  }
-
-  private mounted(): void {
-    this.$store.dispatch('baselines/loadAll');
-  }
-
-  get baselineId(): string {
-    return this.$route.params.id;
-  }
-
-  get baseline(): Baseline {
-    return this.$store.getters['baselines/find'](this.baselineId);
-  }
-
-  get games(): Game[] {
-    return this.baseline.games.sort((DataTable.defaultSortGames));
-  }
-
-  private showSidebar(game: Game): void {
-    this.$router.push('/baselines/' + this.baselineId + '/details/' + game.id)
-  }
-
-  private formatWeatherDate(date: number): string {
-    return moment(date).format('L')
-  }
-
-  private formatDate(date: number): string {
-    return formatDate(date);
-  }
-
-}
-</script>
 
 <style lang="scss" scoped>
 div.status-header {
@@ -236,6 +248,9 @@ div.status-header {
       }
     }
   }
+}
+.submit-button {
+  display: block;
 }
 </style>
 

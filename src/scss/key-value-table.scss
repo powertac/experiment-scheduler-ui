@@ -24,7 +24,7 @@ table.key-value {
   th {
     text-transform: uppercase;
     font-size: .75em;
-    font-weight: normal;
+    font-weight: 600;
     border-bottom: 1px solid #E2E8F0;
     background: #F1F5F9;
     color: #1E293B;
@@ -37,6 +37,31 @@ table.key-value {
   tr.selected > td {
     background: #D1FAE5;
     color: #064E3B;
+  }
+
+  tbody > tr.aggregate > td {
+    border-top: 1px solid #E2E8F0;
+    font-weight: 600;
+    background: #F1F5F9;
+  }
+
+  button.button {
+    text-transform: uppercase;
+    font-size: .75em;
+    padding: .33rem 1rem;
+    background: #EEF2FF;
+    border-color: #A5B4FC;
+    color: #2563EB;
+
+    &:hover {
+      background: #E0E7FF;
+      border-color: #818CF8;
+      color: #3730A3;
+    }
+
+    .button-icon-left {
+      font-size: .75rem;
+    }
   }
 
 }

@@ -16,6 +16,8 @@ import BaselineEditorView from '@/views/Baseline/BaselineEditorView.vue';
 import NewGameView from '@/views/Game/NewGameView.vue';
 import GameDetails from '@/views/Game/GameDetails.vue';
 import GameConfigView from '@/views/Game/GameConfigView.vue';
+import GameStorageView from '@/views/Game/GameStorageView.vue';
+import StorageView from '@/views/System/StorageView.vue';
 
 Vue.use(Router);
 
@@ -62,6 +64,11 @@ export default new Router({
       path: '/games/:id/config',
       name: 'game-config',
       component: GameConfigView,
+    },
+    {
+      path: '/games/:id/storage',
+      name: 'game-storage',
+      component: GameStorageView,
     },
     {
       path: '/brokers',
@@ -112,6 +119,10 @@ export default new Router({
     {
       path: '/experimental/baseline-editor',
       component: BaselineEditorView,
+    },
+    {
+      path: '/storage',
+      component: StorageView,
     },
   ],
 });
