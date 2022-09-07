@@ -1,15 +1,15 @@
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
 import BaselineEditor from '@/components/Baseline/BaselineEditor.vue';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
 import {BaselineConfig} from '@/domain/Baseline/BaselineConfig';
 import ViewActionBar from '@/components/application/ViewActionBar.vue';
+import api from '@/api/api';
 
 @Component({components: {'baseline-editor': BaselineEditor, ViewActionBar}})
 export default class BaselineEditorView extends Vue {
 
   private createBaseline(baselineConfig: BaselineConfig): void {
-    OrchestratorClient.generateBaseline(baselineConfig)
+    api.orchestrator.baselines.generate(baselineConfig)
         .then(() => this.$router.push("/baselines/"))
         .catch((error) => console.error(error))
   }

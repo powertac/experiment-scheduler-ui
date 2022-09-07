@@ -4,8 +4,8 @@ import Vue from 'vue';
 import {ActionContext} from 'vuex';
 import {RootStoreState} from '@/domain/Store/RootStore';
 import {StompClient} from '@/api/StompClient';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
 import {Baseline} from '@/domain/Baseline/Baseline';
+import api from '@/api/api';
 
 const baselineStoreImpl: BaselineStore = {
   namespaced: true,
@@ -38,7 +38,7 @@ const baselineStoreImpl: BaselineStore = {
       StompClient.subscribe('/baselines', (baseline: BaselineData) => context.commit('add', baseline));
     },
     loadAll: (context: ActionContext<BaselineStoreState, RootStoreState>) => {
-      OrchestratorClient.baselines()
+      api.orchestrator.baselines.getAll()
         .then((baselines) => baselines.forEach((baseline) => context.commit('add', baseline)))
         .catch((error) => console.error(error));
     },

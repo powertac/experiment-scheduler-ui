@@ -80,7 +80,6 @@ import {Broker} from '@/domain/Broker/Broker';
 import {VueAdapter} from '@/VueAdapter';
 import Component from 'vue-class-component';
 import {BrokerSet} from '@/domain/Broker/BrokerSet';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
 import {TreatmentSpec} from '@/domain/Treatment/Treatment';
 import {ReplaceBrokerModifierSpec} from '@/domain/Treatment/ReplaceBrokerModifier';
 import BaselineSelector from '@/components/Baseline/BaselineSelector.vue';
@@ -89,6 +88,7 @@ import {ModifierSpec} from '@/domain/Treatment/Modifier';
 import BrokerSelector from '@/components/Broker/BrokerSelector.vue';
 import ParameterInput from '@/components/form/ParameterInput.vue';
 import ParameterSetInput from '@/components/ParameterSetInput.vue';
+import api from '@/api/api';
 
 @Component({components: {'parameter-set': ParameterSetInput, BaselineSelector, BrokerSelector, ParameterInput}})
 export default class TreatmentEditor extends VueAdapter {
@@ -191,7 +191,7 @@ export default class TreatmentEditor extends VueAdapter {
   private createTreatment(): void {
     const spec = this.spec;
     if (null !== spec) {
-      OrchestratorClient.createTreatment(spec)
+      api.orchestrator.treatments.create(spec)
           .then(() => this.$router.push('/treatments'))
           .catch(error => console.error(error));
     } else {

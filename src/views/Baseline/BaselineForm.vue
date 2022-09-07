@@ -84,12 +84,10 @@ import {TransientParameter} from '@/domain/types/Parameter';
 import uuid from 'uuid/v4';
 import BrokerSetSelector from '@/components/Broker/BrokerSetSelector.vue';
 import {Broker} from '@/domain/Broker/Broker';
-import {WeatherLocation} from '@/domain/Location/WeatherLocation';
 import WeatherSelector from '@/components/weather/WeatherSelector.vue';
 import {WeatherConfiguration} from '@/domain/Weather/WeatherConfiguration';
-import {BaselineData} from '@/domain/Baseline/BaselineData';
 import {BaselineSpec} from '@/domain/Baseline/BaselineSpec';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
+import api from '@/api/api';
 
 @Component({components: {'parameter': ParameterInput, 'broker-set': BrokerSetSelector, 'weather': WeatherSelector}})
 export default class BaselineForm extends Vue {
@@ -182,7 +180,7 @@ export default class BaselineForm extends Vue {
 
   private submit(): void {
     if (this.isValid) {
-      OrchestratorClient.createBaseline(this.spec)
+      api.orchestrator.baselines.create(this.spec)
           .then(() => this.$router.back())
           .catch(e => console.error(e));
     } else {

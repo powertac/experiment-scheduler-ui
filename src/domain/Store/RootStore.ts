@@ -20,6 +20,7 @@ export interface RootStoreState {
     time: number;
     supportedParameters: string[];
     availableLocations: WeatherLocation[];
+    authenticated: boolean;
 }
 
 export interface RootStoreModules extends ModuleTree<RootStoreState> {
@@ -34,6 +35,7 @@ export interface RootStoreGetters extends GetterTree<RootStoreState, RootStoreSt
     time: (state: RootStoreState, getters: RootStoreGetters) => number;
     supportedParameters: (state: RootStoreState, getters: RootStoreGetters) => string[];
     availableLocations: (state: RootStoreState, getters: RootStoreGetters) => WeatherLocation[];
+    isAuthenticated: (state: RootStoreState, getters: RootStoreGetters) => boolean;
 }
 
 export interface RootStoreMutations extends MutationTree<RootStoreState> {
@@ -41,6 +43,7 @@ export interface RootStoreMutations extends MutationTree<RootStoreState> {
     setTime: (state: RootStoreState, time: number) => void;
     setSupportedParameters: (state: RootStoreState, parameters: string[]) => void;
     setAvailableLocations: (state: RootStoreState, locations: WeatherLocation[]) => void;
+    setAuthenticated: (state: RootStoreState, authenticated: boolean) => void;
 }
 
 export interface RootStoreActions extends ActionTree<RootStoreState, RootStoreState> {

@@ -1,5 +1,7 @@
 import axios, {AxiosError, AxiosResponse} from 'axios';
 
+console.log("CONFIG");
+
 interface ServiceUriConfig {
     orchestrator: string;
     weather: string;
@@ -18,12 +20,14 @@ class ConfigurationProvider {
 
     public services: Services;
     public mode: string;
+    public localStorageKey: string;
 
     constructor() {
         this.services = {
             orchestrator: {uri: ''},
             weather: {uri: ''},
         };
+        this.localStorageKey = '8hK8l03BbLtFo6Ox18lKL1dzTt3aNYx0';
     }
 
     public load(): Promise<void> {

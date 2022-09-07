@@ -29,7 +29,7 @@
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
 import FileNode from '@/domain/File/FileNode';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
+import api from '@/api/api';
 
 @Component
 export default class FileViewer extends Vue {
@@ -55,7 +55,7 @@ export default class FileViewer extends Vue {
     this.content = null;
     if (null != file) {
       if (!file.directory) {
-        OrchestratorClient.fileContent(file)
+        api.orchestrator.application.fileContents(file)
             .then((content) => this.content = content)
             .catch((error) => console.log(error));
       }

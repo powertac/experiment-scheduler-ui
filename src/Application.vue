@@ -1,9 +1,10 @@
 <template>
-  <div id="app">
+  <div id="app" v-if="authenticated">
     <app-nav :server-status="orchestratorStatus" />
     <!-- <loader id="loader" v-if="!orchestratorStatus.running" /> -->
     <app-view />
   </div>
+  <login-view v-else />
 </template>
 
 <script lang="ts">
@@ -14,12 +15,19 @@ import ServerStatusIndicator from '@/components/ServerStatusIndicator.vue';
 import Loader from '@/components/Loader.vue';
 import ApplicationNavigation from '@/components/application/ApplicationNavigation.vue';
 import ApplicationView from "@/components/application/ApplicationView.vue";
+import LoginView from '@/views/System/LoginView.vue';
 
-@Component({components: {'server-status': ServerStatusIndicator, 'loader': Loader, 'app-nav': ApplicationNavigation, 'app-view': ApplicationView}})
+@Component({components: {
+    LoginView,
+    'server-status': ServerStatusIndicator, 'loader': Loader, 'app-nav': ApplicationNavigation, 'app-view': ApplicationView}})
 export default class App extends VueAdapter {
 
   get orchestratorStatus(): ServerStatus {
     return this.$store.getters.orchestratorStatus;
+  }
+
+  get authenticated(): boolean {
+    return this.$store.getters['isAuthenticated'];
   }
 
   private created(): void {

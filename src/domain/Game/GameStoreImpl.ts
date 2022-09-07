@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import {ActionContext} from 'vuex';
 import {RootStoreState} from '@/domain/Store/RootStore';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
 import {AxiosError} from 'axios';
 import {StompClient} from '@/api/StompClient';
-import {GameStore, GameStoreGetters, GameStoreState} from '@/domain/Game/GameStore';
+import {GameStore, GameStoreState} from '@/domain/Game/GameStore';
 import {GameData} from '@/domain/Game/GameData';
 import Game from '@/domain/Game/Game';
 import {GamePage} from '@/api/GamePage';
+import api from '@/api/api';
 
 const gameStoreImpl: GameStore = {
   namespaced: true,
@@ -37,17 +37,17 @@ const gameStoreImpl: GameStore = {
   },
   actions: {
     load: (context: ActionContext<GameStoreState, RootStoreState>, id: string): void => {
-      OrchestratorClient.game(id)
+      api.orchestrator.games.get(id)
         .then((game: GameData) => context.commit('add', game))
         .catch((error: AxiosError) => console.error(error));
     },
     loadNext: (context: ActionContext<GameStoreState, RootStoreState>, page: GamePage): void => {
-      OrchestratorClient.gamePage(page.start, page.limit)
+      api.orchestrator.games.page(page.start, page.limit)
         .then((games) => games.forEach((game) => context.commit('add', game)))
         .catch((error: AxiosError) => console.error(error));
     },
     loadAll: (context: ActionContext<GameStoreState, RootStoreState>): void => {
-      OrchestratorClient.games()
+      api.orchestrator.games.getAll()
         .then((games: GameData[]) => games.forEach((game: GameData) => context.commit('add', game)))
         .catch((error: AxiosError) => console.error(error));
     },

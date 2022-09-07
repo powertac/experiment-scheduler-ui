@@ -3,7 +3,6 @@ import {RootStoreOptions, RootStoreState} from '@/domain/Store/RootStore';
 import Vuex, {ActionContext} from 'vuex';
 import {ServerStatus} from '@/domain/Service/ServerStatus';
 import Vue from 'vue';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
 import {Notification} from '@/domain/types/Notification';
 import {ServerStatusListener} from '@/util/ServerStatusListener';
 import {gameStoreImpl} from '@/domain/Game/GameStoreImpl';
@@ -13,6 +12,7 @@ import {WeatherServerClient} from '@/api/WeatherServerClient';
 import {WeatherLocationImpl} from '@/domain/Location/WeatherLocationImpl';
 import {baselineStoreImpl} from '@/domain/Baseline/BaselineStoreImpl';
 import {treatmentStore} from '@/domain/Treatment/TreatmentStore';
+import api from '@/api/api';
 
 let orchestratorServerStatusListener: ServerStatusListener | null = null;
 
@@ -28,6 +28,7 @@ const rootStoreOptions: RootStoreOptions = {
     time: moment.now(),
     supportedParameters: [],
     availableLocations: [],
+    authenticated: false,
   },
   modules: {
     baselines: baselineStoreImpl,
@@ -48,6 +49,9 @@ const rootStoreOptions: RootStoreOptions = {
     availableLocations: (state: RootStoreState) => {
       return state.availableLocations;
     },
+    isAuthenticated: (state: RootStoreState) => {
+      return state.authenticated;
+    },
   },
   mutations: {
     setOrchestratorStatus: (state: RootStoreState, orchestratorStatus: ServerStatus) => {
@@ -67,12 +71,16 @@ const rootStoreOptions: RootStoreOptions = {
         l.minForecastTime,
         l.maxForecastTime)));
     },
+    setAuthenticated: (state: RootStoreState, authenticated: boolean) => {
+      console.log(authenticated)
+      Vue.set(state, 'authenticated', authenticated);
+    },
   },
   actions: {
     activateOrchestratorStatusListener: (context: ActionContext<RootStoreState, RootStoreState>) => {
       if (null === orchestratorServerStatusListener) {
         orchestratorServerStatusListener = new ServerStatusListener(() => {
-          OrchestratorClient.serverStatus()
+          api.orchestrator.application.serverStatus()
             .then((orchestratorStatus: ServerStatus) =>
               context.commit('setOrchestratorStatus', orchestratorStatus))
             .catch(() => context.commit('setOrchestratorStatus', {
@@ -90,7 +98,7 @@ const rootStoreOptions: RootStoreOptions = {
       setInterval(() => context.commit('setTime', moment.now()), 1000);
     },
     loadSupportedParameters: (context: ActionContext<RootStoreState, RootStoreState>) => {
-      OrchestratorClient.supportedParams()
+      api.orchestrator.application.supportedParams()
         .then((params) => context.commit('setSupportedParameters', params.sort()))
         .catch((e) => console.error(e));
     },

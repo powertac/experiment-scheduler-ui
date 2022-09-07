@@ -32,6 +32,9 @@
       Storage
     </router-link>
     <div class="footer">
+      <div class="user">
+        <button type="button" @click="$store.commit('setAuthenticated', false)">Logout</button>
+      </div>
       <div class="connection-status" :class="{'dead': !serverStatus.running}">
         <fa-icon class="fa-icon" icon="circle"></fa-icon>
         <span class="label" v-if="serverStatus.healthy">Orchestrator online</span>

@@ -4,9 +4,9 @@ import * as Date from '@/util/Date';
 import Duration from '@/components/time/Duration.vue';
 import {Baseline} from '@/domain/Baseline/Baseline';
 import moment from 'moment';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
 import Game from '@/domain/Game/Game';
 import GameStatusBlock from '@/components/game/GameStatusBlock.vue';
+import api from '@/api/api';
 
 @Component({components: {GameStatusBlock, Duration}})
 export default class GameSidebar extends Vue {
@@ -38,13 +38,12 @@ export default class GameSidebar extends Vue {
 
   private rerun(): void {
     if (this.game.status === 'completed' || this.game.status === 'failed') {
-      OrchestratorClient.rerunGame(this.game)
+      api.orchestrator.games.rerun(this.game);
     }
   }
 
   private deleteGame(): void {
-    OrchestratorClient.deleteGame(this.game)
-        .then(() => this.$store.commit('games/remove', this.game));
+    api.orchestrator.games.delete(this.game).then(() => this.$store.commit('games/remove', this.game));
   }
 
 }

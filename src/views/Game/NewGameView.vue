@@ -2,14 +2,14 @@
 import {Component, Vue} from 'vue-property-decorator';
 import ViewActionBar from '@/components/application/ViewActionBar.vue';
 import GameEditor from '@/components/game/GameEditor.vue';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
 import {GameSpec} from '@/domain/Game/GameSpec';
+import api from '@/api/api';
 
 @Component({name: "new-game", components: {ViewActionBar, GameEditor}})
 export default class NewGameView extends Vue {
 
   private submit(spec: GameSpec): void {
-    OrchestratorClient.createGame(spec)
+    api.orchestrator.games.create(spec)
         .then(this.complete)
         .catch(this.error);
   }

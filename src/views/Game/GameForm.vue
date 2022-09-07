@@ -96,13 +96,13 @@
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
 import {TransientParameter} from '@/domain/types/Parameter';
 import uuid from 'uuid/v4';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
 import ParameterInput from '@/components/form/ParameterInput.vue';
 import GameSelector from '@/components/game/GameSelector.vue';
 import BrokerSelector from '@/components/Broker/BrokerSelector.vue';
 import {Broker} from '@/domain/Broker/Broker';
 import {GameSpec} from '@/domain/Game/GameSpec';
 import Game from '@/domain/Game/Game';
+import api from '@/api/api';
 
 @Component({components: {'parameter': ParameterInput, 'game-selector': GameSelector, 'broker-selector': BrokerSelector}})
 export default class GameForm extends Vue {
@@ -137,7 +137,7 @@ export default class GameForm extends Vue {
     private created(): void {
         this.serverParameters.push({id: uuid(), key: '', value: ''});
         this.$store.dispatch('brokers/subscribe');
-        OrchestratorClient.supportedParams()
+        api.orchestrator.application.supportedParams()
             .then((params) => this.allowedParameters = params.sort())
             .catch((e) => console.log(e));
         const gameId = this.$route.params.id;
@@ -216,7 +216,7 @@ export default class GameForm extends Vue {
         this.$emit('form:submit', this.createGameSpec());
       }
       else {
-        OrchestratorClient.createGame(this.createGameSpec())
+        api.orchestrator.games.create(this.createGameSpec())
             .then(() => this.$router.push('/games'));
       }
     }

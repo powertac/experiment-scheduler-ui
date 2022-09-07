@@ -16,9 +16,9 @@
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
 import FileNode from '@/domain/File/FileNode';
 import FileViewer from '@/components/file/FileViewer.vue';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
-import MouseMoveEvent = JQuery.MouseMoveEvent;
 import FileTreeNode from '@/components/file/FileTreeNode.vue';
+import api from '@/api/api';
+import MouseMoveEvent = JQuery.MouseMoveEvent;
 
 @Component({name: 'file-tree-viewer', components: {'file-node': FileTreeNode, 'file-viewer': FileViewer}})
 export default class FileTreeViewer extends Vue {
@@ -50,7 +50,7 @@ export default class FileTreeViewer extends Vue {
   private selectFile(file: FileNode): void {
     this.currentFile = file;
     if (!file.directory) {
-      OrchestratorClient.fileContent(file)
+      api.orchestrator.application.fileContents(file)
           .then((content) => this.currentFileContent = content)
           .catch((error) => console.log(error));
     }

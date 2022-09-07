@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import {ActionContext} from 'vuex';
 import {StompClient} from '@/api/StompClient';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
 import {RootStoreState} from '@/domain/Store/RootStore';
 import {BrokerStore, BrokerStoreState} from '@/domain/Broker/BrokerStore';
 import {Broker, BrokerImpl} from '@/domain/Broker/Broker';
+import api from '@/api/api';
 
 const brokerStoreImpl: BrokerStore = {
   namespaced: true,
@@ -33,7 +33,7 @@ const brokerStoreImpl: BrokerStore = {
       StompClient.subscribe('/brokers', (broker: Broker) => context.commit('add', broker));
     },
     loadAll: (context: ActionContext<BrokerStoreState, RootStoreState>) => {
-      OrchestratorClient.brokers()
+      api.orchestrator.brokers.getAll()
         .then((brokers) => brokers.forEach((broker) => context.commit('add', broker)))
         .catch((error) => console.error(error));
     },

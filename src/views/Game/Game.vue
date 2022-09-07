@@ -90,11 +90,11 @@ import GameRunSelector from '@/components/game/GameRunSelector.vue';
 import {GameRun} from '@/domain/Game/GameRun';
 import FileTreeViewer from '@/components/file/FileTreeViewer.vue';
 import FileNode from '@/domain/File/FileNode';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
 import Game from '@/domain/Game/Game';
 import FormattedDate from '@/components/time/FormattedDate.vue';
 import FormatDate from '@/components/time/FormattedDate.vue';
 import GameViewHeader from '@/components/game/GameViewHeader.vue';
+import api from '@/api/api';
 
 @Component({components: {GameViewHeader, FormatDate, GameRunSelector, FileTreeViewer, FormattedDate}})
 export default class GameView extends Vue {
@@ -123,7 +123,7 @@ export default class GameView extends Vue {
   private selectRun(run: GameRun|null): void {
     this.selectedRun = run;
     if (null != run) {
-      OrchestratorClient.runFiles(run.id)
+      api.orchestrator.runs.files(run.id)
           .then((node) => this.selectedRunRootNode = node)
           .catch((error) => console.log(error));
     }

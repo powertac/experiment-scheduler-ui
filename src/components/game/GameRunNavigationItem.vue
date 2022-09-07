@@ -11,10 +11,10 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator';
 import {GameRun} from '@/domain/Game/GameRun';
-import {OrchestratorClient} from '@/api/OrchestratorClient';
 import FileTreeNode from '@/components/file/FileTreeNode.vue';
 import FileNode from '@/domain/File/FileNode';
 import FormattedDate from '@/components/time/FormattedDate.vue';
+import api from '@/api/api';
 
 @Component({components: {'file-node': FileTreeNode, 'date': FormattedDate}})
 export default class GameRunNavigationItem extends Vue {
@@ -30,7 +30,7 @@ export default class GameRunNavigationItem extends Vue {
   }
 
   private mounted(): void {
-    OrchestratorClient.runFiles(this.run.id)
+    api.orchestrator.runs.files(this.run.id)
         .then((files) => this.files = files)
         .catch((error) => console.log(error));
   }
