@@ -15,6 +15,7 @@ import NewGameView from '@/views/Game/NewGameView.vue';
 import GameConfigView from '@/views/Game/GameConfigView.vue';
 import GameStorageView from '@/views/Game/GameStorageView.vue';
 import StorageView from '@/views/System/StorageView.vue';
+import UserTableView from "@/views/System/UserTableView.vue";
 
 Vue.use(Router);
 
@@ -114,6 +115,10 @@ export default new Router({
     {
       path: '/storage',
       component: StorageView,
+    },
+    {
+      path: '/users',
+      component: UserTableView,
     },
   ],
 });

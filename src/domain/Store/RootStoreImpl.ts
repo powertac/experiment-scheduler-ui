@@ -13,6 +13,7 @@ import {WeatherLocationImpl} from '@/domain/Location/WeatherLocationImpl';
 import {baselineStoreImpl} from '@/domain/Baseline/BaselineStoreImpl';
 import {treatmentStore} from '@/domain/Treatment/TreatmentStore';
 import api from '@/api/api';
+import {userStoreImpl} from "@/domain/User/UserStoreImpl";
 
 let orchestratorServerStatusListener: ServerStatusListener | null = null;
 
@@ -35,6 +36,7 @@ const rootStoreOptions: RootStoreOptions = {
     brokers: brokerStoreImpl,
     games: gameStoreImpl,
     treatments: treatmentStore,
+    users: userStoreImpl
   },
   getters: {
     orchestratorStatus: (state: RootStoreState) => {

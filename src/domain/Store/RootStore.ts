@@ -6,6 +6,7 @@ import {GameStore} from '@/domain/Game/GameStore';
 import {WeatherLocation} from '@/domain/Location/WeatherLocation';
 import {BaselineStore} from '@/domain/Baseline/BaselineStore';
 import {TreatmentStoreOptions} from '@/domain/Treatment/TreatmentStoreOptions';
+import {UserStore} from "@/domain/User/UserStore";
 
 export interface RootStoreOptions extends StoreOptions<RootStoreState> {
     modules: RootStoreModules;
@@ -28,6 +29,7 @@ export interface RootStoreModules extends ModuleTree<RootStoreState> {
     brokers: BrokerStore;
     games: GameStore;
     treatments: TreatmentStoreOptions;
+    users: UserStore;
 }
 
 export interface RootStoreGetters extends GetterTree<RootStoreState, RootStoreState> {

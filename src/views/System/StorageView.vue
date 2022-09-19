@@ -5,6 +5,7 @@ import GameClient from '@/api/GameClient';
 import FormattedFileSize from '@/components/file/FormattedFileSize.vue';
 import GameRunStorageSize from '@/components/game/GameRunStorageSize.vue';
 import {GameRun} from '@/domain/Game/GameRun';
+import api from "@/api/api";
 
 @Component({components: {GameRunStorageSize, FormattedFileSize, GameViewHeader}})
 export default class StorageView extends Vue {
@@ -17,7 +18,7 @@ export default class StorageView extends Vue {
   }
 
   private mounted(): void {
-    GameClient.failedRuns()
+    api.orchestrator.games.failed()
         .then((runs) => this.failedRuns.push(...runs))
         .catch((error) => console.error("could not load failed runs", error));
   }
