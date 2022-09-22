@@ -1,4 +1,0 @@
-{
-  "orchestrator": "http://localhost:8080",
-  "weather": "http://localhost:8070"
-}

@@ -20,5 +20,7 @@ yarn-error.log*
 *.sln
 *.sw?
 
-### Service manager
+### Custom
 .env
+.env.development
+discovery.json
