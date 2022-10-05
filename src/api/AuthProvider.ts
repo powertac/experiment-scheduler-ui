@@ -25,13 +25,11 @@ export class AuthProvider {
 
   public authenticate(token: string) {
     this.axios = this.createAuthenticatedClient(token);
-  }
-
-  public validateAuth(): void {
-    this.api.get('/auth/').catch(() => this.revokeAuth());
+    TokenStorage.saveToken(token);
   }
 
   public revokeAuth(): void {
+    TokenStorage.clearToken();
     this.axios = this.createPublicClient();
   }
 

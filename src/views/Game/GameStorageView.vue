@@ -7,6 +7,7 @@ import FormattedFileSize from '@/components/file/FormattedFileSize.vue';
 import Files from '@/util/Files';
 import GameRunStorageSize from '@/components/game/GameRunStorageSize.vue';
 import {GameRun} from '@/domain/Game/GameRun';
+import api from "@/api/api";
 
 @Component({components: {GameRunStorageSize, FormattedFileSize, GameViewHeader}})
 export default class GameStorageView extends Vue {
@@ -23,7 +24,7 @@ export default class GameStorageView extends Vue {
   private mounted(): void {
     this.$store.dispatch('games/load', this.gameId)
         .catch((error) => console.error("could not load game", error));
-    GameClient.gameBytes(this.gameId)
+    api.orchestrator.games.storageBytes(this.gameId)
         .then((size) => this.gameFileSize = size)
         .catch((error) => console.error("could not load game storage size", error));
   }
@@ -55,7 +56,7 @@ export default class GameStorageView extends Vue {
   }
 
   private removeRunFiles(run: GameRun): void {
-    GameClient.removeRunFiles(run.id)
+    api.orchestrator.runs.removeFiles(run.id)
         .then()
         .catch((error) => console.error("could not remove run files", error));
   }

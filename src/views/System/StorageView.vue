@@ -45,7 +45,7 @@ export default class StorageView extends Vue {
   }
 
   private removeRunFiles(run: GameRun): void {
-    GameClient.removeRunFiles(run.id)
+    api.orchestrator.runs.removeFiles(run.id)
         .then()
         .catch((error) => console.error("could not remove run files", error));
   }

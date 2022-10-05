@@ -31,9 +31,16 @@
       </div>
       Storage
     </router-link>
+    <hr />
+    <router-link class="nav-option" to="/users" v-if="user !== null && user.isAdmin">
+      <div class="nav-icon">
+        <fa-icon icon="user" transform="shrink-2" class="nav-option-icon" />
+      </div>
+      Users
+    </router-link>
     <div class="footer">
-      <div class="user">
-        <button type="button" @click="$store.commit('setAuthenticated', false)">Logout</button>
+      <div class="user text-center">
+        <button type="button" @click="logout">Logout</button>
       </div>
       <div class="connection-status" :class="{'dead': !serverStatus.running}">
         <fa-icon class="fa-icon" icon="circle"></fa-icon>
@@ -45,13 +52,25 @@
 </template>
 
 <script lang="ts">
-  import {Component, Prop, Vue} from 'vue-property-decorator';
-  import {ServerStatus} from "@/domain/Service/ServerStatus";
+import {Component, Prop, Vue} from 'vue-property-decorator';
+import {ServerStatus} from "@/domain/Service/ServerStatus";
+import api from "@/api/api";
+import {User} from "@/domain/User/User";
 
-  @Component
-  export default class ApplicationNavigation extends Vue {
+@Component
+  export default class AuthenticatedNavigation extends Vue {
 
     @Prop() readonly serverStatus: ServerStatus;
+
+    get user(): User {
+      return this.$store.getters['users/current'];
+    }
+
+    private logout(): void {
+      api.orchestrator.auth.logout()
+          .then(() => this.$store.commit('setAuthenticated', false))
+          .catch(() => this.$store.commit('setAuthenticated', false));
+    }
 
   }
 </script>

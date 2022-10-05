@@ -7,11 +7,11 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import ApplicationNavigation from "@/components/application/ApplicationNavigation.vue";
+import AuthenticatedNavigation from "@/components/application/AuthenticatedNavigation.vue";
 import ApplicationBar from "@/components/application/ApplicationBar.vue";
 
-@Component({components: {'app-nav': ApplicationNavigation, 'app-bar': ApplicationBar}})
-  export default class ApplicationView extends Vue {}
+@Component({components: {'app-nav': AuthenticatedNavigation, 'app-bar': ApplicationBar}})
+  export default class AuthenticatedView extends Vue {}
 </script>
 
 <style lang="scss">

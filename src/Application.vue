@@ -1,7 +1,6 @@
 <template>
   <div id="app" v-if="authenticated">
     <app-nav :server-status="orchestratorStatus" />
-    <!-- <loader id="loader" v-if="!orchestratorStatus.running" /> -->
     <app-view />
   </div>
   <login-view v-else />
@@ -13,13 +12,13 @@ import {VueAdapter} from '@/VueAdapter';
 import {ServerStatus} from '@/domain/Service/ServerStatus';
 import ServerStatusIndicator from '@/components/ServerStatusIndicator.vue';
 import Loader from '@/components/Loader.vue';
-import ApplicationNavigation from '@/components/application/ApplicationNavigation.vue';
-import ApplicationView from "@/components/application/ApplicationView.vue";
-import LoginView from '@/views/System/LoginView.vue';
+import AuthenticatedNavigation from '@/components/application/AuthenticatedNavigation.vue';
+import AuthenticatedView from "@/components/application/AuthenticatedView.vue";
+import LoginView from '@/views/User/LoginView.vue';
+import api from "@/api/api";
 
-@Component({components: {
-    LoginView,
-    'server-status': ServerStatusIndicator, 'loader': Loader, 'app-nav': ApplicationNavigation, 'app-view': ApplicationView}})
+@Component({components: { LoginView, 'server-status': ServerStatusIndicator, 'loader': Loader,
+                                  'app-nav': AuthenticatedNavigation, 'app-view': AuthenticatedView}})
 export default class App extends VueAdapter {
 
   get orchestratorStatus(): ServerStatus {
@@ -31,11 +30,24 @@ export default class App extends VueAdapter {
   }
 
   private created(): void {
+    api.orchestrator.auth.verify()
+        .then((authenticated) => {
+          if (authenticated) {
+            this.initStorage();
+          }
+        }).catch(error => console.error("could not determine authentication status", error));
+  }
+
+  private initStorage(): void {
+    // TODO : add as login hook
+    this.$store.dispatch('users/loadCurrent');
+    // TODO : move calls to the components which actually need the data
+    this.$store.commit('setAuthenticated', true);
     this.$store.dispatch('activateOrchestratorStatusListener');
     this.$store.dispatch('loadAvailableLocations');
     this.$store.dispatch('startClock');
     this.$store.dispatch('games/loadAll')
-      .catch(() => console.error("unable to load games"));
+        .catch(() => console.error("unable to load games"));
     this.$store.dispatch('games/subscribe')
         .catch(() => console.error('failed to subscribe to games channel'));
     this.$store.dispatch('brokers/subscribe')
@@ -48,7 +60,6 @@ export default class App extends VueAdapter {
         .catch(() => console.error("unable to load treatments"));
     this.$store.dispatch('baselines/loadAll')
         .catch(() => console.error("unable to load baselines"));
-    // FIXME : wait till all loading ops are completed before showing the page
   }
 
 }

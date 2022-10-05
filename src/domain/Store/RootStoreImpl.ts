@@ -74,7 +74,6 @@ const rootStoreOptions: RootStoreOptions = {
         l.maxForecastTime)));
     },
     setAuthenticated: (state: RootStoreState, authenticated: boolean) => {
-      console.log(authenticated)
       Vue.set(state, 'authenticated', authenticated);
     },
   },

@@ -3,6 +3,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 import {GameRun} from '@/domain/Game/GameRun';
 import GameClient from '@/api/GameClient';
 import Files from '@/util/Files';
+import api from "@/api/api";
 
 @Component
 export default class FormattedFileSize extends Vue {
@@ -18,7 +19,7 @@ export default class FormattedFileSize extends Vue {
   }
 
   private mounted(): void {
-    GameClient.gameRunBytes(this.run.id)
+    api.orchestrator.runs.storageBytes(this.run.id)
         .then((bytes) => this.bytes = bytes)
         .catch((error) => console.error("could not load run storage size", error));
   }

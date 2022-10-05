@@ -30,9 +30,12 @@
 <template>
     <div id="users-table" class="view">
         <div class="action-bar">
-            <router-link to="/registration/create">
-                <fa-icon icon="plus" class="icon-left" /> Create Registration
-            </router-link>
+          <router-link to="/registrations/">
+            <fa-icon icon="plus" class="icon-left" /> Show Registrations
+          </router-link>
+          <router-link to="/registrations/create">
+            <fa-icon icon="plus" class="icon-left" /> Create registration tokens
+          </router-link>
         </div>
         <div class="loader" v-if="isLoading">
             LOADING

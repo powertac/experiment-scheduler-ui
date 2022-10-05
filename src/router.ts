@@ -15,7 +15,9 @@ import NewGameView from '@/views/Game/NewGameView.vue';
 import GameConfigView from '@/views/Game/GameConfigView.vue';
 import GameStorageView from '@/views/Game/GameStorageView.vue';
 import StorageView from '@/views/System/StorageView.vue';
-import UserTableView from "@/views/System/UserTableView.vue";
+import UserTableView from "@/views/User/UserTableView.vue";
+import RegistrationTableView from "@/views/User/RegistrationTableView.vue";
+import CreateRegistrationsView from "@/views/User/CreateRegistrationsView.vue";
 
 Vue.use(Router);
 
@@ -119,6 +121,14 @@ export default new Router({
     {
       path: '/users',
       component: UserTableView,
+    },
+    {
+      path: '/registrations',
+      component: RegistrationTableView,
+    },
+    {
+      path: '/registrations/create',
+      component: CreateRegistrationsView,
     },
   ],
 });

@@ -1,7 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from 'axios';
 
-console.log("CONFIG");
-
 interface ServiceUriConfig {
     orchestrator: string;
     weather: string;

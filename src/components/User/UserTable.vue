@@ -24,9 +24,9 @@
         <tbody>
         <tr v-for="user in users" :key="user.id">
             <td class="col-center monospaced">{{user.id.substr(0, 8)}}</td>
-            <td>{{user.name}}</td>
+            <td>{{user.username}}</td>
             <td>{{user.roles.join(", ")}}</td>
-            <td>{{ user.enabled ? 'ENABLED' : 'DISABLED' }}</td>
+            <td class="text-center">{{ user.enabled ? 'ENABLED' : 'DISABLED' }}</td>
         </tr>
         </tbody>
     </table>

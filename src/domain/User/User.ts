@@ -12,6 +12,14 @@ export class User implements UserData {
         this.enabled = props.enabled;
     }
 
+    get isAdmin(): boolean {
+        return this.hasRole("ADMIN");
+    }
+
+    public hasRole(role: string): boolean {
+        return this.roles.filter(r => r.toUpperCase() === role.toUpperCase()).length === 1;
+    }
+
 }
 
 export interface UserData {
